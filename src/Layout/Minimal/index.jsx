@@ -1,0 +1,1 @@
+export const Minimal = (props) => props.children;
