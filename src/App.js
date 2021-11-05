@@ -21,7 +21,11 @@ const App = () => {
     }, [dispatch]);
 
     return (
-        <MantineProvider>
+        <MantineProvider theme={{
+            headings: {
+
+            }
+        }}>
             <GlobalStyles />
             <NormalizeCSS />
             <LoadingOverlay visible={isLoading} />

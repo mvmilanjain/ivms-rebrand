@@ -1,5 +1,5 @@
-import {useState} from "react";
-import {NavLink as Link} from "react-router-dom";
+import {useState} from 'react';
+import {NavLink as Link} from 'react-router-dom';
 import {Scrollbars} from 'react-custom-scrollbars';
 import {
     ActionIcon,
@@ -12,23 +12,23 @@ import {
     Text,
     ThemeIcon,
     useMantineTheme
-} from "@mantine/core";
+} from '@mantine/core';
 import {
-    CubeIcon as ProductIcon,
-    DashboardIcon,
-    DoubleArrowUpIcon as VehicleIcon,
     GearIcon as SettingIcon,
-    Pencil2Icon as RouteOrderIcon,
     TriangleDownIcon,
-    TriangleUpIcon
-} from "@modulz/radix-icons";
-import {Truck as BrandIcon, MapPin as AddressIcon, Map as RouteIcon} from "react-feather";
+    TriangleUpIcon,
+    IdCardIcon as AddressIcon
+} from '@modulz/radix-icons';
+import {FiTruck as BrandIcon} from 'react-icons/fi';
+import {MdOutlineDashboard as DashboardIcon, MdChecklist as RouteOrderIcon} from 'react-icons/md';
+import {FaRoute as RouteIcon, FaTruck as VehicleIcon} from 'react-icons/fa';
+import {AiOutlineInbox as ProductIcon} from 'react-icons/ai';
 
 import {getInitials} from "Shared/Utilities/common.util";
 
 const navList = [
     {id: "dashboard", path: "/dashboard", label: 'Dashboard', icon: <DashboardIcon/>, color: 'blue'},
-    {id: "route", path: "/route", label: 'Route', icon: <RouteIcon size={16}/>, color: 'teal'},
+    {id: "route", path: "/route", label: 'Route', icon: <RouteIcon/>, color: 'teal'},
     {
         id: "routeOrder", label: 'Route Order', icon: <RouteOrderIcon/>, color: 'lime', subNav: [
             {id: "plan", path: "/plan", label: 'Planning'},
@@ -38,7 +38,7 @@ const navList = [
         ]
     },
     {id: "product", path: "/product", label: 'Product', icon: <ProductIcon/>, color: 'grape'},
-    {id: "address", path: "/address", label: 'Address', icon: <AddressIcon size={16}/>, color: 'violet'},
+    {id: "address", path: "/address", label: 'Address', icon: <AddressIcon/>, color: 'violet'},
     {
         id: "vehicle", label: 'Vehicle', icon: <VehicleIcon/>, color: 'green', subNav: [
             {id: "truck", path: "/truck", label: 'Truck'},
@@ -142,7 +142,7 @@ const Sidebar = () => {
     };
 
     return (
-        <Navbar padding="sm" width={{base: 264, breakpoints: {sm: '100%', lg: 400}}} className={classes.root}>
+        <Navbar padding="sm" width={{base: 240, breakpoints: {sm: '100%', lg: 400}}} className={classes.root}>
             <Navbar.Section sx={t => ({borderBottom: `1px solid ${t.colors.gray[2]}`})}>
                 <Group withGutter sx={t => ({paddingTop: 4, paddingBottom: t.spacing.md})}>
                     <ThemeIcon variant="gradient" radius="xl" size="lg" gradient={{from: 'indigo', to: 'cyan'}}>

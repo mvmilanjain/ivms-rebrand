@@ -1,7 +1,8 @@
 import {useHistory} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {ActionIcon, Avatar, Box, Center, Divider, Header, Menu} from '@mantine/core';
-import {ExitIcon, GearIcon, HamburgerMenuIcon as NavbarIcon, PersonIcon} from '@modulz/radix-icons';
+import {ExitIcon, GearIcon, PersonIcon} from '@modulz/radix-icons';
+import {AiOutlineMenuFold as MenuOpenIcon} from 'react-icons/ai';
 
 import {authLogout} from 'Store/actions/auth.actions';
 
@@ -18,9 +19,9 @@ const AppBar = () => {
     };
 
     return (
-        <Header padding="sm" height={64} sx={t => ({flexGrow: 1, boxShadow: t.shadows.xs})} zIndex={1}>
+        <Header padding="sm" height={64} sx={t => ({flexGrow: 1})} zIndex={1}>
             <Center style={{height: '100%'}}>
-                <ActionIcon size="lg" variant="light"><NavbarIcon/></ActionIcon>
+                <ActionIcon size="lg" variant="light"><MenuOpenIcon/></ActionIcon>
                 <Box component="div" sx={() => ({flexGrow: 1})}/>
                 <Menu
                     control={<Avatar size="md" radius="xl" color="blue">MJ</Avatar>}

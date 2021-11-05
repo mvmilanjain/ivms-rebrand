@@ -1,3 +1,4 @@
+import {Scrollbars} from 'react-custom-scrollbars';
 import {Box} from '@mantine/core';
 
 import AppBar from './AppBar';
@@ -8,7 +9,9 @@ export const Main = (props) => (
         <Sidebar/>
         <Box component="div" sx={() => ({flexGrow: 1, display: 'flex', flexDirection: "column"})}>
             <AppBar/>
-            <Box component="div" m="md" sx={() => ({flexGrow: 1})}>{props.children}</Box>
+            <Scrollbars>
+                <Box component="div" sx={t => ({height: '100%', padding: t.spacing.sm})}>{props.children}</Box>
+            </Scrollbars>
         </Box>
     </Box>
 );
