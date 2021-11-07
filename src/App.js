@@ -6,8 +6,8 @@ import {NotificationsProvider} from '@mantine/notifications';
 
 import {GlobalStyles} from "Assets/GlobalStyles";
 import Routes from 'Routes';
-import {MainLayout, MinimalLayout} from "Layout";
-import {authCheckState} from "Store/actions/auth.actions";
+import {MainLayout, MinimalLayout} from 'Layout';
+import {authCheckState} from 'Store/actions/auth.actions';
 
 
 const App = () => {
@@ -21,14 +21,10 @@ const App = () => {
     }, [dispatch]);
 
     return (
-        <MantineProvider theme={{
-            headings: {
-
-            }
-        }}>
-            <GlobalStyles />
-            <NormalizeCSS />
-            <LoadingOverlay visible={isLoading} />
+        <MantineProvider>
+            <GlobalStyles/>
+            <NormalizeCSS/>
+            <LoadingOverlay visible={isLoading}/>
             <NotificationsProvider position={"top-right"}>
                 {isAuthenticated !== null && (
                     isAuthenticated ?
