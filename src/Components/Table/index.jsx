@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import get from 'lodash/get';
 import {
     ActionIcon,
     Box,
@@ -11,6 +12,7 @@ import {
     Table,
     Text
 } from '@mantine/core';
+import {ArrowDownIcon as DescIcon, ArrowUpIcon as AscIcon} from '@modulz/radix-icons';
 import {AiOutlineInbox} from 'react-icons/ai';
 
 const pageSizeOptions = [
@@ -20,11 +22,14 @@ const pageSizeOptions = [
     {value: '100', label: '100'}
 ];
 
+const descendingComparator = (a, b, sortBy) => {
+    if (b[sortBy] < a[sortBy]) return -1;
+    if (b[sortBy] > a[sortBy]) return 1;
+    return 0;
+};
+
 const useStyles = createStyles((t) => ({
-    root: {
-        height: '100%',
-        display: 'block'
-    },
+    root: {height: '100%', display: 'block'},
     tableContainer: {
         display: 'block',
         overflow: 'auto',
@@ -34,7 +39,8 @@ const useStyles = createStyles((t) => ({
             '& > tbody > tr > td': {padding: t.spacing.sm}
         }
     },
-    stickHeader: {top: 0, position: 'sticky'}
+    stickHeader: {top: 0, position: 'sticky'},
+    sortableHeader: {cursor: 'pointer'}
 }));
 
 export const TableComponent = (
@@ -48,17 +54,35 @@ export const TableComponent = (
     }
 ) => {
     const {classes, cx} = useStyles();
+    const [currentPage, setCurrentPage] = useState(initialPage);
     const [pageCount, setPageCount] = useState(1);
     const [pageSize, setPageSize] = useState(rowsPerPage);
     const [paginatedData, setPaginatedData] = useState();
-    const [position, setPosition] = useState({start: 1, end: 10})
+    const [position, setPosition] = useState({start: 1, end: 10});
+    const [sortDirection, setSortDirection] = useState('none');
+    const [sortBy, setSortBy] = useState('');
+
 
     useEffect(() => {
         if (!loading) {
             calculatePageCount(rowsPerPage);
-            handlePageChange(initialPage, pageSize)
+            handlePaginatedData(currentPage, pageSize, sortDirection, sortBy);
         }
     }, [loading]);
+
+    const sortData = (sortDirection, sortBy) => {
+        if (sortDirection === 'none') return data;
+
+        const stabilizedThis = data.map((el, index) => [el, index]);
+        stabilizedThis.sort((a, b) => {
+            const order = (sortDirection === 'desc') ?
+                descendingComparator(a[0], b[0], sortBy) :
+                -descendingComparator(a[0], b[0], sortBy);
+            if (order !== 0) return order;
+            return a[1] - b[1];
+        });
+        return stabilizedThis.map((el) => el[0]);
+    };
 
     const calculatePageCount = (pageSize = 10) => {
         const totalPages = data ? Math.ceil(total / pageSize) : 0;
@@ -69,14 +93,52 @@ export const TableComponent = (
         pageSize = Number(pageSize);
         calculatePageCount(pageSize);
         setPageSize(pageSize);
-        handlePageChange(initialPage, pageSize);
+        handlePaginatedData(initialPage, pageSize, sortDirection, sortBy);
     };
 
-    const handlePageChange = (pageNum = 1, pageSize = 10) => {
+    const handlePageChange = (pageNum) => {
+        setCurrentPage(pageNum);
+        handlePaginatedData(pageNum, pageSize, sortDirection, sortBy);
+    };
+
+    const handlePaginatedData = (pageNum, pageSize, sortDirection, sortBy) => {
         const startIndex = (pageNum - 1) * pageSize;
         const endIndex = pageNum * pageSize;
-        setPaginatedData(data.slice(startIndex, endIndex));
+        setPaginatedData(sortData(sortDirection, sortBy).slice(startIndex, endIndex));
         setPosition({start: startIndex + 1, end: endIndex > total ? total : endIndex});
+    };
+
+    const handleSort = (columnId) => {
+        let newDirection = 'asc';
+        if (columnId === sortBy) {
+            if (sortDirection === 'asc') {
+                newDirection = 'desc';
+            } else if (sortDirection === 'desc') {
+                newDirection = 'none';
+            }
+        }
+        setSortDirection(newDirection);
+        setSortBy(columnId);
+        handlePaginatedData(currentPage, pageSize, newDirection, columnId);
+    };
+
+    const renderHeader = () => {
+        return schema.map((col) => {
+            if (!col.sort) {
+                return <th key={col.id}>{col.header}</th>
+            } else {
+                return <th key={col.id} className={classes.sortableHeader} onClick={() => handleSort(col.id)}>
+                    <Group>
+                        <span>{col.header}</span>
+                        <ActionIcon m={0}>
+                            {sortDirection === 'none' && null}
+                            {sortBy === col.id && sortDirection === 'asc' && <AscIcon/>}
+                            {sortBy === col.id && sortDirection === 'desc' && <DescIcon/>}
+                        </ActionIcon>
+                    </Group>
+                </th>
+            }
+        });
     };
 
     const renderRow = () => {
@@ -84,7 +146,7 @@ export const TableComponent = (
             <tr key={i}>
                 {schema.map((col) => (
                     <td key={`${i}_${col.id}`} style={{minWidth: col.width}}>
-                        {row[col.id]}
+                        {get(row, col.id, '')}
                     </td>
                 ))}
             </tr>
@@ -97,9 +159,9 @@ export const TableComponent = (
             <Box component="div" className={classes.tableContainer} style={{
                 height: pagination ? 'calc(100% - 44px)' : '100%'
             }}>
-                <Table highlightOnHover>
+                <Table highlightOnHover={!loading && (data.length > 0)}>
                     <thead className={cx({[classes.stickHeader]: stickyHeader})}>
-                    <tr>{schema.map((col) => <th key={col.id}>{col.header}</th>)}</tr>
+                    <tr>{renderHeader()}</tr>
                     </thead>
 
                     <tbody>
@@ -129,7 +191,7 @@ export const TableComponent = (
                         style={{width: '72px'}}
                         variant="filled"
                         data={pageSizeOptions}
-                        value={`${pageSize}`}
+                        value={pageSize + ''}
                         onChange={handlePageSizeChange}
                     />
                     <Divider orientation="vertical" mx="sm"/>
@@ -137,7 +199,11 @@ export const TableComponent = (
                     <Text size="sm">{position.start} - {position.end} of {total}</Text>
                     <Divider orientation="vertical" mx="sm"/>
 
-                    <Pagination total={pageCount} initialPage={initialPage} onChange={handlePageChange}/>
+                    <Pagination
+                        initialPage={initialPage}
+                        total={pageCount}
+                        onChange={handlePageChange}
+                    />
                 </Group>
             </>}
         </Box>

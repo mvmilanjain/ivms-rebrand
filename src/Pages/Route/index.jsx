@@ -9,16 +9,16 @@ import {getSelectDataSource} from "Shared/Utilities/common.util";
 
 const schema = [
     {id: 'index', header: '#'},
-    {id: 'route_code', header: 'Route Code'},
+    {id: 'route_code', header: 'Route Code', sort: true},
     {id: 'name', header: 'Route Name'},
-    {id: 'std_distance_cycle', header: 'Distance (KM)'},
+    {id: 'std_distance_cycle', header: 'Distance (KM)', sort: true},
     {id: 'std_cycle_hours', header: 'Cycle Hours'}
 ];
 
 const Route = (props) => {
     const {requestHandler} = useHttp();
     const [data, setData] = useState([]);
-    const [pagination, setPagination] = useState({total: 0});
+    // const [pagination, setPagination] = useState({total: 0});
     const [loading, toggleLoading] = useState(false);
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const Route = (props) => {
                 const {data, meta: {pagination}} = res;
                 data.forEach((route, i) => route['index'] = i + 1);
                 setData(data);
-                setPagination({total: pagination.count});
+                // setPagination({total: pagination.count});
             })
             .catch(e => console.error(e))
             .finally(() => toggleLoading(false));
