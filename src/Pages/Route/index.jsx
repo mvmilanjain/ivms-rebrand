@@ -5,15 +5,8 @@ import {PlusSquare as CreateIcon} from 'react-feather';
 import {Table} from 'Components';
 import {useHttp} from 'Hooks';
 import {getRoutes} from 'Shared/Services';
-import {getSelectDataSource} from "Shared/Utilities/common.util";
-
-const schema = [
-    {id: 'index', header: '#'},
-    {id: 'route_code', header: 'Route Code', sort: true},
-    {id: 'name', header: 'Route Name'},
-    {id: 'std_distance_cycle', header: 'Distance (KM)', sort: true},
-    {id: 'std_cycle_hours', header: 'Cycle Hours'}
-];
+import {getSelectDataSource} from 'Shared/Utilities/common.util';
+import {ROUTE_SCHEMA} from 'Shared/Utilities/tableSchema';
 
 const Route = (props) => {
     const {requestHandler} = useHttp();
@@ -27,7 +20,6 @@ const Route = (props) => {
         getSelectDataSource(requestHandler, getRoutes(params))
             .then(res => {
                 const {data, meta: {pagination}} = res;
-                data.forEach((route, i) => route['index'] = i + 1);
                 setData(data);
                 // setPagination({total: pagination.count});
             })
@@ -43,7 +35,7 @@ const Route = (props) => {
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 {data && <Table
-                    schema={schema} data={data}
+                    schema={ROUTE_SCHEMA} data={data}
                     stickyHeader loading={loading}
                     pagination={data.length > 10}
                     total={data.length}

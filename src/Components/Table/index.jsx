@@ -125,10 +125,10 @@ export const TableComponent = (
     const renderHeader = () => {
         return schema.map((col) => {
             if (!col.sort) {
-                return <th key={col.id}>{col.header}</th>
+                return <th key={col.id}>{col.header}</th>;
             } else {
                 return <th key={col.id} className={classes.sortableHeader} onClick={() => handleSort(col.id)}>
-                    <Group>
+                    <Group noWrap>
                         <span>{col.header}</span>
                         <ActionIcon m={0}>
                             {sortDirection === 'none' && null}
@@ -136,7 +136,7 @@ export const TableComponent = (
                             {sortBy === col.id && sortDirection === 'desc' && <DescIcon/>}
                         </ActionIcon>
                     </Group>
-                </th>
+                </th>;
             }
         });
     };
@@ -144,11 +144,15 @@ export const TableComponent = (
     const renderRow = () => {
         return paginatedData.map((row, i) => (
             <tr key={i}>
-                {schema.map((col) => (
-                    <td key={`${i}_${col.id}`} style={{minWidth: col.width}}>
-                        {get(row, col.id, '')}
-                    </td>
-                ))}
+                {schema.map((col) => {
+                    if (col.hidden) {
+                        return null;
+                    } else if (col.hasOwnProperty('render')) {
+                        return <td key={`${i}_${col.id}`} style={{minWidth: col.width}}>{col.render(row)}</td>;
+                    } else {
+                        return <td key={`${i}_${col.id}`} style={{minWidth: col.width}}>{get(row, col.id, '')}</td>;
+                    }
+                })}
             </tr>
         ));
     };
