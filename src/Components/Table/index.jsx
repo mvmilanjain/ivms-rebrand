@@ -40,7 +40,8 @@ const useStyles = createStyles((t) => ({
         }
     },
     stickHeader: {top: 0, position: 'sticky'},
-    sortableHeader: {cursor: 'pointer'}
+    sortableHeader: {cursor: 'pointer'},
+    sortDirectionIcon: {transition: 'transform 200ms ease'}
 }));
 
 export const TableComponent = (
@@ -130,11 +131,11 @@ export const TableComponent = (
                 return <th key={col.id} className={classes.sortableHeader} onClick={() => handleSort(col.id)}>
                     <Group noWrap>
                         <span>{col.header}</span>
-                        <ActionIcon m={0}>
-                            {sortDirection === 'none' && null}
-                            {sortBy === col.id && sortDirection === 'asc' && <AscIcon/>}
-                            {sortBy === col.id && sortDirection === 'desc' && <DescIcon/>}
-                        </ActionIcon>
+                        {(sortBy !== col.id || sortDirection === 'none') && <div style={{width: '15px', height: '15px'}}/>}
+                        {sortBy === col.id && sortDirection !== 'none' && <AscIcon
+                            className={classes.sortDirectionIcon}
+                            style={{transform: sortDirection === 'desc'  ? 'rotate(180deg)' : 'none'}}
+                        />}
                     </Group>
                 </th>;
             }

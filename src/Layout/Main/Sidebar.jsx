@@ -1,26 +1,10 @@
 import {useState} from 'react';
 import {NavLink as Link} from 'react-router-dom';
 import {Scrollbars} from 'react-custom-scrollbars';
-import {
-    ActionIcon,
-    Box,
-    Collapse,
-    createStyles,
-    Group,
-    hexToRgba,
-    Navbar,
-    Text,
-    ThemeIcon,
-    useMantineTheme
-} from '@mantine/core';
-import {
-    GearIcon as SettingIcon,
-    TriangleDownIcon,
-    TriangleUpIcon,
-    IdCardIcon as AddressIcon
-} from '@modulz/radix-icons';
+import {Box, Collapse, createStyles, Group, hexToRgba, Navbar, Text, ThemeIcon, useMantineTheme} from '@mantine/core';
+import {ChevronRightIcon, GearIcon as SettingIcon, IdCardIcon as AddressIcon} from '@modulz/radix-icons';
 import {FiTruck as BrandIcon} from 'react-icons/fi';
-import {MdOutlineDashboard as DashboardIcon, MdChecklist as RouteOrderIcon} from 'react-icons/md';
+import {MdChecklist as RouteOrderIcon, MdOutlineDashboard as DashboardIcon} from 'react-icons/md';
 import {FaRoute as RouteIcon, FaTruck as VehicleIcon} from 'react-icons/fa';
 import {AiOutlineInbox as ProductIcon} from 'react-icons/ai';
 
@@ -52,6 +36,7 @@ const useStyles = createStyles(t => ({
     root: {backgroundColor: t.colors.dark[4]},
     link: {
         display: 'flex',
+        alignItems: 'center',
         justifyContent: 'space-between',
         width: '100%',
         padding: t.spacing.xs,
@@ -63,6 +48,10 @@ const useStyles = createStyles(t => ({
             backgroundColor: t.colors.dark[5],
             color: 'white'
         }
+    },
+    chevron: {
+        color: 'currentcolor',
+        transition: 'transform 200ms ease',
     }
 }));
 
@@ -95,14 +84,15 @@ const NavWithSubLink = ({icon, color, label, subNav}) => {
 
     return (
         <>
-            <Box component="div" className={classes.link} onClick={() => setOpen((o) => !o)}>
+            <Box className={classes.link} onClick={() => setOpen((o) => !o)}>
                 <Group>
-                    <ThemeIcon color={color} variant="filled">{icon || getInitials(label)}</ThemeIcon>
-                    <Text size="md" sx={() => ({color: 'currentcolor', fontWeight: 'inherit'})}>{label}</Text>
+                    <ThemeIcon color={color}>{icon || getInitials(label)}</ThemeIcon>
+                    <Box>{label}</Box>
                 </Group>
-                <ActionIcon variant="transparent" sx={() => ({color: 'currentcolor'})}>
-                    {opened ? <TriangleUpIcon/> : <TriangleDownIcon/>}
-                </ActionIcon>
+                <ChevronRightIcon
+                    className={classes.chevron}
+                    style={{transform: opened ? 'rotate(90deg)' : 'none'}}
+                />
             </Box>
             <Collapse in={opened} ml="xl">
                 {subNav.map(({id, path, label}) => (
