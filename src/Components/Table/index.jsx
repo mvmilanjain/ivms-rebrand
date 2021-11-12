@@ -12,7 +12,7 @@ import {
     Table,
     Text
 } from '@mantine/core';
-import {ArrowDownIcon as DescIcon, ArrowUpIcon as AscIcon} from '@modulz/radix-icons';
+import {ArrowUpIcon as AscIcon} from '@modulz/radix-icons';
 import {AiOutlineInbox} from 'react-icons/ai';
 
 const pageSizeOptions = [
@@ -23,8 +23,8 @@ const pageSizeOptions = [
 ];
 
 const descendingComparator = (a, b, sortBy) => {
-    if (b[sortBy] < a[sortBy]) return -1;
-    if (b[sortBy] > a[sortBy]) return 1;
+    if (get(b, sortBy, '') < get(a, sortBy, '')) return -1;
+    if (get(b, sortBy, '') > get(a, sortBy, '')) return 1;
     return 0;
 };
 
@@ -36,7 +36,7 @@ const useStyles = createStyles((t) => ({
         '& > table': {
             '& > thead': {backgroundColor: t.colors.gray[0]},
             '& > thead > tr > th': {padding: t.spacing.md},
-            '& > tbody > tr > td': {padding: t.spacing.sm}
+            '& > tbody > tr > td': {padding: t.spacing.md}
         }
     },
     stickHeader: {top: 0, position: 'sticky'},
@@ -126,15 +126,21 @@ export const TableComponent = (
     const renderHeader = () => {
         return schema.map((col) => {
             if (!col.sort) {
-                return <th key={col.id}>{col.header}</th>;
+                return <th key={col.id} style={{minWidth: col.width}} align={col.align || 'justify'}>{col.header}</th>;
             } else {
-                return <th key={col.id} className={classes.sortableHeader} onClick={() => handleSort(col.id)}>
-                    <Group noWrap>
+                return <th
+                    key={col.id}
+                    className={classes.sortableHeader}
+                    style={{minWidth: col.width}}
+                    onClick={() => handleSort(col.id)}
+                >
+                    <Group noWrap position={col.align || 'left'}>
                         <span>{col.header}</span>
-                        {(sortBy !== col.id || sortDirection === 'none') && <div style={{width: '15px', height: '15px'}}/>}
+                        {(sortBy !== col.id || sortDirection === 'none') &&
+                        <div style={{width: '15px', height: '15px'}}/>}
                         {sortBy === col.id && sortDirection !== 'none' && <AscIcon
                             className={classes.sortDirectionIcon}
-                            style={{transform: sortDirection === 'desc'  ? 'rotate(180deg)' : 'none'}}
+                            style={{transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none'}}
                         />}
                     </Group>
                 </th>;
@@ -149,9 +155,13 @@ export const TableComponent = (
                     if (col.hidden) {
                         return null;
                     } else if (col.hasOwnProperty('render')) {
-                        return <td key={`${i}_${col.id}`} style={{minWidth: col.width}}>{col.render(row)}</td>;
+                        return <td key={`${i}_${col.id}`} align={col.align || 'justify'}>
+                            {col.render(row)}
+                        </td>;
                     } else {
-                        return <td key={`${i}_${col.id}`} style={{minWidth: col.width}}>{get(row, col.id, '')}</td>;
+                        return <td key={`${i}_${col.id}`} align={col.align || 'justify'}>
+                            {get(row, col.id, '')}
+                        </td>;
                     }
                 })}
             </tr>

@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {NavLink as Link} from 'react-router-dom';
 import {Scrollbars} from 'react-custom-scrollbars';
 import {Box, Collapse, createStyles, Group, hexToRgba, Navbar, Text, ThemeIcon, useMantineTheme} from '@mantine/core';
-import {ChevronRightIcon, GearIcon as SettingIcon, IdCardIcon as AddressIcon} from '@modulz/radix-icons';
+import {ChevronRightIcon, GearIcon as SettingIcon, IdCardIcon as AddressIcon, ExclamationTriangleIcon as FaultIcon} from '@modulz/radix-icons';
 import {FiTruck as BrandIcon} from 'react-icons/fi';
 import {MdChecklist as RouteOrderIcon, MdOutlineDashboard as DashboardIcon} from 'react-icons/md';
 import {FaRoute as RouteIcon, FaTruck as VehicleIcon} from 'react-icons/fa';
@@ -15,12 +15,13 @@ const navList = [
     {id: "route", path: "/route", label: 'Route', icon: <RouteIcon/>, color: 'teal'},
     {
         id: "routeOrder", label: 'Route Order', icon: <RouteOrderIcon/>, color: 'lime', subNav: [
-            {id: "plan", path: "/plan", label: 'Planning'},
-            {id: "operation", path: "/operation", label: 'Operation'},
-            {id: "finance", path: "/finance", label: 'Finance'},
-            {id: "reports", path: "/reports", label: 'Reports'}
+            {id: "planning", path: "/route_order_planning", label: 'Planning'},
+            {id: "operation", path: "/route_order_operation", label: 'Operation'},
+            {id: "finance", path: "/route_order_finance", label: 'Finance'},
+            {id: "reports", path: "/route_order_reports", label: 'Reports'}
         ]
     },
+    {id: "fault", path: "/fault", label: 'Fault', icon: <FaultIcon/>, color: 'red'},
     {id: "product", path: "/product", label: 'Product', icon: <ProductIcon/>, color: 'grape'},
     {id: "address", path: "/address", label: 'Address', icon: <AddressIcon/>, color: 'violet'},
     {

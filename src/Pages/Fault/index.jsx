@@ -4,11 +4,11 @@ import {MdOutlineAddBox as CreateIcon} from 'react-icons/md';
 
 import {Table} from 'Components';
 import {useHttp} from 'Hooks';
-import {getProducts} from 'Shared/Services';
+import {getFaults} from 'Shared/Services';
+import {FAULT_SCHEMA} from 'Shared/Utilities/tableSchema';
 import {getSelectDataSource} from 'Shared/Utilities/common.util';
-import {PRODUCT_SCHEMA} from 'Shared/Utilities/tableSchema';
 
-const Product = (props) => {
+const Fault = (props) => {
     const {requestHandler} = useHttp();
     const [data, setData] = useState([]);
     // const [pagination, setPagination] = useState({total: 0});
@@ -20,8 +20,8 @@ const Product = (props) => {
 
     const getDataSource = () => {
         toggleLoading(true);
-        const params = {per_page: 100, page_no: 1};
-        getSelectDataSource(requestHandler, getProducts(params))
+        const params = {per_page: 100, page_no: 1, include: 'vehicle'};
+        getSelectDataSource(requestHandler, getFaults(params))
             .then(res => {
                 const {data, meta: {pagination}} = res;
                 setData(data);
@@ -34,14 +34,14 @@ const Product = (props) => {
     return (
         <Paper padding="sm" withBorder style={{height: '100%'}}>
             <Group position="apart" mb="sm">
-                <Title order={2} color="red">Product</Title>
-                <Button leftIcon={<CreateIcon/>} variant="light">Create Product</Button>
+                <Title order={2} color="red">Fault</Title>
+                <Button leftIcon={<CreateIcon/>} variant="light">Create Fault</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 {data && <Table
-                    schema={PRODUCT_SCHEMA} data={data}
+                    schema={FAULT_SCHEMA} data={data}
                     stickyHeader loading={loading}
-                    pagination={data.length > 10}
+                    pagination
                     total={data.length}
                 />}
             </div>
@@ -49,4 +49,4 @@ const Product = (props) => {
     );
 };
 
-export default Product;
+export default Fault;

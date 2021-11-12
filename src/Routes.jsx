@@ -3,6 +3,7 @@ import loadable from "@loadable/component";
 
 const Address = loadable(() => import('Pages/Address'));
 const Dashboard = loadable(() => import('Pages/Dashboard'));
+const Fault = loadable(() => import('Pages/Fault'));
 const Product = loadable(() => import('Pages/Product'));
 const RoutePage = loadable(() => import('Pages/Route'));
 const Setting = loadable(() => import('Pages/Setting'));
@@ -11,7 +12,7 @@ const SignIn = loadable(() => import('Pages/SignIn'));
 const Truck = loadable(() => import('Pages/Vehicle/Truck'));
 const Trailer = loadable(() => import('Pages/Vehicle/Trailer'));
 
-const Plan = loadable(() => import('Pages/RoutePlanner/Plan'));
+const Planning = loadable(() => import('Pages/RoutePlanner/Planning'));
 const Operation = loadable(() => import('Pages/RoutePlanner/Operation'));
 const Finance = loadable(() => import('Pages/RoutePlanner/Finance'));
 const Reports = loadable(() => import('Pages/RoutePlanner/Reports'));
@@ -23,6 +24,7 @@ const pagesWithoutAuthentication = [
 const pagesWithAuthentication = [
     {id: "address", path: "/address", component: Address},
     {id: "dashboard", path: "/dashboard", component: Dashboard},
+    {id: "fault", path: "/fault", component: Fault},
     {id: "product", path: "/product", component: Product},
     {id: "route", path: "/route", component: RoutePage},
     {id: "setting", path: "/setting", component: Setting},
@@ -30,10 +32,10 @@ const pagesWithAuthentication = [
     {id: "truck", path: "/truck", component: Truck},
     {id: "trailer", path: "/trailer", component: Trailer},
 
-    {id: "plan", path: "/plan", component: Plan},
-    {id: "operation", path: "/operation", component: Operation},
-    {id: "finance", path: "/finance", component: Finance},
-    {id: "reports", path: "/reports", component: Reports},
+    {id: "planning", path: "/route_order_planning", component: Planning},
+    {id: "operation", path: "/route_order_operation", component: Operation},
+    {id: "finance", path: "/route_order_finance", component: Finance},
+    {id: "reports", path: "/route_order_reports", component: Reports},
 ];
 
 const Routes = ({isAuthenticated}) => {

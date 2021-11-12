@@ -1,15 +1,9 @@
-import {instance as axios} from "./config.service";
-
 const truckUrl = '/vehicles';
 const trailerUrl = '/trailers';
 const trailerSolUrl = '/trailersol_vehicles';
 
 // TRUCK
-const getTrucks = (per_page = 100, page_no = 1, include = '') => axios({
-    url: truckUrl, method: 'get', params: {per_page, page_no, include}
-});
-
-const getTrucks2 = (params) => ({url: truckUrl, method: 'get', params});
+const getTrucks = (params) => ({url: truckUrl, method: 'get', params});
 
 const getTruck = (id, params) => ({url: `${truckUrl}/${id}`, method: 'get', params});
 
@@ -34,7 +28,6 @@ const getTrailerSolVehicles =() => ({url: `${trailerSolUrl}`, method: 'get'});
 
 export {
     getTrucks,
-    getTrucks2,
     getTruck,
     putTruck,
     postTruck,

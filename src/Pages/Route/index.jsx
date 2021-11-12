@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Button, Group, Paper, Title} from '@mantine/core';
-import {PlusSquare as CreateIcon} from 'react-feather';
+import {MdOutlineAddBox as CreateIcon} from 'react-icons/md';
 
 import {Table} from 'Components';
 import {useHttp} from 'Hooks';
@@ -15,6 +15,10 @@ const Route = (props) => {
     const [loading, toggleLoading] = useState(false);
 
     useEffect(() => {
+        getDataSource();
+    }, []);
+
+    const getDataSource = () => {
         toggleLoading(true);
         const params = {per_page: 100, page_no: 1, include: 'source_address,destination_address'};
         getSelectDataSource(requestHandler, getRoutes(params))
@@ -25,13 +29,13 @@ const Route = (props) => {
             })
             .catch(e => console.error(e))
             .finally(() => toggleLoading(false));
-    }, []);
+    };
 
     return (
         <Paper padding="sm" withBorder style={{height: '100%'}}>
             <Group position="apart" mb="sm">
                 <Title order={2} color="red">Routes</Title>
-                <Button leftIcon={<CreateIcon size={16}/>} variant="light">Create Route</Button>
+                <Button leftIcon={<CreateIcon/>} variant="light">Create Route</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 {data && <Table
