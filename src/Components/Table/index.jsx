@@ -126,7 +126,9 @@ export const TableComponent = (
     const renderHeader = () => {
         return schema.map((col) => {
             if (!col.sort) {
-                return <th key={col.id} style={{minWidth: col.width}} align={col.align || 'justify'}>{col.header}</th>;
+                return <th key={col.id} style={{minWidth: col.width, textAlign: col.align || 'left'}}>
+                    {col.header}
+                </th>;
             } else {
                 return <th
                     key={col.id}
@@ -155,11 +157,11 @@ export const TableComponent = (
                     if (col.hidden) {
                         return null;
                     } else if (col.hasOwnProperty('render')) {
-                        return <td key={`${i}_${col.id}`} align={col.align || 'justify'}>
+                        return <td key={`${i}_${col.id}`} align={col.align || 'left'}>
                             {col.render(row)}
                         </td>;
                     } else {
-                        return <td key={`${i}_${col.id}`} align={col.align || 'justify'}>
+                        return <td key={`${i}_${col.id}`} align={col.align || 'left'}>
                             {get(row, col.id, '')}
                         </td>;
                     }
