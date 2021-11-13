@@ -34,7 +34,10 @@ const useStyles = createStyles((t) => ({
         display: 'block',
         overflow: 'auto',
         '& > table': {
-            '& > thead': {backgroundColor: t.colors.gray[0]},
+            '& > thead': {
+                backgroundColor: t.colors.gray[0],
+                zIndex: 1
+            },
             '& > thead > tr > th': {padding: t.spacing.md},
             '& > tbody > tr > td': {padding: t.spacing.md}
         }
@@ -44,7 +47,7 @@ const useStyles = createStyles((t) => ({
     sortDirectionIcon: {transition: 'transform 200ms ease'}
 }));
 
-export const TableComponent = (
+export const DataGridTable = (
     {
         schema, data, loading,
         stickyHeader = false,
@@ -201,8 +204,8 @@ export const TableComponent = (
                 </Table>
             </Box>
             {pagination && <>
-                <Divider mb="xs"/>
-                <Group position="left">
+                <Divider mb="xs" variant="dotted"/>
+                <Group>
                     <Text size="sm">Rows per page: </Text>
                     <Select
                         style={{width: '72px'}}

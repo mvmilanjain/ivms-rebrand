@@ -4,7 +4,7 @@ import {MdOutlineAddBox as CreateIcon} from 'react-icons/md';
 
 import {Table} from 'Components';
 import {useHttp} from 'Hooks';
-import {getTrailers, getTrucks} from 'Shared/Services';
+import {getTrailers} from 'Shared/Services';
 import {getSelectDataSource} from 'Shared/Utilities/common.util';
 import {TRAILER_SCHEMA} from 'Shared/Utilities/tableSchema';
 
@@ -35,13 +35,15 @@ const Trailer = (props) => {
         <Paper padding="sm" withBorder style={{height: '100%'}}>
             <Group position="apart" mb="sm">
                 <Title order={2}>Trailer</Title>
-                <Button leftIcon={<CreateIcon/>} variant="light">Create Trailer</Button>
+                <Button leftIcon={<CreateIcon/>}>Create Trailer</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 {data && <Table
-                    schema={TRAILER_SCHEMA} data={data}
-                    stickyHeader loading={loading}
-                    pagination={data.length > 10}
+                    schema={TRAILER_SCHEMA}
+                    data={data}
+                    pagination
+                    stickyHeader
+                    loading={loading}
                     total={data.length}
                 />}
             </div>

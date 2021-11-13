@@ -4,7 +4,7 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {Box, Button, Center, Col, Grid, Paper, PasswordInput, TextInput, ThemeIcon, Title} from '@mantine/core'
 import {useNotifications} from '@mantine/notifications';
-import {InfoCircledIcon, LockClosedIcon, LockOpen1Icon, PersonIcon} from "@modulz/radix-icons";
+import {LockClosedIcon, LockOpen1Icon, PersonIcon} from "@modulz/radix-icons";
 
 import {useHttp} from 'Hooks';
 import {signIn} from "Shared/Services";
@@ -33,8 +33,8 @@ const SignIn = ({history}) => {
         } catch (e) {
             dispatch(authFailure());
             notifications.showNotification({
-                title: 'Error', message: 'Username or Password is incorrect.',
-                color: "red", icon: <InfoCircledIcon/>
+                title: 'Error', color: 'red',
+                message: 'Username or Password is incorrect.'
             });
         } finally {
             toggleLoading(false);

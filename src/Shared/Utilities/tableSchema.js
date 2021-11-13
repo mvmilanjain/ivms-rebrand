@@ -4,7 +4,7 @@ import {Badge} from '@mantine/core';
 import {capitalizeStr, formatDate, getAddressLabel, getOptionLabel} from './common.util';
 import {VEHICLE_STATUS} from "./referenceData.util";
 
-const renderVehicleStatus = (status) => {
+const renderVehicleStatus = ({status}) => {
     let result = '';
     if(status === 'available') {
         result = <Badge variant="filled" color="green" fullWidth>{getOptionLabel(VEHICLE_STATUS, status)}</Badge>;
@@ -69,6 +69,6 @@ export const TRAILER_SCHEMA = [
         id: 'meter_reading', header: 'Meter', sort: true, align: 'center',
         render: (row) => row.meter_reading ? <Badge variant="dot" fullWidth>{row.meter_reading} KM</Badge> : ''
     },
-    {id: 'status', header: 'Status', sort: true, align: 'center', render: ({status}) => renderVehicleStatus(status)},
+    {id: 'status', header: 'Status', sort: true, align: 'center', render: renderVehicleStatus},
     {id: 'license_expiry', header: 'License Expiry', sort: true, render: ({license_expiry}) => formatDate(license_expiry)}
 ];

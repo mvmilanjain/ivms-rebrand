@@ -35,14 +35,16 @@ const Truck = (props) => {
     return (
         <Paper padding="sm" withBorder style={{height: '100%'}}>
             <Group position="apart" mb="sm">
-                <Title order={2} color="red">Truck</Title>
-                <Button leftIcon={<CreateIcon/>} variant="light">Create Truck</Button>
+                <Title order={2}>Truck</Title>
+                <Button leftIcon={<CreateIcon/>}>Create Truck</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 {data && <Table
-                    schema={TRUCK_SCHEMA} data={data}
-                    stickyHeader loading={loading}
-                    pagination={data.length > 10}
+                    schema={TRUCK_SCHEMA}
+                    data={data}
+                    stickyHeader
+                    pagination
+                    loading={loading}
                     total={data.length}
                 />}
             </div>

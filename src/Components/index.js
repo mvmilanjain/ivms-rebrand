@@ -1,1 +1,2 @@
-export {TableComponent as Table} from './Table';
+export {DataGridTable as Table} from './Table';
+export {ConfirmModal} from './ConfirmModal';

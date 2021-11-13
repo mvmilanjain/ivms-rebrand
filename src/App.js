@@ -25,7 +25,7 @@ const App = () => {
             <GlobalStyles/>
             <NormalizeCSS/>
             <LoadingOverlay visible={isLoading}/>
-            <NotificationsProvider position={"top-right"}>
+            <NotificationsProvider position="top-center">
                 {isAuthenticated !== null && (
                     isAuthenticated ?
                         <MainLayout><Routes isAuthenticated={isAuthenticated}/></MainLayout> :

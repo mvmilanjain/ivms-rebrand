@@ -34,14 +34,16 @@ const Fault = (props) => {
     return (
         <Paper padding="sm" withBorder style={{height: '100%'}}>
             <Group position="apart" mb="sm">
-                <Title order={2} color="red">Fault</Title>
-                <Button leftIcon={<CreateIcon/>} variant="light">Create Fault</Button>
+                <Title order={2}>Fault</Title>
+                <Button leftIcon={<CreateIcon/>}>Create Fault</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 {data && <Table
-                    schema={FAULT_SCHEMA} data={data}
-                    stickyHeader loading={loading}
+                    schema={FAULT_SCHEMA}
+                    data={data}
                     pagination
+                    stickyHeader
+                    loading={loading}
                     total={data.length}
                 />}
             </div>

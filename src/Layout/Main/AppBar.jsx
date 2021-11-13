@@ -27,12 +27,12 @@ const AppBar = () => {
                     control={<Avatar size="md" radius="xl" color="blue">MJ</Avatar>}
                     placement="end" withArrow
                 >
-                    <Menu.Label>Personal Details</Menu.Label>
-                    <Menu.Item icon={<PersonIcon/>}>Milan Jain</Menu.Item>
-                    <Divider/>
                     <Menu.Label>Application</Menu.Label>
+                    <Menu.Item icon={<PersonIcon/>}>Milan Jain</Menu.Item>
                     <Menu.Item icon={<GearIcon/>} onClick={handleSetting}>Settings</Menu.Item>
-                    <Menu.Item icon={<ExitIcon/>} onClick={handleSignOut}>Sign Out</Menu.Item>
+                    <Divider/>
+                    <Menu.Label>Danger Zone</Menu.Label>
+                    <Menu.Item icon={<ExitIcon/>} onClick={handleSignOut} color="red">Sign Out</Menu.Item>
                 </Menu>
             </Center>
         </Header>
