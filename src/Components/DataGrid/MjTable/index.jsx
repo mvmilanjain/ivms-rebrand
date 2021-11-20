@@ -203,7 +203,7 @@ export const MjTable = (
                 </Table>
             </Box>
             {pagination && <>
-                <Divider mb="xs" variant="dotted"/>
+                <Divider mb="md" variant="dotted"/>
                 <Group>
                     <Text size="sm">Rows per page: </Text>
                     <Select

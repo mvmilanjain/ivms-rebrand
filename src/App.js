@@ -1,10 +1,10 @@
 import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
-import {LoadingOverlay, MantineProvider, NormalizeCSS} from '@mantine/core';
+import {LoadingOverlay, MantineProvider} from '@mantine/core';
+import {ModalsProvider} from '@mantine/modals';
 import {NotificationsProvider} from '@mantine/notifications';
 
-import {GlobalStyles} from 'Assets/GlobalStyles';
 import Routes from 'Routes';
 import {MainLayout, MinimalLayout} from 'Layout';
 import {authCheckState} from 'Store/actions/auth.actions';
@@ -21,17 +21,17 @@ const App = () => {
     }, [dispatch]);
 
     return (
-        <MantineProvider>
-            <GlobalStyles/>
-            <NormalizeCSS/>
+        <MantineProvider withNormalizeCSS withGlobalStyles theme={{dateFormat: 'yyyy-MM-dd hh:mm a'}}>
             <LoadingOverlay visible={isLoading} loaderProps={{variant: 'dots'}}/>
-            <NotificationsProvider position="top-center">
-                {isAuthenticated !== null && (
-                    isAuthenticated ?
-                        <MainLayout><Routes isAuthenticated={isAuthenticated}/></MainLayout> :
-                        <MinimalLayout><Routes isAuthenticated={isAuthenticated}/></MinimalLayout>
-                )}
-            </NotificationsProvider>
+            <ModalsProvider modalProps={{styles: {inner: {alignItems: 'center'}}}}>
+                <NotificationsProvider position="top-center">
+                    {isAuthenticated !== null && (
+                        isAuthenticated ?
+                            <MainLayout><Routes isAuthenticated={isAuthenticated}/></MainLayout> :
+                            <MinimalLayout><Routes isAuthenticated={isAuthenticated}/></MinimalLayout>
+                    )}
+                </NotificationsProvider>
+            </ModalsProvider>
         </MantineProvider>
     );
 };

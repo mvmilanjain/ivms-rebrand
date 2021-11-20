@@ -1,14 +1,19 @@
 import {useState} from 'react';
 import {NavLink as Link} from 'react-router-dom';
 import {Scrollbars} from 'react-custom-scrollbars';
-import {Box, Collapse, createStyles, Group, hexToRgba, Navbar, Text, ThemeIcon, useMantineTheme} from '@mantine/core';
-import {ChevronRightIcon, GearIcon as SettingIcon, IdCardIcon as AddressIcon, ExclamationTriangleIcon as FaultIcon} from '@modulz/radix-icons';
+import {Box, Collapse, createStyles, Group, Navbar, Text, ThemeIcon, useMantineTheme} from '@mantine/core';
+import {
+    ChevronRightIcon,
+    ExclamationTriangleIcon as FaultIcon,
+    GearIcon as SettingIcon,
+    IdCardIcon as AddressIcon
+} from '@modulz/radix-icons';
 import {FiTruck as BrandIcon} from 'react-icons/fi';
 import {MdChecklist as RouteOrderIcon, MdOutlineDashboard as DashboardIcon} from 'react-icons/md';
 import {FaRoute as RouteIcon, FaTruck as VehicleIcon} from 'react-icons/fa';
 import {AiOutlineInbox as ProductIcon} from 'react-icons/ai';
 
-import {getInitials} from "Shared/Utilities/common.util";
+import {getInitials} from 'Shared/Utilities/common.util';
 
 const navList = [
     {id: "dashboard", path: "/dashboard", label: 'Dashboard', icon: <DashboardIcon/>, color: 'blue'},
@@ -67,7 +72,7 @@ const MainLink = ({path, icon, color, label}) => {
                 fontWeight: 500,
                 borderLeftColor: theme.colors[color][7],
                 color: theme.colors.gray[2],
-                backgroundColor: hexToRgba(theme.colors[color][9], .45)
+                backgroundColor: theme.fn.rgba(theme.colors[color][9], .45)
             }}
         >
             <Group>
@@ -104,7 +109,7 @@ const NavWithSubLink = ({icon, color, label, subNav}) => {
                             fontWeight: 500,
                             borderLeftColor: theme.colors[color][7],
                             color: theme.colors.gray[2],
-                            backgroundColor: hexToRgba(theme.colors[color][9], .45)
+                            backgroundColor: theme.fn.rgba(theme.colors[color][9], .45)
                         }}
                     >
                         <Group>
@@ -135,7 +140,7 @@ const Sidebar = () => {
     return (
         <Navbar padding="sm" width={{base: 240, breakpoints: {sm: '100%', lg: 400}}} className={classes.root}>
             <Navbar.Section sx={t => ({borderBottom: `1px solid ${t.colors.gray[2]}`})}>
-                <Group withGutter sx={t => ({paddingTop: 4, paddingBottom: t.spacing.md})}>
+                <Group sx={t => ({paddingTop: 4, paddingBottom: t.spacing.md})}>
                     <ThemeIcon variant="gradient" radius="xl" size="lg" gradient={{from: 'indigo', to: 'cyan'}}>
                         <BrandIcon size={16}/>
                     </ThemeIcon>
