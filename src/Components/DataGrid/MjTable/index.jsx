@@ -12,8 +12,7 @@ import {
     Table,
     Text
 } from '@mantine/core';
-import {ArrowUpIcon as AscIcon} from '@modulz/radix-icons';
-import {AiOutlineInbox} from 'react-icons/ai';
+import {AiOutlineInbox, AiOutlineArrowUp as AscIcon} from 'react-icons/ai';
 
 const pageSizeOptions = [
     {value: '10', label: '10'},
@@ -47,7 +46,7 @@ const useStyles = createStyles((t) => ({
     sortDirectionIcon: {transition: 'transform 200ms ease'}
 }));
 
-export const DataGridTable = (
+export const MjTable = (
     {
         schema, data, loading,
         stickyHeader = false,

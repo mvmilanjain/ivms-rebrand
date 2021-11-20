@@ -4,7 +4,7 @@ import {useHistory} from 'react-router-dom';
 import {LoadingOverlay, MantineProvider, NormalizeCSS} from '@mantine/core';
 import {NotificationsProvider} from '@mantine/notifications';
 
-import {GlobalStyles} from "Assets/GlobalStyles";
+import {GlobalStyles} from 'Assets/GlobalStyles';
 import Routes from 'Routes';
 import {MainLayout, MinimalLayout} from 'Layout';
 import {authCheckState} from 'Store/actions/auth.actions';
@@ -24,7 +24,7 @@ const App = () => {
         <MantineProvider>
             <GlobalStyles/>
             <NormalizeCSS/>
-            <LoadingOverlay visible={isLoading}/>
+            <LoadingOverlay visible={isLoading} loaderProps={{variant: 'dots'}}/>
             <NotificationsProvider position="top-center">
                 {isAuthenticated !== null && (
                     isAuthenticated ?

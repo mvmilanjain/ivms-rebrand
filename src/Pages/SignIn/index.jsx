@@ -2,14 +2,14 @@ import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {Box, Button, Center, Col, Grid, Paper, PasswordInput, TextInput, ThemeIcon, Title} from '@mantine/core'
+import {Button, Center, Col, Grid, Paper, PasswordInput, Text, TextInput, ThemeIcon, Title} from '@mantine/core'
 import {useNotifications} from '@mantine/notifications';
-import {LockClosedIcon, LockOpen1Icon, PersonIcon} from "@modulz/radix-icons";
+import {LockClosedIcon, LockOpen1Icon, PersonIcon} from '@modulz/radix-icons';
 
 import {useHttp} from 'Hooks';
-import {signIn} from "Shared/Services";
-import {SIGN_IN} from "Shared/Utilities/validationSchema.util";
-import {authFailure, authSuccess, checkAuthTimeout} from "Store/actions/auth.actions";
+import {signIn} from 'Shared/Services';
+import {SIGN_IN} from 'Shared/Utilities/validationSchema.util';
+import {authFailure, authSuccess, checkAuthTimeout} from 'Store/actions/auth.actions';
 
 const SignIn = ({history}) => {
     const [loading, toggleLoading] = useState(false);
@@ -56,10 +56,7 @@ const SignIn = ({history}) => {
                         </Center>
 
                         <Title align={"center"} order={2} mb="xl">
-                            <Box component="span" sx={(theme) => ({
-                                color: theme.colors.blue[6]
-                            })}>Sign in </Box>
-                            your account
+                            <Text color="blue" inherit component="span">Sign in</Text> your account
                         </Title>
 
                         <TextInput
@@ -74,7 +71,6 @@ const SignIn = ({history}) => {
                             required icon={<LockClosedIcon/>}
                             error={formState.errors.password?.message}
                         />
-
                         <Button fullWidth type="submit" loading={loading}>
                             {loading ? 'Signing...' : 'Sign In'}
                         </Button>
