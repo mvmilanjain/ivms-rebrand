@@ -5,10 +5,10 @@ import {LoadingOverlay, MantineProvider} from '@mantine/core';
 import {ModalsProvider} from '@mantine/modals';
 import {NotificationsProvider} from '@mantine/notifications';
 
-import Routes from 'Routes';
+import {GlobalStyles} from 'Assets/GlobalStyles';
 import {MainLayout, MinimalLayout} from 'Layout';
+import Routes from 'Routes';
 import {authCheckState} from 'Store/actions/auth.actions';
-
 
 const App = () => {
     const history = useHistory();
@@ -21,7 +21,8 @@ const App = () => {
     }, [dispatch]);
 
     return (
-        <MantineProvider withNormalizeCSS withGlobalStyles theme={{dateFormat: 'yyyy-MM-dd hh:mm a'}}>
+        <MantineProvider withNormalizeCSS theme={{dateFormat: 'yyyy-MM-dd hh:mm a'}}>
+            <GlobalStyles />
             <LoadingOverlay visible={isLoading} loaderProps={{variant: 'dots'}}/>
             <ModalsProvider modalProps={{styles: {inner: {alignItems: 'center'}}}}>
                 <NotificationsProvider position="top-center">

@@ -2,13 +2,8 @@ import {useEffect, useState} from 'react';
 import {Group, Paper, Title} from '@mantine/core';
 
 import {ReactTable} from 'Components';
-import {useHttp} from 'Hooks';
-import {getSelectDataSource} from 'Shared/Utilities/common.util';
-import {getRoutes} from 'Shared/Services';
 
 const Dashboard = (props) => {
-    const {requestHandler} = useHttp();
-
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -16,12 +11,8 @@ const Dashboard = (props) => {
     }, []);
 
     const getDataSource = () => {
-        const params = {per_page: 100, page_no: 1, include: 'source_address,destination_address'};
-        getSelectDataSource(requestHandler, getRoutes(params)).then(res => {
-            setData(res.data);
-        }).catch(e => {
-            console.error(e)
-        });
+        fetch('https://jsonplaceholder.typicode.com/comments')
+            .then(res => res.json()).then(data => setData(data))
     };
 
     return (
@@ -32,15 +23,17 @@ const Dashboard = (props) => {
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
                     schema={[
-                        {accessor: 'route_code', Header: 'Route Code'},
-                        {accessor: 'name', Header: 'Route Name', disableSortBy: true},
-                        {accessor: 'std_distance_cycle', Header: 'Distance (KM)'},
-                        {accessor: 'std_cycle_hours', Header: 'Cycle Hours'}
+                        {accessor: 'id', Header: 'Id'},
+                        {accessor: 'postId', Header: 'Post Id'},
+                        {accessor: 'name', Header: 'Name'},
+                        {accessor: 'email', Header: 'Email Address'}
                     ]}
                     data={data}
+                    total={data.length}
                     stickyHeader
                     sorting
                     selection
+                    pagination
                 />
             </div>
         </Paper>

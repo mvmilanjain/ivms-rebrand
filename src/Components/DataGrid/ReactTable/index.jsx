@@ -1,6 +1,15 @@
-import {useRowSelect, useSortBy, useTable} from 'react-table';
-import {Checkbox, createStyles, Group, Table} from '@mantine/core';
-import {TiArrowSortedUp as AscIcon, TiArrowUnsorted as SortIcon} from 'react-icons/ti';
+import {usePagination, useRowSelect, useSortBy, useTable} from 'react-table';
+import {ActionIcon, Checkbox, createStyles, Divider, Group, LoadingOverlay, Select, Table, Text, NumberInput} from '@mantine/core';
+import {
+    ArrowUpIcon as AscIcon,
+    CaretSortIcon as SortIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    DoubleArrowLeftIcon,
+    DoubleArrowRightIcon
+} from '@modulz/radix-icons';
+
+const pageSizeOptions = ['10', '25', '50', '100'];
 
 const useStyles = createStyles((t) => ({
     root: {height: '100%', display: 'block'},
@@ -15,7 +24,7 @@ const useStyles = createStyles((t) => ({
     },
     stickHeader: {top: 0, position: 'sticky'},
     sortableHeader: {'&:hover': {backgroundColor: t.colors.gray[2]}},
-    disableSortIcon: {color: t.colors.gray[6]},
+    disableSortIcon: {color: t.colors.gray[5]},
     sortDirectionIcon: {transition: 'transform 200ms ease'}
 }));
 
@@ -39,12 +48,28 @@ const selectionHook = (hook, selection) => {
     }
 };
 
-export const ReactTable = ({schema, data, stickyHeader, sorting, selection, onRowClick, onAllRowsSelection}) => {
+export const ReactTable = (
+    {
+        schema, data, total = 0,
+        stickyHeader, loading,
+        sorting, selection, pagination,
+        onRowClick, onAllRowsSelection
+    }) => {
     const {classes, cx} = useStyles();
 
-    const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, selectedFlatRows} = useTable(
-        {columns: schema, data},
+    const {
+        getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, selectedFlatRows, page,
+        canPreviousPage, canNextPage, pageOptions, pageCount, gotoPage, nextPage, previousPage, setPageSize,
+        state: {pageIndex, pageSize}
+    } = useTable(
+        {
+            columns: schema,
+            data,
+            autoResetPage: false,
+            autoResetSortBy: false,
+        },
         useSortBy,
+        usePagination,
         useRowSelect,
         (hook) => selectionHook(hook, selection)
     );
@@ -86,31 +111,69 @@ export const ReactTable = ({schema, data, stickyHeader, sorting, selection, onRo
         })}
     </tr>);
 
+    const renderRow = rows => rows.map((row, i) => {
+        prepareRow(row);
+        return (
+            <tr {...row.getRowProps({onClick: e => handleRowClick(e, row)})}>
+                {row.cells.map(cell => (<td {...cell.getCellProps()}>{cell.render('Cell')}</td>))}
+            </tr>
+        )
+    });
+
     return (
         <div className={classes.root}>
-            {/*<pre>
-                <code>
-                    {JSON.stringify({'selectedFlatRows': selectedFlatRows.map(d => d.original)}, null, 2)}
-                </code>
-            </pre>*/}
-            <div className={classes.tableContainer} style={{height: '100%'}}>
+            <LoadingOverlay visible={loading}/>
+            <div className={classes.tableContainer} style={{
+                height: pagination ? 'calc(100% - 44px)' : '100%'
+            }}>
                 <Table {...getTableProps()}>
                     <thead className={cx({[classes.stickHeader]: stickyHeader})}>
                     {renderHeader()}
                     </thead>
 
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps({onClick: e => handleRowClick(e, row)})}>
-                                {row.cells.map(cell => (<td {...cell.getCellProps()}>{cell.render('Cell')}</td>))}
-                            </tr>
-                        )
-                    })}
-                    </tbody>
+                    <tbody {...getTableBodyProps()}>{pagination ? renderRow(page) : renderRow(rows)}</tbody>
                 </Table>
             </div>
+            {pagination && <>
+                <Divider mb="md" variant="dotted"/>
+                <Group position="center">
+                    <Text size="sm">Rows per page: </Text>
+                    <Select
+                        style={{width: '72px'}}
+                        variant="filled"
+                        data={pageSizeOptions}
+                        value={pageSize + ''}
+                        onChange={pageSize => setPageSize(Number(pageSize))}
+                    />
+                    <Divider orientation="vertical"/>
+
+                    <Text size="sm">{(pageIndex * pageSize) + 1} - {(pageIndex + 1) * pageSize} of {total}</Text>
+                    <Divider orientation="vertical"/>
+
+                    <Text size="sm">Go to page: </Text>
+                    <NumberInput
+                        style={{ width: '100px' }}
+                        variant="filled"
+                        hideControls
+                        defaultValue={pageIndex + 1}
+                        onChange={pageNum => gotoPage(pageNum - 1)}
+                    />
+                    <Divider orientation="vertical"/>
+
+                    <ActionIcon variant="default" disabled={!canPreviousPage} onClick={() => gotoPage(0)}>
+                        <DoubleArrowLeftIcon/>
+                    </ActionIcon>
+                    <ActionIcon variant="default" disabled={!canPreviousPage} onClick={previousPage}>
+                        <ChevronLeftIcon/>
+                    </ActionIcon>
+                    <ActionIcon variant="default" disabled={!canNextPage} onClick={nextPage}>
+                        <ChevronRightIcon/>
+                    </ActionIcon>
+                    <ActionIcon variant="default" disabled={!canNextPage} onClick={() => gotoPage(pageCount - 1)}>
+                        <DoubleArrowRightIcon/>
+                    </ActionIcon>
+                </Group>
+            </>}
         </div>
     );
 };
