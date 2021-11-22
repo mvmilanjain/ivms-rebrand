@@ -1,5 +1,17 @@
+import {useEffect} from 'react';
 import {usePagination, useRowSelect, useSortBy, useTable} from 'react-table';
-import {ActionIcon, Checkbox, createStyles, Divider, Group, LoadingOverlay, Select, Table, Text, NumberInput} from '@mantine/core';
+import {
+    ActionIcon,
+    Checkbox,
+    createStyles,
+    Divider,
+    Group,
+    LoadingOverlay,
+    Select,
+    Table,
+    Text,
+    NumberInput
+} from '@mantine/core';
 import {
     ArrowUpIcon as AscIcon,
     CaretSortIcon as SortIcon,
@@ -50,23 +62,38 @@ const selectionHook = (hook, selection) => {
 
 export const ReactTable = (
     {
-        schema, data, total = 0,
-        stickyHeader, loading,
-        sorting, selection, pagination,
-        onRowClick, onAllRowsSelection
-    }) => {
+        schema,
+        data = [],
+        initialPageSize = 10,
+        initialPageIndex = 0,
+        pageCount = 0,
+        total = 0,
+        stickyHeader,
+        fetchData,
+        loading,
+        sorting,
+        selection,
+        pagination,
+        onRowClick,
+        onAllRowsSelection,
+        manualPagination,
+        manualSortBy,
+        autoResetPage = true,
+        autoResetSortBy = true,
+    }
+) => {
     const {classes, cx} = useStyles();
 
-    const {
-        getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, selectedFlatRows, page,
-        canPreviousPage, canNextPage, pageOptions, pageCount, gotoPage, nextPage, previousPage, setPageSize,
-        state: {pageIndex, pageSize}
-    } = useTable(
+    const tableOptions = useTable(
         {
             columns: schema,
             data,
-            autoResetPage: false,
-            autoResetSortBy: false,
+            manualPagination,
+            manualSortBy,
+            autoResetPage,
+            autoResetSortBy,
+            pageCount,
+            initialState: {pageSize: initialPageSize, pageIndex: initialPageIndex}
         },
         useSortBy,
         usePagination,
@@ -74,15 +101,19 @@ export const ReactTable = (
         (hook) => selectionHook(hook, selection)
     );
 
+    const {
+        getTableProps, getTableBodyProps, headerGroups, rows, prepareRow,
+        page, gotoPage, nextPage, previousPage, setPageSize, canPreviousPage, canNextPage,
+        state: {pageIndex, pageSize, sortBy}
+    } = tableOptions;
+
+    useEffect(() => {
+        fetchData && fetchData({pageIndex, pageSize, sortBy});
+    }, [sortBy, fetchData, pageIndex, pageSize]);
+
     const handleRowClick = (e, row) => {
         console.log('Row Selected: ', row);
         onRowClick && onRowClick(row);
-    };
-
-    const handleAllRowsSelection = (e) => {
-        const rowsData = selectedFlatRows.map(d => d.original);
-        console.log(rowsData);
-        onAllRowsSelection && onAllRowsSelection(rowsData);
     };
 
     const renderHeader = () => headerGroups.map(hg => <tr {...hg.getHeaderGroupProps()}>
@@ -136,7 +167,7 @@ export const ReactTable = (
             </div>
             {pagination && <>
                 <Divider mb="md" variant="dotted"/>
-                <Group position="center">
+                <Group position="left">
                     <Text size="sm">Rows per page: </Text>
                     <Select
                         style={{width: '72px'}}
@@ -152,7 +183,7 @@ export const ReactTable = (
 
                     <Text size="sm">Go to page: </Text>
                     <NumberInput
-                        style={{ width: '100px' }}
+                        style={{width: '100px'}}
                         variant="filled"
                         hideControls
                         defaultValue={pageIndex + 1}
