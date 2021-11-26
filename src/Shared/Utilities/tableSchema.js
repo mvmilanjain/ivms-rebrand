@@ -6,16 +6,17 @@ import {VEHICLE_STATUS} from "./referenceData.util";
 
 const renderVehicleStatus = ({status}) => {
     let result = '';
-    if(status === 'available') {
-        result = <Badge variant="filled" color="green" fullWidth>{getOptionLabel(VEHICLE_STATUS, status)}</Badge>;
-    } else if(status === 'in_maintenance') {
-        result = <Badge variant="filled" color="yellow" fullWidth>{getOptionLabel(VEHICLE_STATUS, status)}</Badge>;
-    } else if(status === 'maintenance_required') {
-        result = <Badge variant="filled" color="orange" fullWidth>{getOptionLabel(VEHICLE_STATUS, status)}</Badge>;
-    } else if(status === 'breakdown') {
-        result = <Badge variant="filled" color="red" fullWidth>{getOptionLabel(VEHICLE_STATUS, status)}</Badge>;
-    } else if(status === 'discontinue') {
-        result = <Badge variant="filled" color="gray" fullWidth>{getOptionLabel(VEHICLE_STATUS, status)}</Badge>;
+    const label = getOptionLabel(VEHICLE_STATUS, status);
+    if (status === 'available') {
+        result = <Badge variant="filled" radius="sm" color="green" fullWidth>{label}</Badge>;
+    } else if (status === 'in_maintenance') {
+        result = <Badge variant="filled" radius="sm" color="yellow" fullWidth>{label}</Badge>;
+    } else if (status === 'maintenance_required') {
+        result = <Badge variant="filled" radius="sm" color="orange" fullWidth>{label}</Badge>;
+    } else if (status === 'breakdown') {
+        result = <Badge variant="filled" radius="sm" color="red" fullWidth>{label}</Badge>;
+    } else if (status === 'discontinue') {
+        result = <Badge variant="filled" radius="sm" color="gray" fullWidth>{label}</Badge>;
     }
     return result;
 };
@@ -55,9 +56,9 @@ export const TRUCK_SCHEMA = [
     {id: 'model', header: 'Model', sort: true},
     {
         id: 'meter_reading', header: 'Meter Reading', sort: true, align: 'center',
-        render: (row) => row.meter_reading ? <Badge variant="dot" fullWidth>{row.meter_reading} KM</Badge> : ''
+        render: (row) => row.meter_reading ? <Badge radius="sm">{row.meter_reading} KM</Badge> : ''
     },
-    {id: 'status', header: 'Status', sort: true, align: 'center', render: ({status}) => renderVehicleStatus(status)}
+    {id: 'status', header: 'Status', sort: true, align: 'center', render: renderVehicleStatus}
 ];
 
 export const TRAILER_SCHEMA = [
@@ -67,8 +68,11 @@ export const TRAILER_SCHEMA = [
     {id: 'model', header: 'Model', sort: true},
     {
         id: 'meter_reading', header: 'Meter', sort: true, align: 'center',
-        render: (row) => row.meter_reading ? <Badge variant="dot" fullWidth>{row.meter_reading} KM</Badge> : ''
+        render: (row) => row.meter_reading ? <Badge radius="sm">{row.meter_reading} KM</Badge> : ''
     },
     {id: 'status', header: 'Status', sort: true, align: 'center', render: renderVehicleStatus},
-    {id: 'license_expiry', header: 'License Expiry', sort: true, render: ({license_expiry}) => formatDate(license_expiry)}
+    {
+        id: 'license_expiry', header: 'License Expiry', align: 'center',
+        render: ({license_expiry}) => formatDate(license_expiry)
+    }
 ];

@@ -140,8 +140,7 @@ export const MjTable = (
                 >
                     <Group noWrap position={col.align || 'left'}>
                         <span>{col.header}</span>
-                        {(sortBy !== col.id || sortDirection === 'none') &&
-                        <div style={{width: '15px', height: '15px'}}/>}
+                        {/*{(sortBy !== col.id || sortDirection === 'none') && <div style={{width: '15px', height: '15px'}}/>}*/}
                         {sortBy === col.id && sortDirection !== 'none' && <AscIcon
                             className={classes.sortDirectionIcon}
                             style={{transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none'}}

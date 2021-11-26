@@ -1,18 +1,33 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {Group, Paper, Title} from '@mantine/core';
+import {
+    ActionIcon,
+    Anchor,
+    Button,
+    Divider,
+    Group,
+    Paper,
+    Popover,
+    Radio,
+    RadioGroup,
+    TextInput,
+    Title
+} from '@mantine/core';
+import {BsFilter as FilterIcon} from 'react-icons/bs';
 
 import {ReactTable} from 'Components';
 
-const Dashboard = (props) => {
+const Demo = (props) => {
     const [data, setData] = useState([]);
 
     const [loading, toggleLoading] = useState(false);
     const [pageCount, setPageCount] = useState(0);
     const [total, setTotal] = useState(0);
+
+    const [opened, setOpened] = useState(false);
     const fetchIdRef = useRef(0);
 
     useEffect(() => {
-        getDataSource();
+        // getDataSource();
     }, []);
 
     const getDataSource = () => {
@@ -23,7 +38,7 @@ const Dashboard = (props) => {
         });
     };
 
-    const fetchData = useCallback(({pageSize, pageIndex, sortBy, filters}) => {
+    const fetchData = useCallback(({pageSize, pageIndex, sortBy}) => {
         const fetchId = ++fetchIdRef.current;
         toggleLoading(true);
 
@@ -52,10 +67,38 @@ const Dashboard = (props) => {
     }, []);
 
     return (
-        <Paper padding="sm" withBorder style={{height: '100%'}}>
+        <Paper padding="lg" withBorder style={{height: '100%'}}>
             <Group position="apart" mb="sm">
-                <Title order={2}>Dashboard</Title>
+                <Title order={2}>Demo</Title>
+
+                <Popover
+                    target={<ActionIcon onClick={() => setOpened(o => !o)}><FilterIcon/></ActionIcon>}
+                    opened={opened}
+                    onClose={() => setOpened(false)}
+                    position="bottom"
+                    placement="end"
+                    withArrow
+                    transition="scale-y"
+                >
+                    <RadioGroup description="Select your option" value="cont" mb="md" variant="vertical" size="sm">
+                        <Radio value="cont">Contains</Radio>
+                        <Radio value="not_cont">Does not contain</Radio>
+                        <Radio value="start">Starts with</Radio>
+                        <Radio value="end">Ends with</Radio>
+                        <Radio value="eq">Equals</Radio>
+                        <Radio value="not_eq">Not equal</Radio>
+                    </RadioGroup>
+                    <Divider mb="md"/>
+                    <TextInput placeholder="Enter filter string..." mb="xl" autoFocus/>
+
+                    <Group position="apart">
+                        <Anchor component="button" color="gray" onClick={() => setOpened(false)}>Clear</Anchor>
+                        <Button>Apply</Button>
+                    </Group>
+
+                </Popover>
             </Group>
+
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
                     schema={[
@@ -65,7 +108,6 @@ const Dashboard = (props) => {
                         {accessor: 'email', Header: 'Email Address'}
                     ]}
                     data={data}
-                    // serverSideDataSource
                     loading={loading}
                     pageCount={pageCount}
                     total={total}
@@ -73,12 +115,15 @@ const Dashboard = (props) => {
                     // selection
                     sorting
                     pagination
-                    filtering
-                    // fetchData={fetchData}
+                    fetchData={fetchData}
+                    manualSortBy
+                    autoResetSortBy={false}
+                    manualPagination
+                    autoResetPage={false}
                 />
             </div>
         </Paper>
     );
 };
 
-export default Dashboard;
+export default Demo;

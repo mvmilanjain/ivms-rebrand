@@ -1,25 +1,23 @@
 import {useEffect} from 'react';
-import {usePagination, useRowSelect, useSortBy, useTable} from 'react-table';
+import {useFilters, usePagination, useRowSelect, useSortBy, useTable} from 'react-table';
 import {
     ActionIcon,
+    Box,
     Checkbox,
     createStyles,
     Divider,
     Group,
     LoadingOverlay,
+    NumberInput,
     Select,
     Table,
-    Text,
-    NumberInput
+    Text
 } from '@mantine/core';
-import {
-    ArrowUpIcon as AscIcon,
-    CaretSortIcon as SortIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    DoubleArrowLeftIcon,
-    DoubleArrowRightIcon
-} from '@modulz/radix-icons';
+import {ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon} from '@modulz/radix-icons';
+import {BsArrowDownUp as SortIcon, BsArrowUp as AscIcon,} from 'react-icons/bs';
+
+import FilterTypes from './filterTypes';
+import {StringFilter} from './Filters';
 
 const pageSizeOptions = ['10', '25', '50', '100'];
 
@@ -39,6 +37,11 @@ const useStyles = createStyles((t) => ({
     disableSortIcon: {color: t.colors.gray[5]},
     sortDirectionIcon: {transition: 'transform 200ms ease'}
 }));
+
+const defaultColumn = {
+    Filter: StringFilter,
+    filter: 'stringFilter'
+};
 
 const selectionHook = (hook, selection) => {
     if (selection) {
@@ -64,22 +67,21 @@ export const ReactTable = (
     {
         schema,
         data = [],
+        serverSideDataSource = false,
         initialPageSize = 10,
         initialPageIndex = 0,
         pageCount = 0,
         total = 0,
         stickyHeader,
-        fetchData,
         loading,
+        filtering,
         sorting,
         selection,
         pagination,
         onRowClick,
         onAllRowsSelection,
-        manualPagination,
-        manualSortBy,
-        autoResetPage = true,
-        autoResetSortBy = true,
+        fetchData, // Pass function to fetch data for server side operations
+        ...rest
     }
 ) => {
     const {classes, cx} = useStyles();
@@ -88,13 +90,20 @@ export const ReactTable = (
         {
             columns: schema,
             data,
-            manualPagination,
-            manualSortBy,
-            autoResetPage,
-            autoResetSortBy,
+            defaultColumn,
+            disableFilters: !filtering,
+            disableSortBy: !sorting,
+            manualFilters: serverSideDataSource,
+            manualPagination: serverSideDataSource,
+            manualSortBy: serverSideDataSource,
+            autoResetFilters: !serverSideDataSource,
+            autoResetPage: !serverSideDataSource,
+            autoResetSortBy: !serverSideDataSource,
             pageCount,
+            filterTypes: FilterTypes,
             initialState: {pageSize: initialPageSize, pageIndex: initialPageIndex}
         },
+        useFilters,
         useSortBy,
         usePagination,
         useRowSelect,
@@ -104,12 +113,12 @@ export const ReactTable = (
     const {
         getTableProps, getTableBodyProps, headerGroups, rows, prepareRow,
         page, gotoPage, nextPage, previousPage, setPageSize, canPreviousPage, canNextPage,
-        state: {pageIndex, pageSize, sortBy}
+        state: {pageIndex, pageSize, sortBy, filters}
     } = tableOptions;
 
     useEffect(() => {
-        fetchData && fetchData({pageIndex, pageSize, sortBy});
-    }, [sortBy, fetchData, pageIndex, pageSize]);
+        fetchData && fetchData({pageIndex, pageSize, sortBy, filters});
+    }, [sortBy, fetchData, pageIndex, pageSize, filters]);
 
     const handleRowClick = (e, row) => {
         console.log('Row Selected: ', row);
@@ -117,29 +126,33 @@ export const ReactTable = (
     };
 
     const renderHeader = () => headerGroups.map(hg => <tr {...hg.getHeaderGroupProps()}>
-        {hg.headers.map(column => {
-            if (!sorting || !column.canSort) {
-                return <th {...column.getHeaderProps()}>{column.render('Header')}</th>;
-            } else {
-                return (
-                    <th
-                        className={classes.sortableHeader}
-                        {...column.getHeaderProps(column.getSortByToggleProps({title: undefined}))}
-                    >
-                        <Group noWrap>
-                            <span>{column.render('Header')}</span>
-                            {column.isSorted ?
-                                <AscIcon
-                                    className={classes.sortDirectionIcon}
-                                    style={{transform: column.isSortedDesc ? 'rotate(180deg)' : 'none'}}
-                                /> :
-                                <SortIcon className={classes.disableSortIcon}/>
-                            }
-                        </Group>
-                    </th>
-                );
-            }
-        })}
+        {hg.headers.map(column => (
+            <th
+                className={cx({[classes.sortableHeader]: column.canSort})}
+                {...column.getHeaderProps(column.getSortByToggleProps({title: undefined}))}
+            >
+                <Group noWrap position="apart">
+                    <span>{column.render('Header')}</span>
+                    <div>
+                        {column.canFilter ? column.render('Filter') : null}
+                        {column.canSort ?
+                            (
+                                column.isSorted ?
+                                    <Box component="span" ml="xs">
+                                        <AscIcon
+                                            className={classes.sortDirectionIcon}
+                                            style={{transform: column.isSortedDesc ? 'rotate(180deg)' : 'none'}}
+                                        />
+                                    </Box> :
+                                    <Box component="span" ml="xs">
+                                        <SortIcon className={classes.disableSortIcon}/>
+                                    </Box>
+                            ) : null
+                        }
+                    </div>
+                </Group>
+            </th>
+        ))}
     </tr>);
 
     const renderRow = rows => rows.map((row, i) => {
@@ -154,13 +167,12 @@ export const ReactTable = (
     return (
         <div className={classes.root}>
             <LoadingOverlay visible={loading}/>
-            <div className={classes.tableContainer} style={{
-                height: pagination ? 'calc(100% - 44px)' : '100%'
-            }}>
+            <div className={classes.tableContainer} style={{height: pagination ? 'calc(100% - 44px)' : '100%'}}>
+                {/*<pre>
+                  <code>{JSON.stringify(filters, null, 2)}</code>
+                </pre>*/}
                 <Table {...getTableProps()}>
-                    <thead className={cx({[classes.stickHeader]: stickyHeader})}>
-                    {renderHeader()}
-                    </thead>
+                    <thead className={cx({[classes.stickHeader]: stickyHeader})}>{renderHeader()}</thead>
 
                     <tbody {...getTableBodyProps()}>{pagination ? renderRow(page) : renderRow(rows)}</tbody>
                 </Table>
