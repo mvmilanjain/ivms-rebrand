@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {Group, Paper, Title} from '@mantine/core';
 
-import {ReactTable} from 'Components';
+import {DateFilter, NumberFilter, ReactTable} from 'Components';
 
 const Dashboard = (props) => {
     const [data, setData] = useState([]);
@@ -58,23 +58,24 @@ const Dashboard = (props) => {
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
-                    schema={[
-                        {accessor: 'id', Header: 'Id'},
-                        {accessor: 'postId', Header: 'Post Id'},
+                    columns={[
+                        {accessor: 'id', Header: 'Id', Filter: DateFilter, filter: 'dateFilter'},
+                        {accessor: 'postId', Header: 'Post Id', Filter: NumberFilter, filter: 'numberFilter'},
                         {accessor: 'name', Header: 'Name'},
                         {accessor: 'email', Header: 'Email Address'}
                     ]}
                     data={data}
+                    // fetchData={fetchData}
                     // serverSideDataSource
+                    // selection
                     loading={loading}
                     pageCount={pageCount}
                     total={total}
                     stickyHeader
-                    // selection
+                    // debugging
                     sorting
                     pagination
                     filtering
-                    // fetchData={fetchData}
                 />
             </div>
         </Paper>

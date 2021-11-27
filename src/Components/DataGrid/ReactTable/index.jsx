@@ -1,22 +1,20 @@
 import {useEffect} from 'react';
 import {useFilters, usePagination, useRowSelect, useSortBy, useTable} from 'react-table';
 import {
-    ActionIcon,
     Box,
     Checkbox,
     createStyles,
     Divider,
     Group,
     LoadingOverlay,
-    NumberInput,
+    Pagination,
     Select,
     Table,
     Text
 } from '@mantine/core';
-import {ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon} from '@modulz/radix-icons';
 import {BsArrowDownUp as SortIcon, BsArrowUp as AscIcon,} from 'react-icons/bs';
 
-import FilterTypes from './filterTypes';
+import filterTypes from './filterTypes';
 import {StringFilter} from './Filters';
 
 const pageSizeOptions = ['10', '25', '50', '100'];
@@ -65,7 +63,7 @@ const selectionHook = (hook, selection) => {
 
 export const ReactTable = (
     {
-        schema,
+        columns,
         data = [],
         serverSideDataSource = false,
         initialPageSize = 10,
@@ -73,6 +71,8 @@ export const ReactTable = (
         pageCount = 0,
         total = 0,
         stickyHeader,
+        customFilterTypes = {},
+        debugging,
         loading,
         filtering,
         sorting,
@@ -88,31 +88,30 @@ export const ReactTable = (
 
     const tableOptions = useTable(
         {
-            columns: schema,
-            data,
-            defaultColumn,
+            data, columns, defaultColumn,
             disableFilters: !filtering,
             disableSortBy: !sorting,
+
             manualFilters: serverSideDataSource,
             manualPagination: serverSideDataSource,
             manualSortBy: serverSideDataSource,
+
             autoResetFilters: !serverSideDataSource,
             autoResetPage: !serverSideDataSource,
             autoResetSortBy: !serverSideDataSource,
-            pageCount,
-            filterTypes: FilterTypes,
+            autoResetSelectedRows: !serverSideDataSource,
+
+            pageCount, filterTypes: {...filterTypes, ...customFilterTypes},
             initialState: {pageSize: initialPageSize, pageIndex: initialPageIndex}
         },
-        useFilters,
-        useSortBy,
-        usePagination,
-        useRowSelect,
+        useFilters, useSortBy, usePagination, useRowSelect,
         (hook) => selectionHook(hook, selection)
     );
 
     const {
-        getTableProps, getTableBodyProps, headerGroups, rows, prepareRow,
-        page, gotoPage, nextPage, previousPage, setPageSize, canPreviousPage, canNextPage,
+        getTableProps, getTableBodyProps, headerGroups,
+        rows, prepareRow,
+        page, gotoPage, setPageSize,
         state: {pageIndex, pageSize, sortBy, filters}
     } = tableOptions;
 
@@ -124,6 +123,22 @@ export const ReactTable = (
         console.log('Row Selected: ', row);
         onRowClick && onRowClick(row);
     };
+
+    const getPageRecordInfo = () => {
+        const firstRowNum = (pageIndex * pageSize) + 1;
+        const totalRows = serverSideDataSource ? total : rows.length;
+
+        const currLastRowNum = (pageIndex + 1) * pageSize;
+        let lastRowNum = (currLastRowNum < totalRows) ? currLastRowNum : totalRows;
+        return `${firstRowNum} - ${lastRowNum} of ${totalRows}`;
+    };
+
+    const getPageCount = () => {
+        const totalRows = serverSideDataSource ? total : rows.length;
+        return Math.ceil(totalRows / pageSize);
+    };
+
+    const handlePageChange = (pageNum) => gotoPage(pageNum - 1);
 
     const renderHeader = () => headerGroups.map(hg => <tr {...hg.getHeaderGroupProps()}>
         {hg.headers.map(column => (
@@ -168,9 +183,8 @@ export const ReactTable = (
         <div className={classes.root}>
             <LoadingOverlay visible={loading}/>
             <div className={classes.tableContainer} style={{height: pagination ? 'calc(100% - 44px)' : '100%'}}>
-                {/*<pre>
-                  <code>{JSON.stringify(filters, null, 2)}</code>
-                </pre>*/}
+                {debugging && (<pre><code>{JSON.stringify(filters, null, 2)}</code></pre>)}
+
                 <Table {...getTableProps()}>
                     <thead className={cx({[classes.stickHeader]: stickyHeader})}>{renderHeader()}</thead>
 
@@ -190,31 +204,10 @@ export const ReactTable = (
                     />
                     <Divider orientation="vertical"/>
 
-                    <Text size="sm">{(pageIndex * pageSize) + 1} - {(pageIndex + 1) * pageSize} of {total}</Text>
+                    <Text size="sm">{getPageRecordInfo()}</Text>
                     <Divider orientation="vertical"/>
 
-                    <Text size="sm">Go to page: </Text>
-                    <NumberInput
-                        style={{width: '100px'}}
-                        variant="filled"
-                        hideControls
-                        defaultValue={pageIndex + 1}
-                        onChange={pageNum => gotoPage(pageNum - 1)}
-                    />
-                    <Divider orientation="vertical"/>
-
-                    <ActionIcon variant="default" disabled={!canPreviousPage} onClick={() => gotoPage(0)}>
-                        <DoubleArrowLeftIcon/>
-                    </ActionIcon>
-                    <ActionIcon variant="default" disabled={!canPreviousPage} onClick={previousPage}>
-                        <ChevronLeftIcon/>
-                    </ActionIcon>
-                    <ActionIcon variant="default" disabled={!canNextPage} onClick={nextPage}>
-                        <ChevronRightIcon/>
-                    </ActionIcon>
-                    <ActionIcon variant="default" disabled={!canNextPage} onClick={() => gotoPage(pageCount - 1)}>
-                        <DoubleArrowRightIcon/>
-                    </ActionIcon>
+                    <Pagination page={pageIndex + 1} total={getPageCount()} onChange={handlePageChange}/>
                 </Group>
             </>}
         </div>

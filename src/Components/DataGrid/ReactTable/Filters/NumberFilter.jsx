@@ -1,12 +1,13 @@
 import {useState} from 'react';
-import {ActionIcon, Anchor, Button, Divider, Group, Popover, Radio, RadioGroup, TextInput} from '@mantine/core';
+import {ActionIcon, Anchor, Button, Divider, Group, NumberInput, Popover, Radio, RadioGroup} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {BiFilterAlt as FilterIcon} from 'react-icons/bi';
 
-const StringFilter = (props) => {
-    const {column: {filterValue, setFilter}} = props;
+const NumberFilter = (props) => {
+    const {column: {filterValue, setFilter, filterOptions}} = props;
+    const {min, max, step} = filterOptions || {};
     const [opened, setOpened] = useState(false);
-    const [state, setState] = useSetState(filterValue || {operator: 'cont', value: ''});
+    const [state, setState] = useSetState(filterValue || {operator: 'cont', value: undefined});
 
     const handleClose = () => {
         setState(filterValue || {operator: 'cont', value: ''});
@@ -47,19 +48,22 @@ const StringFilter = (props) => {
                 value={state.operator}
                 onChange={o => setState({operator: o})}
             >
-                <Radio value="cont">Contains</Radio>
-                <Radio value="not_cont">Does not contain</Radio>
-                <Radio value="start">Starts with</Radio>
-                <Radio value="end">Ends with</Radio>
                 <Radio value="eq">Equals</Radio>
                 <Radio value="not_eq">Not equal</Radio>
+                <Radio value="gt">Greater than</Radio>
+                <Radio value="gteq">Greater than or equal</Radio>
+                <Radio value="lt">Less than</Radio>
+                <Radio value="lteq">Less than or equal</Radio>
             </RadioGroup>
             <Divider my="sm"/>
-            <TextInput
-                placeholder="Enter text"
-                mb="sm" data-autoFocus value={state.value}
-                onChange={e => setState({value: e.target.value})}
+            <NumberInput
+                placeholder="Enter number" mb="sm"
+                hideControls data-autoFocus
+                min={min} max={max} step={step}
+                value={state.value}
+                onChange={val => setState({value: val})}
             />
+
             <Group position="apart">
                 <Anchor component="button" color="gray" onClick={handleClear}>Clear</Anchor>
                 <Button onClick={handleApply}>Apply</Button>
@@ -68,4 +72,4 @@ const StringFilter = (props) => {
     );
 };
 
-export default StringFilter;
+export default NumberFilter;

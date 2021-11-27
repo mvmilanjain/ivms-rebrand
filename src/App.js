@@ -21,7 +21,7 @@ const App = () => {
     }, [dispatch]);
 
     return (
-        <MantineProvider withNormalizeCSS theme={{dateFormat: 'yyyy-MM-dd hh:mm a'}}>
+        <MantineProvider withNormalizeCSS theme={{dateFormat: 'YYYY-MM-DD'}}>
             <GlobalStyles />
             <LoadingOverlay visible={isLoading} loaderProps={{variant: 'dots'}}/>
             <ModalsProvider modalProps={{styles: {inner: {alignItems: 'center'}}}}>
