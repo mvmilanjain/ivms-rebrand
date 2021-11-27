@@ -40,9 +40,8 @@ const DateFilter = (props) => {
             }
             opened={opened} onClose={handleClose}
             onClick={(e) => e.stopPropagation()}
-            position="bottom" placement="start"
-            transition="scale-y" zIndex={10000}
-            withArrow withCloseButton noFocusTrap
+            position="bottom" transition="scale-y"
+            zIndex={10000}
         >
             <RadioGroup
                 description="Select your option"

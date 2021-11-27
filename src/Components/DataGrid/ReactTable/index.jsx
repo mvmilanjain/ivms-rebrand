@@ -10,7 +10,8 @@ import {
     Pagination,
     Select,
     Table,
-    Text
+    Text,
+    useCss
 } from '@mantine/core';
 import {BsArrowDownUp as SortIcon, BsArrowUp as AscIcon,} from 'react-icons/bs';
 
@@ -73,6 +74,7 @@ export const ReactTable = (
         stickyHeader,
         customFilterTypes = {},
         debugging,
+        reload,
         loading,
         filtering,
         sorting,
@@ -85,6 +87,7 @@ export const ReactTable = (
     }
 ) => {
     const {classes, cx} = useStyles();
+    const {css} = useCss();
 
     const tableOptions = useTable(
         {
@@ -119,6 +122,10 @@ export const ReactTable = (
         fetchData && fetchData({pageIndex, pageSize, sortBy, filters});
     }, [sortBy, fetchData, pageIndex, pageSize, filters]);
 
+    useEffect(() => {
+        reload && fetchData && fetchData({pageIndex, pageSize, sortBy, filters});
+    }, [reload]);
+
     const handleRowClick = (e, row) => {
         console.log('Row Selected: ', row);
         onRowClick && onRowClick(row);
@@ -143,28 +150,28 @@ export const ReactTable = (
     const renderHeader = () => headerGroups.map(hg => <tr {...hg.getHeaderGroupProps()}>
         {hg.headers.map(column => (
             <th
-                className={cx({[classes.sortableHeader]: column.canSort})}
+                className={cx(
+                    {[classes.sortableHeader]: column.canSort},
+                    {[css({minWidth: column.cellMinWidth})]: column.cellMinWidth},
+                    {[css({width: column.cellWidth})]: column.cellWidth},
+                )}
                 {...column.getHeaderProps(column.getSortByToggleProps({title: undefined}))}
             >
-                <Group noWrap position="apart">
-                    <span>{column.render('Header')}</span>
-                    <div>
+                <Group noWrap position={column.align || "apart"}>
+                    <div>{column.render('Header')}</div>
+                    <Group noWrap position="left">
                         {column.canFilter ? column.render('Filter') : null}
                         {column.canSort ?
                             (
                                 column.isSorted ?
-                                    <Box component="span" ml="xs">
-                                        <AscIcon
-                                            className={classes.sortDirectionIcon}
-                                            style={{transform: column.isSortedDesc ? 'rotate(180deg)' : 'none'}}
-                                        />
-                                    </Box> :
-                                    <Box component="span" ml="xs">
-                                        <SortIcon className={classes.disableSortIcon}/>
-                                    </Box>
+                                    <AscIcon
+                                        className={classes.sortDirectionIcon}
+                                        style={{transform: column.isSortedDesc ? 'rotate(180deg)' : 'none'}}
+                                    /> :
+                                    <SortIcon className={classes.disableSortIcon}/>
                             ) : null
                         }
-                    </div>
+                    </Group>
                 </Group>
             </th>
         ))}
@@ -174,7 +181,9 @@ export const ReactTable = (
         prepareRow(row);
         return (
             <tr {...row.getRowProps({onClick: e => handleRowClick(e, row)})}>
-                {row.cells.map(cell => (<td {...cell.getCellProps()}>{cell.render('Cell')}</td>))}
+                {row.cells.map(cell => (
+                    <td align={cell.column.align || "left"} {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                ))}
             </tr>
         )
     });

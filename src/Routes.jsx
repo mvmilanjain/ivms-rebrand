@@ -3,7 +3,6 @@ import loadable from "@loadable/component";
 
 const Address = loadable(() => import('Pages/Address'));
 const Dashboard = loadable(() => import('Pages/Dashboard'));
-const Demo = loadable(() => import('Pages/Demo'));
 const Fault = loadable(() => import('Pages/Fault'));
 const Product = loadable(() => import('Pages/Product'));
 const RoutePage = loadable(() => import('Pages/Route'));
@@ -18,10 +17,7 @@ const Operation = loadable(() => import('Pages/RoutePlanner/Operation'));
 const Finance = loadable(() => import('Pages/RoutePlanner/Finance'));
 const Reports = loadable(() => import('Pages/RoutePlanner/Reports'));
 
-const pagesWithoutAuthentication = [
-    {id: "signin", path: "/signin", component: SignIn},
-    {id: "demo", path: "/demo", component: Demo}
-];
+const pagesWithoutAuthentication = [{id: "signin", path: "/signin", component: SignIn}];
 
 const pagesWithAuthentication = [
     {id: "address", path: "/address", component: Address},

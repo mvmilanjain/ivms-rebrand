@@ -66,14 +66,14 @@ export const formatTime = (timeStr) => {
 };
 
 export const formatDateTime = (dateTime, format = DATE_TIME_FORMAT_24_HR) => {
-    if(dateTime && fnsIsValid(new Date(dateTime))) {
+    if (dateTime && fnsIsValid(new Date(dateTime))) {
         return fnsFormat(new Date(dateTime), format);
     }
     return '';
 };
 
 export const formatDate = (date, format = DATE_FORMAT) => {
-    if(date && fnsIsValid(new Date(date))) {
+    if (date && fnsIsValid(new Date(date))) {
         return fnsFormat(new Date(date), format);
     }
     return '';
@@ -165,6 +165,23 @@ export const getSelectDataSource = async (requestHandler, requestConfig, options
     } catch (e) {
         throw e;
     }
+};
+
+export const getSortText = (sortBy) => {
+    let result = '';
+    if (sortBy.length) {
+        result = sortBy[0].id.replaceAll('.', '_');
+        sortBy[0].desc && (result = result + '.desc');
+    }
+    return result;
+};
+
+export const getFilterList = (filters) => {
+    const filterObj = {};
+    filters.filter(item => item.value.value).forEach(({id, value}) => {
+        filterObj[`${id}_${value.operator}`] = value.value;
+    });
+    return filterObj;
 };
 
 export const hasError = (key, touched, errors) => get(touched, key, false) && Boolean(get(errors, key));

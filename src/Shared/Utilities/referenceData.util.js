@@ -2,6 +2,7 @@ export const BOOLEAN_LIST = [{value: true, label: 'Yes'}, {value: false, label: 
 export const ITEM_QUANTITY_TYPE = ['piece', 'kg', 'gram', 'gallon', 'quart', 'ltr', 'ml'];
 export const METER_READING = ['miles', 'km', 'hours'];
 export const VEHICLE_STATUS = [
+    {value: 'initial', label: 'Initial'},
     {value: 'available', label: 'Available'},
     {value: 'in_maintenance', label: 'In Maintenance'},
     {value: 'maintenance_required', label: 'Maintenance Required'},
