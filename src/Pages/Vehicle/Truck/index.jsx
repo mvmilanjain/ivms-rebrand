@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Group, Menu, Paper, Title} from '@mantine/core';
+import {ActionIcon, Button, Group, Menu, Title} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
@@ -79,7 +79,7 @@ const Truck = (props) => {
     };
 
     return (
-        <Paper padding="sm" withBorder style={{height: '100%'}}>
+        <>
             <Group position="apart" mb="sm">
                 <Title order={2}>Truck</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Truck</Button>
@@ -103,7 +103,7 @@ const Truck = (props) => {
                     {...state.pagination}
                 />
             </div>
-        </Paper>
+        </>
     );
 };
 

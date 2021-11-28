@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import {Button, Group, Paper, Title} from '@mantine/core';
+import {Button, Group, Title} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {MdOutlineAddBox as CreateIcon} from 'react-icons/md';
 
@@ -34,7 +34,7 @@ const InspectionReport = (props) => {
     }, []);
 
     return (
-        <Paper padding="sm" withBorder style={{height: '100%'}}>
+        <>
             <Group position="apart" mb="sm">
                 <Title order={2}>Inspection Report</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Inspection Report</Button>
@@ -52,7 +52,7 @@ const InspectionReport = (props) => {
                     {...state.pagination}
                 />
             </div>
-        </Paper>
+        </>
     );
 };
 

@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Group, Menu, Paper, Title} from '@mantine/core';
+import {ActionIcon, Button, Group, Menu, Title} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
@@ -78,7 +78,7 @@ const Request = (props) => {
     };
 
     return (
-        <Paper padding="sm" withBorder style={{height: '100%'}}>
+        <>
             <Group position="apart" mb="sm">
                 <Title order={2}>Request</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Request</Button>
@@ -102,7 +102,7 @@ const Request = (props) => {
                     {...state.pagination}
                 />
             </div>
-        </Paper>
+        </>
     );
 };
 

@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Group, Menu, Paper, Title} from '@mantine/core';
+import {ActionIcon, Button, Group, Menu, Title} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {DotsVerticalIcon} from '@modulz/radix-icons';
 import {
@@ -47,7 +47,7 @@ const Fault = (props) => {
     };
 
     return (
-        <Paper padding="sm" withBorder style={{height: '100%'}}>
+        <>
             <Group position="apart" mb="sm">
                 <Title order={2}>Fault</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Fault</Button>
@@ -71,7 +71,7 @@ const Fault = (props) => {
                     {...state.pagination}
                 />
             </div>
-        </Paper>
+        </>
     );
 };
 

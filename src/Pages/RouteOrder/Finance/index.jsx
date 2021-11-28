@@ -1,7 +1,16 @@
-import {Title} from "@mantine/core";
+import {Button, Group, Title} from '@mantine/core';
+import {MdOutlineAddBox as CreateIcon} from 'react-icons/md';
 
 const Finance = (props) => {
-    return <Title order={1}>Finance</Title>;
+    return (
+        <>
+            <Group position="apart" mb="sm">
+                <Title order={2} color="red">Finance</Title>
+                <Button leftIcon={<CreateIcon/>}>Create Finance</Button>
+            </Group>
+            <div style={{height: 'calc(100% - 60px)'}}/>
+        </>
+    );
 };
 
 export default Finance;

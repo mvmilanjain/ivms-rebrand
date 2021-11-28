@@ -1,7 +1,16 @@
-import {Title} from "@mantine/core";
+import {Group, Title} from '@mantine/core';
 
 const Address = (props) => {
-    return <Title order={1}>Address</Title>;
+    return (
+        <>
+            <Group position="apart" mb="sm">
+                <Title order={2}>Address</Title>
+            </Group>
+            <div style={{height: 'calc(100% - 60px)'}}>
+
+            </div>
+        </>
+    );
 };
 
 export default Address;

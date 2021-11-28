@@ -1,14 +1,15 @@
-import {Group, Paper, Title} from "@mantine/core";
+import {Button, Group, Title} from '@mantine/core';
+import {MdOutlineAddBox as CreateIcon} from 'react-icons/md';
 
 const Planning = (props) => {
     return (
-        <Paper padding="sm" withBorder style={{height: '100%'}}>
+        <>
             <Group position="apart" mb="sm">
                 <Title order={2} color="red">Planning</Title>
-                {/*<Button leftIcon={<CreateIcon size={16}/>} variant="light">Create Route</Button>*/}
+                <Button leftIcon={<CreateIcon/>}>Create Plan</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}/>
-        </Paper>
+        </>
     );
 };
 
