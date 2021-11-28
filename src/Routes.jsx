@@ -1,6 +1,8 @@
 import {Redirect, Route, Switch} from "react-router-dom";
 import loadable from "@loadable/component";
 
+const PageNotFound = loadable(() => import('Pages/ErrorPage/PageNotFound'));
+
 const Address = loadable(() => import('Pages/Address'));
 const Dashboard = loadable(() => import('Pages/Dashboard'));
 const Fault = loadable(() => import('Pages/Fault'));
@@ -63,6 +65,7 @@ const Routes = ({isAuthenticated}) => {
         <Switch>
             {getRoutes()}
             <Redirect exact from="/" to={isAuthenticated ? "/Dashboard" : "/SignIn"}/>
+            <Route component={PageNotFound}/>
         </Switch>
     );
 };
