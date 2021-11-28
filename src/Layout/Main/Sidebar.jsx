@@ -11,31 +11,47 @@ import {
 import {FiTruck as BrandIcon} from 'react-icons/fi';
 import {MdChecklist as RouteOrderIcon, MdOutlineDashboard as DashboardIcon} from 'react-icons/md';
 import {FaRoute as RouteIcon, FaTruck as VehicleIcon} from 'react-icons/fa';
+import {FcInspection as InspectionIcon} from 'react-icons/fc';
 import {AiOutlineInbox as ProductIcon} from 'react-icons/ai';
+import {GiAutoRepair as MaintenanceIcon} from 'react-icons/gi';
 
 import {getInitials} from 'Shared/Utilities/common.util';
 
 const navList = [
-    {id: "dashboard", path: "/dashboard", label: 'Dashboard', icon: <DashboardIcon/>, color: 'blue'},
-    {id: "route", path: "/route", label: 'Route', icon: <RouteIcon/>, color: 'teal'},
+    {id: 'dashboard', path: '/Dashboard', label: 'Dashboard', icon: <DashboardIcon/>, color: 'blue'},
+    {id: 'route', path: '/Route', label: 'Route', icon: <RouteIcon/>, color: 'teal'},
     {
-        id: "routeOrder", label: 'Route Order', icon: <RouteOrderIcon/>, color: 'lime', subNav: [
-            {id: "planning", path: "/route_order_planning", label: 'Planning'},
-            {id: "operation", path: "/route_order_operation", label: 'Operation'},
-            {id: "finance", path: "/route_order_finance", label: 'Finance'},
-            {id: "reports", path: "/route_order_reports", label: 'Reports'}
+        id: 'routeOrder', label: 'Route Order', icon: <RouteOrderIcon/>, color: 'lime', subNav: [
+            {id: 'planning', path: '/RouteOrder/Planning', label: 'Planning'},
+            {id: 'operation', path: '/RouteOrder/Operation', label: 'Operation'},
+            {id: 'finance', path: '/RouteOrder/Finance', label: 'Finance'},
+            {id: 'reports', path: '/RouteOrder/Reports', label: 'Reports'}
         ]
     },
-    {id: "fault", path: "/fault", label: 'Fault', icon: <FaultIcon/>, color: 'red'},
-    {id: "product", path: "/product", label: 'Product', icon: <ProductIcon/>, color: 'grape'},
-    {id: "address", path: "/address", label: 'Address', icon: <AddressIcon/>, color: 'violet'},
     {
-        id: "vehicle", label: 'Vehicle', icon: <VehicleIcon/>, color: 'green', subNav: [
-            {id: "truck", path: "/truck", label: 'Truck'},
-            {id: "trailer", path: "/trailer", label: 'Trailer'}
+        id: 'maintenance', label: 'Maintenance', icon: <MaintenanceIcon/>, color: 'yellow', subNav: [
+            {id: 'workorder', path: '/Maintenance/Workorder', label: 'Work Order'},
+            {id: 'request', path: '/Maintenance/Request', label: 'Request'},
+            {id: 'scheduler', path: '/Maintenance/Scheduler', label: 'Scheduler'},
+            {id: 'laborcode', path: '/Maintenance/Laborcode', label: 'Labor Code'}
         ]
     },
-    {id: "setting", path: "/setting", label: 'Setting', icon: <SettingIcon/>, color: 'indigo'}
+    {
+        id: 'inspection', label: 'Inspection', icon: <InspectionIcon/>, color: 'orange', subNav: [
+            {id: 'inspectionForm', path: '/Inspection/InspectionForm', label: 'Form'},
+            {id: 'inspectionReport', path: '/Inspection/InspectionReport', label: 'Report'},
+        ]
+    },
+    {id: 'fault', path: '/Fault', label: 'Fault', icon: <FaultIcon/>, color: 'red'},
+    {id: 'product', path: '/Product', label: 'Product', icon: <ProductIcon/>, color: 'grape'},
+    {id: 'address', path: '/Address', label: 'Address', icon: <AddressIcon/>, color: 'violet'},
+    {
+        id: 'vehicle', label: 'Vehicle', icon: <VehicleIcon/>, color: 'green', subNav: [
+            {id: 'truck', path: '/Vehicle/Truck', label: 'Truck'},
+            {id: 'trailer', path: '/Vehicle/Trailer', label: 'Trailer'}
+        ]
+    },
+    {id: 'setting', path: '/Setting', label: 'Setting', icon: <SettingIcon/>, color: 'indigo'}
 ];
 
 const useStyles = createStyles(t => ({

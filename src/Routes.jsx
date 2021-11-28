@@ -9,31 +9,47 @@ const RoutePage = loadable(() => import('Pages/Route'));
 const Setting = loadable(() => import('Pages/Setting'));
 const SignIn = loadable(() => import('Pages/SignIn'));
 
+const Planning = loadable(() => import('Pages/RouteOrder/Planning'));
+const Operation = loadable(() => import('Pages/RouteOrder/Operation'));
+const Finance = loadable(() => import('Pages/RouteOrder/Finance'));
+const Reports = loadable(() => import('Pages/RouteOrder/Reports'));
+
+const Laborcode = loadable(() => import('Pages/Maintenance/Laborcode'));
+const Request = loadable(() => import('Pages/Maintenance/Request'));
+const Scheduler = loadable(() => import('Pages/Maintenance/Scheduler'));
+const Workorder = loadable(() => import('Pages/Maintenance/Workorder'));
+
+const InspectionForm = loadable(() => import('Pages/Inspection/InspectionForm'));
+const InspectionReport = loadable(() => import('Pages/Inspection/InspectionReport'));
+
 const Truck = loadable(() => import('Pages/Vehicle/Truck'));
 const Trailer = loadable(() => import('Pages/Vehicle/Trailer'));
 
-const Planning = loadable(() => import('Pages/RoutePlanner/Planning'));
-const Operation = loadable(() => import('Pages/RoutePlanner/Operation'));
-const Finance = loadable(() => import('Pages/RoutePlanner/Finance'));
-const Reports = loadable(() => import('Pages/RoutePlanner/Reports'));
-
-const pagesWithoutAuthentication = [{id: "signin", path: "/signin", component: SignIn}];
+const pagesWithoutAuthentication = [{id: "signin", path: "/SignIn", component: SignIn}];
 
 const pagesWithAuthentication = [
-    {id: "address", path: "/address", component: Address},
-    {id: "dashboard", path: "/dashboard", component: Dashboard},
-    {id: "fault", path: "/fault", component: Fault},
-    {id: "product", path: "/product", component: Product},
-    {id: "route", path: "/route", component: RoutePage},
-    {id: "setting", path: "/setting", component: Setting},
+    {id: "address", path: "/Address", component: Address},
+    {id: "dashboard", path: "/Dashboard", component: Dashboard},
+    {id: "fault", path: "/Fault", component: Fault},
+    {id: "product", path: "/Product", component: Product},
+    {id: "route", path: "/Route", component: RoutePage},
+    {id: "setting", path: "/Setting", component: Setting},
 
-    {id: "truck", path: "/truck", component: Truck},
-    {id: "trailer", path: "/trailer", component: Trailer},
+    {id: "laborcode", path: "/Maintenance/Laborcode", component: Laborcode},
+    {id: "request", path: "/Maintenance/Request", component: Request},
+    {id: "scheduler", path: "/Maintenance/Scheduler", component: Scheduler},
+    {id: "workorder", path: "/Maintenance/Workorder", component: Workorder},
 
-    {id: "planning", path: "/route_order_planning", component: Planning},
-    {id: "operation", path: "/route_order_operation", component: Operation},
-    {id: "finance", path: "/route_order_finance", component: Finance},
-    {id: "reports", path: "/route_order_reports", component: Reports},
+    {id: "inspectionForm", path: "/Inspection/InspectionForm", component: InspectionForm},
+    {id: "inspectionReport", path: "/Inspection/InspectionReport", component: InspectionReport},
+
+    {id: "truck", path: "/Vehicle/Truck", component: Truck},
+    {id: "trailer", path: "/Vehicle/Trailer", component: Trailer},
+
+    {id: "planning", path: "/RouteOrder/Planning", component: Planning},
+    {id: "operation", path: "/RouteOrder/Operation", component: Operation},
+    {id: "finance", path: "/RouteOrder/Finance", component: Finance},
+    {id: "reports", path: "/RouteOrder/Reports", component: Reports},
 ];
 
 const Routes = ({isAuthenticated}) => {
@@ -46,7 +62,7 @@ const Routes = ({isAuthenticated}) => {
     return (
         <Switch>
             {getRoutes()}
-            <Redirect exact from="/" to={isAuthenticated ? "/dashboard" : "/signin"}/>
+            <Redirect exact from="/" to={isAuthenticated ? "/Dashboard" : "/SignIn"}/>
         </Switch>
     );
 };

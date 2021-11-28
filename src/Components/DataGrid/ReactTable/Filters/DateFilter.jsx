@@ -4,7 +4,6 @@ import {DatePicker} from '@mantine/dates';
 import {useSetState} from '@mantine/hooks';
 import {BiFilterAlt as FilterIcon} from 'react-icons/bi';
 import {CalendarIcon} from '@modulz/radix-icons';
-import {formatDate} from "../../../../Shared/Utilities/common.util";
 
 const DateFilter = (props) => {
     const {column: {filterValue, setFilter, filterOptions}} = props;

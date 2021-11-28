@@ -1,8 +1,7 @@
-import get from 'lodash/get';
 import {Badge} from '@mantine/core';
 
-import {capitalizeStr, formatDate, getAddressLabel, getOptionLabel} from './common.util';
-import {VEHICLE_STATUS} from "./referenceData.util";
+import {capitalizeStr, formatDate, formatDateTime, getAddressLabel, getFullName, getOptionLabel} from './common.util';
+import {VEHICLE_STATUS} from './referenceData.util';
 
 const renderVehicleStatus = ({value}) => {
     let result = '';
@@ -51,33 +50,78 @@ export const FAULT_SCHEMA = [
     {accessor: 'description', Header: 'Description', disableSortBy: true}
 ];
 
-export const TRUCK_SCHEMA = [
-    {accessor: 'vehicle_number', Header: 'Truck No.'},
-    {accessor: 'vehicle_category.name', Header: 'Vehicle Category', disableFilters: true},
-    {accessor: 'name', Header: 'Vehicle Name', cellMinWidth: 200},
-    {accessor: 'model', Header: 'Model'},
-    {
-        accessor: 'meter_reading', Header: 'Meter Reading', disableFilters: true,
-        Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
-    },
-    {accessor: 'status', Header: 'Status', align: 'center', disableFilters: true, Cell: renderVehicleStatus}
-];
+export const INSPECTION = {
+    INSPECTION_FORM: [],
+    INSPECTION_REPORT: [
+        {accessor: 'report_number', Header: 'Report No.'},
+        {accessor: 'created_at', Header: 'Date', Cell: ({value}) => formatDateTime(value)},
+        {accessor: 'vehicle.vehicle_number', Header: 'Vehicle'},
+        {
+            accessor: 'location', Header: 'Location',
+            Cell: ({row}) => row.original.location ? getAddressLabel(row.original.location) : ''
+        },
+        {
+            accessor: 'inspector', Header: 'Inspector', disableSortBy: true,
+            Cell: ({row}) => getFullName(row.original.inspector.first_name, row.original.inspector.last_name)
+        }
+    ]
+};
 
-export const TRAILER_SCHEMA = [
-    {accessor: 'name', Header: 'Name'},
-    {accessor: 'trailer_category.name', Header: 'Category', disableFilters: true},
-    {accessor: 'vin_number', Header: 'VIN No.'},
-    {accessor: 'model', Header: 'Model', disableFilters: true},
-    {
-        accessor: 'meter_reading', Header: 'Meter', align: 'center', disableFilters: true,
-        Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
-    },
-    {
-        accessor: 'status', Header: 'Status', align: 'center',
-        disableFilters: true, Cell: renderVehicleStatus
-    },
-    {
-        accessor: 'license_expiry', Header: 'License Expiry', align: 'center', disableFilters: true,
-        Cell: ({value}) => value ? <Badge radius="sm" color="cyan">{formatDate(value)}</Badge> : ''
-    }
-];
+export const MAINTENANCE = {
+    LABOR_CODE_SCHEMA: [
+        {accessor: 'code', Header: 'Labor Code'},
+        {accessor: 'hourly_rate', Header: 'Hourly Rate'},
+        {accessor: 'supplier.name', Header: 'Supplier'},
+        {accessor: 'travel', Header: 'Travel'},
+        {accessor: 'call_out', Header: 'Call Out'}
+    ],
+    ORDER_SCHEMA: [
+        {accessor: 'work_order_number', Header: 'Order no.'},
+        {accessor: 'created_at', Header: 'Create Date', Cell: ({value}) => value ? formatDateTime(value) : ''},
+        {accessor: 'vehicle.vehicle_number', Header: 'Vehicle'},
+        {accessor: 'due_date', Header: 'Due Date', Cell: ({value}) => value ? formatDateTime(value) : ''},
+        {accessor: 'status', Header: 'Status'},
+        {accessor: 'priority', Header: 'Priority'},
+        {
+            accessor: 'assignee', Header: 'Assigned To', disableSortBy: true,
+            Cell: ({row}) => getFullName(row.original.assignee.first_name, row.original.assignee.last_name)
+        }
+    ],
+    SCHEDULE_SCHEMA: [
+        {accessor: 'title', Header: 'Name'},
+        {accessor: 'vehicle.vehicle_number', Header: 'Truck No.'},
+        {accessor: 'workorder', Header: 'Workorder'}
+    ]
+};
+
+export const VEHICLE = {
+    TRUCK_SCHEMA: [
+        {accessor: 'vehicle_number', Header: 'Truck No.'},
+        {accessor: 'vehicle_category.name', Header: 'Vehicle Category', disableFilters: true},
+        {accessor: 'name', Header: 'Vehicle Name', cellMinWidth: 200},
+        {accessor: 'model', Header: 'Model'},
+        {
+            accessor: 'meter_reading', Header: 'Meter Reading', disableFilters: true,
+            Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
+        },
+        {accessor: 'status', Header: 'Status', align: 'center', disableFilters: true, Cell: renderVehicleStatus}
+    ],
+    TRAILER_SCHEMA: [
+        {accessor: 'name', Header: 'Name'},
+        {accessor: 'trailer_category.name', Header: 'Category', disableFilters: true},
+        {accessor: 'vin_number', Header: 'VIN No.'},
+        {accessor: 'model', Header: 'Model', disableFilters: true},
+        {
+            accessor: 'meter_reading', Header: 'Meter', align: 'center', disableFilters: true,
+            Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
+        },
+        {
+            accessor: 'status', Header: 'Status', align: 'center',
+            disableFilters: true, Cell: renderVehicleStatus
+        },
+        {
+            accessor: 'license_expiry', Header: 'License Expiry', align: 'center', disableFilters: true,
+            Cell: ({value}) => value ? <Badge radius="sm" color="cyan">{formatDate(value)}</Badge> : ''
+        }
+    ]
+};

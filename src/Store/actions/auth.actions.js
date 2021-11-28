@@ -23,7 +23,7 @@ export const authCheckState = (history) => (dispatch => {
     const refreshToken = localStorage.getItem('refreshToken');
     if (!token) {
         dispatch(authLogout());
-        history.push('/signin');
+        history.push('/SignIn');
     } else {
         const expirationTime = new Date(localStorage.getItem('expirationTime'));
         if (expirationTime <= new Date()) {

@@ -1,20 +1,15 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Group, Menu, Paper, Title} from '@mantine/core';
+import {Button, Group, Paper, Title} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
-import {DotsVerticalIcon} from '@modulz/radix-icons';
-import {
-    MdOutlineAddBox as CreateIcon,
-    MdOutlineEdit as EditIcon,
-    MdOutlineVisibility as ViewIcon
-} from 'react-icons/md';
+import {MdOutlineAddBox as CreateIcon} from 'react-icons/md';
 
 import {ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
-import {getFaults} from 'Shared/Services';
-import {FAULT_SCHEMA} from 'Shared/Utilities/tableSchema';
+import {getInspectionReports} from 'Shared/Services';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
+import {INSPECTION} from 'Shared/Utilities/tableSchema';
 
-const Fault = (props) => {
+const InspectionReport = (props) => {
     const {requestHandler} = useHttp();
     const [loading, toggleLoading] = useState(false);
     const [state, setState] = useSetState({
@@ -25,10 +20,11 @@ const Fault = (props) => {
     const fetchData = useCallback(({pageSize, pageIndex, sortBy, filters}) => {
         toggleLoading(l => !l);
         const params = {
-            per_page: pageSize, page_no: pageIndex + 1, include: 'vehicle',
+            per_page: pageSize, page_no: pageIndex + 1,
+            include: 'vehicle,inspector,location',
             sort: getSortText(sortBy), filter: getFilterList(filters)
         };
-        requestHandler(getFaults(params)).then(res => {
+        requestHandler(getInspectionReports(params)).then(res => {
             const {data, meta: {pagination: {count, current_page, total_pages}}} = res;
             setState({
                 reload: false, data,
@@ -37,30 +33,15 @@ const Fault = (props) => {
         }).catch(e => console.error(e)).finally(() => toggleLoading(l => !l));
     }, []);
 
-    const renderActions = ({value}) => {
-        return (
-            <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
-                <Menu.Item icon={<EditIcon/>}>Edit Fault</Menu.Item>
-                <Menu.Item icon={<ViewIcon/>}>View Fault</Menu.Item>
-            </Menu>
-        );
-    };
-
     return (
         <Paper padding="sm" withBorder style={{height: '100%'}}>
             <Group position="apart" mb="sm">
-                <Title order={2}>Fault</Title>
-                <Button leftIcon={<CreateIcon/>}>Create Fault</Button>
+                <Title order={2}>Inspection Report</Title>
+                <Button leftIcon={<CreateIcon/>}>Create Inspection Report</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
-                    columns={[
-                        {
-                            accessor: 'id', Header: '', disableFilters: true, disableSortBy: true,
-                            cellMinWidth: 40, cellWidth: 40, Cell: renderActions
-                        },
-                        ...FAULT_SCHEMA
-                    ]}
+                    columns={INSPECTION.INSPECTION_REPORT}
                     data={state.data}
                     serverSideDataSource
                     fetchData={fetchData}
@@ -75,4 +56,4 @@ const Fault = (props) => {
     );
 };
 
-export default Fault;
+export default InspectionReport;

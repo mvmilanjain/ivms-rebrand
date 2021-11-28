@@ -14,7 +14,7 @@ import {
 import {ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {deleteTruck, getTrucks} from 'Shared/Services';
-import {TRUCK_SCHEMA} from 'Shared/Utilities/tableSchema';
+import {VEHICLE} from 'Shared/Utilities/tableSchema';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
 
 const Truck = (props) => {
@@ -91,7 +91,7 @@ const Truck = (props) => {
                             accessor: 'id', Header: '', disableFilters: true,
                             disableSortBy: true, Cell: renderActions
                         },
-                        ...TRUCK_SCHEMA
+                        ...VEHICLE.TRUCK_SCHEMA
                     ]}
                     data={state.data}
                     serverSideDataSource

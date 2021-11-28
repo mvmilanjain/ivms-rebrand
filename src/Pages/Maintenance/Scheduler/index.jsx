@@ -1,9 +1,9 @@
 import {useCallback, useState} from 'react';
 import {ActionIcon, Button, Group, Menu, Paper, Title} from '@mantine/core';
-import {useSetState} from "@mantine/hooks";
-import {useModals} from "@mantine/modals";
-import {useNotifications} from "@mantine/notifications";
-import {DotsVerticalIcon} from "@modulz/radix-icons";
+import {useSetState} from '@mantine/hooks';
+import {useModals} from '@mantine/modals';
+import {useNotifications} from '@mantine/notifications';
+import {DotsVerticalIcon} from '@modulz/radix-icons';
 import {
     MdOutlineAddBox as CreateIcon,
     MdOutlineDelete as DeleteIcon,
@@ -13,11 +13,11 @@ import {
 
 import {ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
-import {deleteTrailer, getTrailers} from 'Shared/Services';
+import {deleteSchedule, getSchedules} from 'Shared/Services';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
-import {VEHICLE} from 'Shared/Utilities/tableSchema';
+import {MAINTENANCE} from 'Shared/Utilities/tableSchema';
 
-const Trailer = (props) => {
+const Workorder = (props) => {
     const {requestHandler} = useHttp();
     const modals = useModals();
     const notifications = useNotifications();
@@ -30,47 +30,47 @@ const Trailer = (props) => {
     const fetchData = useCallback(({pageSize, pageIndex, sortBy, filters}) => {
         toggleLoading(l => !l);
         const params = {
-            per_page: pageSize, page_no: pageIndex + 1,
-            include: 'trailer_category',
+            per_page: pageSize, page_no: pageIndex + 1, include: 'vehicle',
             sort: getSortText(sortBy), filter: getFilterList(filters)
         };
-        requestHandler(getTrailers(params)).then(res => {
+        requestHandler(getSchedules(params)).then(res => {
             const {data, meta: {pagination: {count, current_page, total_pages}}} = res;
             setState({
-                reload: false, data, pagination: {total: count, pageCount: total_pages, pageIndex: current_page - 1}
+                reload: false, data,
+                pagination: {total: count, pageCount: total_pages, pageIndex: current_page - 1}
             });
         }).catch(e => console.error(e)).finally(() => toggleLoading(l => !l));
     }, []);
 
     const renderActions = ({value}) => {
         return (
-            <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
-                <Menu.Item icon={<EditIcon/>}>Edit Trailer</Menu.Item>
-                <Menu.Item icon={<ViewIcon/>}>View Trailer</Menu.Item>
+            <Menu withArrow size="md" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
+                <Menu.Item icon={<EditIcon/>}>Edit Schedule</Menu.Item>
+                <Menu.Item icon={<ViewIcon/>}>View Schedule</Menu.Item>
                 <Menu.Item icon={<DeleteIcon/>} color="red" onClick={() => openDeleteConfirmModal(value)}>
-                    Delete Trailer
+                    Delete Schedule
                 </Menu.Item>
             </Menu>
         );
     };
 
-    const openDeleteConfirmModal = (id) => {
+    const openDeleteConfirmModal = (routeId) => {
         modals.openConfirmModal({
-            title: `Are you sure you want to delete the trailer?`,
-            labels: {confirm: "Delete trailer", cancel: "No don't delete it"},
+            title: "Are you sure you want to delete the schedule?",
+            labels: {confirm: "Delete schedule", cancel: "No don't delete it"},
             confirmProps: {color: "red"},
             onConfirm: () => {
                 toggleLoading(l => !l);
-                requestHandler(deleteTrailer(id)).then(() => {
+                requestHandler(deleteSchedule(routeId)).then(() => {
                     notifications.showNotification({
                         title: "Success", color: "green",
-                        message: "Trailer has been deleted successfully."
+                        message: "Schedule has been deleted successfully."
                     });
                     setState({reload: true});
                 }).catch(e => {
                     notifications.showNotification({
-                        title: "Error", color: "red",
-                        message: "Not able to delete trailer. Something went wrong!!"
+                        title: "Error", color: 'red',
+                        message: 'Not able to delete schedule. Something went wrong!!'
                     });
                 }).finally(() => toggleLoading(l => !l));
             }
@@ -80,24 +80,24 @@ const Trailer = (props) => {
     return (
         <Paper padding="sm" withBorder style={{height: '100%'}}>
             <Group position="apart" mb="sm">
-                <Title order={2}>Trailer</Title>
-                <Button leftIcon={<CreateIcon/>}>Create Trailer</Button>
+                <Title order={2}>Scheduler</Title>
+                <Button leftIcon={<CreateIcon/>}>Create Schedule</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
                     columns={[
                         {
-                            accessor: 'id', Header: '', disableFilters: true,
-                            disableSortBy: true, Cell: renderActions
+                            accessor: 'id', Header: '', disableFilters: true, disableSortBy: true,
+                            cellMinWidth: 40, cellWidth: 40, Cell: renderActions
                         },
-                        ...VEHICLE.TRAILER_SCHEMA
+                        ...MAINTENANCE.SCHEDULE_SCHEMA
                     ]}
                     data={state.data}
                     serverSideDataSource
                     fetchData={fetchData}
                     loading={loading}
                     reload={state.reload}
-                    stickyHeader sorting filtering
+                    stickyHeader sorting
                     pagination initialPageSize={50}
                     {...state.pagination}
                 />
@@ -106,4 +106,4 @@ const Trailer = (props) => {
     );
 };
 
-export default Trailer;
+export default Workorder;

@@ -15,7 +15,7 @@ const AppBar = () => {
 
     const handleSignOut = () => {
         logout();
-        history.push("/signin");
+        history.push("/SignIn");
     };
 
     return (
