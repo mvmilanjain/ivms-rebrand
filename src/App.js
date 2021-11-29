@@ -6,7 +6,7 @@ import {ModalsProvider} from '@mantine/modals';
 import {NotificationsProvider} from '@mantine/notifications';
 
 import {GlobalStyles} from 'Assets/GlobalStyles';
-import {MainLayout, MinimalLayout} from 'Layout';
+import {Main1Layout, MinimalLayout} from 'Layout';
 import Routes from 'Routes';
 import {authCheckState} from 'Store/actions/auth.actions';
 
@@ -28,7 +28,7 @@ const App = () => {
                 <NotificationsProvider position="top-center">
                     {isAuthenticated !== null && (
                         isAuthenticated ?
-                            <MainLayout><Routes isAuthenticated={isAuthenticated}/></MainLayout> :
+                            <Main1Layout><Routes isAuthenticated={isAuthenticated}/></Main1Layout> :
                             <MinimalLayout><Routes isAuthenticated={isAuthenticated}/></MinimalLayout>
                     )}
                 </NotificationsProvider>

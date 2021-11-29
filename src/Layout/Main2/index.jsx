@@ -4,7 +4,7 @@ import {Box, Paper} from '@mantine/core';
 import AppBar from './AppBar';
 import Sidebar from './Sidebar';
 
-export const Main = (props) => (
+const Main2 = (props) => (
     <Box component="div" sx={() => ({display: 'flex'})}>
         <Sidebar/>
         <Box component="div" sx={() => ({flexGrow: 1, display: 'flex', flexDirection: "column"})}>
@@ -19,3 +19,5 @@ export const Main = (props) => (
         </Box>
     </Box>
 );
+
+export default Main2;

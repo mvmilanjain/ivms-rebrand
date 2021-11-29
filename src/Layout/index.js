@@ -1,2 +1,4 @@
-export {Main as MainLayout} from './Main';
-export {Minimal as MinimalLayout} from './Minimal';
+export {default as Main1Layout} from './Main1';
+export {default as Main2Layout} from './Main2';
+
+export {default as MinimalLayout} from './Minimal';
