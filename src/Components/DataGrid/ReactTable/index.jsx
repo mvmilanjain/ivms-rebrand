@@ -34,7 +34,10 @@ const useStyles = createStyles((t) => ({
     stickHeader: {top: 0, position: 'sticky'},
     sortableHeader: {'&:hover': {backgroundColor: t.colors.gray[2]}},
     disableSortIcon: {color: t.colors.gray[5]},
-    sortDirectionIcon: {transition: 'transform 200ms ease'}
+    sortDirectionIcon: {
+        color: t.colors.blue[5],
+        transition: 'transform 200ms ease'
+    }
 }));
 
 const defaultColumn = {

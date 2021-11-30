@@ -1,10 +1,9 @@
 import {useState} from 'react';
-import {NavLink as Link} from 'react-router-dom';
 import {Scrollbars} from 'react-custom-scrollbars';
-import {Box, Collapse, createStyles, Group, Navbar, Text, ThemeIcon, useMantineTheme} from '@mantine/core';
+import {createStyles, Group, Navbar, Popover, ThemeIcon, UnstyledButton, useCss, useMantineTheme} from '@mantine/core';
 import {
-    ChevronRightIcon,
     ExclamationTriangleIcon as FaultIcon,
+    ExitIcon as LogoutIcon,
     GearIcon as SettingIcon,
     IdCardIcon as AddressIcon
 } from '@modulz/radix-icons';
@@ -15,157 +14,104 @@ import {FcInspection as InspectionIcon} from 'react-icons/fc';
 import {AiOutlineInbox as ProductIcon} from 'react-icons/ai';
 import {GiAutoRepair as MaintenanceIcon} from 'react-icons/gi';
 
-import {getInitials} from 'Shared/Utilities/common.util';
-
-const navList = [
-    {id: 'dashboard', path: '/Dashboard', label: 'Dashboard', icon: <DashboardIcon/>, color: 'blue'},
-    {id: 'route', path: '/Route', label: 'Route', icon: <RouteIcon/>, color: 'teal'},
-    {
-        id: 'routeOrder', label: 'Route Order', icon: <RouteOrderIcon/>, color: 'lime', subNav: [
-            {id: 'planning', path: '/RouteOrder/Planning', label: 'Planning'},
-            {id: 'operation', path: '/RouteOrder/Operation', label: 'Operation'},
-            {id: 'finance', path: '/RouteOrder/Finance', label: 'Finance'},
-            {id: 'reports', path: '/RouteOrder/Reports', label: 'Reports'}
-        ]
-    },
-    {
-        id: 'maintenance', label: 'Maintenance', icon: <MaintenanceIcon/>, color: 'yellow', subNav: [
-            {id: 'workorder', path: '/Maintenance/Workorder', label: 'Work Order'},
-            {id: 'request', path: '/Maintenance/Request', label: 'Request'},
-            {id: 'scheduler', path: '/Maintenance/Scheduler', label: 'Scheduler'},
-            {id: 'laborcode', path: '/Maintenance/Laborcode', label: 'Labor Code'}
-        ]
-    },
-    {
-        id: 'inspection', label: 'Inspection', icon: <InspectionIcon/>, color: 'orange', subNav: [
-            {id: 'inspectionForm', path: '/Inspection/InspectionForm', label: 'Form'},
-            {id: 'inspectionReport', path: '/Inspection/InspectionReport', label: 'Report'},
-        ]
-    },
-    {id: 'fault', path: '/Fault', label: 'Fault', icon: <FaultIcon/>, color: 'red'},
-    {id: 'product', path: '/Product', label: 'Product', icon: <ProductIcon/>, color: 'grape'},
-    {id: 'address', path: '/Address', label: 'Address', icon: <AddressIcon/>, color: 'violet'},
-    {
-        id: 'vehicle', label: 'Vehicle', icon: <VehicleIcon/>, color: 'green', subNav: [
-            {id: 'truck', path: '/Vehicle/Truck', label: 'Truck'},
-            {id: 'trailer', path: '/Vehicle/Trailer', label: 'Trailer'}
-        ]
-    },
-    {id: 'setting', path: '/Setting', label: 'Setting', icon: <SettingIcon/>, color: 'indigo'}
-];
-
 const useStyles = createStyles(t => ({
-    root: {backgroundColor: t.colors.dark[4]},
+    root: {backgroundColor: t.colors.dark[9]},
     link: {
+        width: 50,
+        height: 50,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '100%',
-        padding: t.spacing.xs,
+        justifyContent: 'center',
+        color: t.colors.dark[0],
         borderLeft: `1px solid transparent`,
         borderTopRightRadius: t.radius.sm,
         borderBottomRightRadius: t.radius.sm,
-        color: t.colors.dark[0],
-        '&:hover': {
-            backgroundColor: t.colors.dark[5],
-            color: 'white'
-        }
-    },
-    chevron: {
-        color: 'currentcolor',
-        transition: 'transform 200ms ease',
+        '&:hover': {backgroundColor: t.colors.dark[5]}
     }
 }));
 
-const MainLink = ({path, icon, color, label}) => {
+const NavbarLink = ({icon: Icon, label, color, active, onClick}) => {
     const {classes} = useStyles();
     const theme = useMantineTheme();
+    const {cx, css} = useCss();
+    const [opened, setOpened] = useState(false);
 
     return (
-        <Link
-            to={path} exact className={classes.link}
-            activeStyle={{
-                fontWeight: 500,
-                borderLeftColor: theme.colors[color][7],
-                color: theme.colors.gray[2],
-                backgroundColor: theme.fn.rgba(theme.colors[color][9], .45)
+        <Popover
+            opened={opened} onClose={() => setOpened(false)}
+            position="right" transitionDuration={0}
+            withArrow noFocusTrap noEscape
+            styles={{
+                popover: {backgroundColor: theme.colors.gray[0]},
+                body: {color: theme.colors.gray[9]}
             }}
+            target={<UnstyledButton
+                className={cx(
+                    classes.link,
+                    {
+                        [css({
+                            '&, &:hover': {
+                                backgroundColor: theme.fn.rgba(theme.colors[color][9], .45)
+                            }
+                        })]: active
+                    }
+                )}
+                onMouseEnter={() => setOpened(true)}
+                onMouseLeave={() => setOpened(false)}
+                onClick={onClick}
+            >
+                <ThemeIcon color={color} variant="filled"><Icon/></ThemeIcon>
+            </UnstyledButton>}
         >
-            <Group>
-                <ThemeIcon color={color} variant="filled">{icon}</ThemeIcon>
-                <Text size="md" sx={() => ({color: 'currentcolor', fontWeight: 'inherit'})}>{label}</Text>
-            </Group>
-        </Link>
+            {label}
+        </Popover>
     );
 };
 
-const NavWithSubLink = ({icon, color, label, subNav}) => {
-    const {classes} = useStyles();
-    const theme = useMantineTheme();
-    const [opened, setOpen] = useState(false);
-
-    return (
-        <>
-            <Box className={classes.link} onClick={() => setOpen((o) => !o)}>
-                <Group>
-                    <ThemeIcon color={color}>{icon || getInitials(label)}</ThemeIcon>
-                    <Box>{label}</Box>
-                </Group>
-                <ChevronRightIcon
-                    className={classes.chevron}
-                    style={{transform: opened ? 'rotate(90deg)' : 'none'}}
-                />
-            </Box>
-            <Collapse in={opened} ml="xl">
-                {subNav.map(({id, path, label}) => (
-                    <Link
-                        key={id} to={path} exact className={classes.link}
-                        style={{borderLeftColor: theme.colors.gray[2]}}
-                        activeStyle={{
-                            fontWeight: 500,
-                            borderLeftColor: theme.colors[color][7],
-                            color: theme.colors.gray[2],
-                            backgroundColor: theme.fn.rgba(theme.colors[color][9], .45)
-                        }}
-                    >
-                        <Group>
-                            <ThemeIcon ml="md" variant="light">{getInitials(label)}</ThemeIcon>
-                            <Text size="md" style={{color: 'currentcolor', fontWeight: 'inherit',}}>
-                                {label}
-                            </Text>
-                        </Group>
-                    </Link>
-                ))}
-            </Collapse>
-        </>
-    );
-};
+const mockdata = [
+    {id: 'dashboard', label: 'Dashboard', icon: DashboardIcon, color: 'blue'},
+    {id: 'route', label: 'Route', icon: RouteIcon, color: 'teal'},
+    {id: 'routeOrder', label: 'Route Order', icon: RouteOrderIcon, color: 'lime'},
+    {id: 'maintenance', label: 'Maintenance', icon: MaintenanceIcon, color: 'yellow'},
+    {id: 'inspection', label: 'Inspection', icon: InspectionIcon, color: 'orange'},
+    {id: 'fault', label: 'Fault', icon: FaultIcon, color: 'red'},
+    {id: 'product', label: 'Product', icon: ProductIcon, color: 'grape'},
+    {id: 'address', label: 'Address', icon: AddressIcon, color: 'violet'},
+    {id: 'vehicle', label: 'Vehicle', icon: VehicleIcon, color: 'green'},
+    {id: 'setting', label: 'Setting', icon: SettingIcon, color: 'indigo'}
+];
 
 const Sidebar = () => {
     const {classes} = useStyles();
-    const getNavList = () => {
-        return navList.map((link) => {
-            if (!link.subNav) {
-                return <MainLink key={link.id} {...link}/>;
-            } else {
-                return <NavWithSubLink key={link.id} {...link}/>;
-            }
-        });
-    };
+    const [active, setActive] = useState(2);
+
+    const links = mockdata.map((link, index) => (
+        <NavbarLink
+            {...link}
+            key={link.id}
+            active={index === active}
+            onClick={() => setActive(index)}
+        />
+    ));
 
     return (
-        <Navbar padding="sm" width={{base: 240, breakpoints: {sm: '100%', lg: 400}}} className={classes.root}>
+        <Navbar width={{base: 84}} padding="md" className={classes.root} zIndex={1}>
             <Navbar.Section sx={t => ({borderBottom: `1px solid ${t.colors.gray[2]}`})}>
-                <Group sx={t => ({paddingTop: 4, paddingBottom: t.spacing.md})}>
+                <Group sx={t => ({paddingTop: 2, paddingBottom: t.spacing.sm})} position="center">
                     <ThemeIcon variant="gradient" radius="xl" size="lg" gradient={{from: 'indigo', to: 'cyan'}}>
                         <BrandIcon size={16}/>
                     </ThemeIcon>
-                    <Text size="xl" weight="bold" sx={t => ({color: t.colors.gray[2]})}>IVMS</Text>
                 </Group>
             </Navbar.Section>
 
-            <Navbar.Section grow mt="lg">
-                <Scrollbars>{getNavList()}</Scrollbars>
+            <Navbar.Section grow mt="sm">
+                <Scrollbars>{links}</Scrollbars>
+            </Navbar.Section>
+
+            <Navbar.Section sx={t => ({borderTop: `1px solid ${t.colors.gray[2]}`})}>
+                <Group my="sm" position="center">
+                    <NavbarLink icon={LogoutIcon} label="Logout" color="blue"/>
+                </Group>
             </Navbar.Section>
         </Navbar>
     );

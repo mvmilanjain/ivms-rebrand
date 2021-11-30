@@ -19,7 +19,7 @@ const AppBar = () => {
     };
 
     return (
-        <Header padding="sm" height={64} sx={t => ({flexGrow: 1})} zIndex={1}>
+        <Header padding="sm" height={64} sx={t => ({flexGrow: 1})}>
             <Center style={{height: '100%'}}>
                 <ActionIcon size="lg" variant="light"><MenuOpenIcon/></ActionIcon>
                 <Box component="div" sx={() => ({flexGrow: 1})}/>

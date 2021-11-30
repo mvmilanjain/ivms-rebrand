@@ -1,8 +1,15 @@
 import {useState} from 'react';
-import {NavLink as Link} from 'react-router-dom';
+import {NavLink as Link, useHistory} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
 import {Scrollbars} from 'react-custom-scrollbars';
-import {Box, Collapse, createStyles, Group, Navbar, Text, ThemeIcon} from '@mantine/core';
-import {ChevronRightIcon, ExclamationTriangleIcon as FaultIcon, IdCardIcon as AddressIcon} from '@modulz/radix-icons';
+import {Box, UnstyledButton, Collapse, createStyles, Group, Navbar, Text, ThemeIcon, useMantineTheme} from '@mantine/core';
+import {
+    ChevronRightIcon,
+    ExclamationTriangleIcon as FaultIcon,
+    ExitIcon as LogoutIcon,
+    GearIcon as SettingIcon,
+    IdCardIcon as AddressIcon,
+} from '@modulz/radix-icons';
 import {FiTruck as BrandIcon} from 'react-icons/fi';
 import {MdChecklist as RouteOrderIcon, MdOutlineDashboard as DashboardIcon} from 'react-icons/md';
 import {FaRoute as RouteIcon, FaTruck as VehicleIcon} from 'react-icons/fa';
@@ -11,6 +18,7 @@ import {AiOutlineInbox as ProductIcon} from 'react-icons/ai';
 import {GiAutoRepair as MaintenanceIcon} from 'react-icons/gi';
 
 import {getInitials} from 'Shared/Utilities/common.util';
+import {authLogout} from 'Store/actions/auth.actions';
 
 const navList = [
     {id: 'dashboard', path: '/Dashboard', label: 'Dashboard', icon: <DashboardIcon/>, color: 'blue'},
@@ -49,11 +57,7 @@ const navList = [
 ];
 
 const useStyles = createStyles(t => ({
-    root: {
-        backgroundColor: t.colors.dark[7],
-        padding: t.spacing.sm,
-        zIndex: 1
-    },
+    root: {backgroundColor: t.colors.dark[7]},
     link: {
         display: 'flex',
         alignItems: 'center',
@@ -61,13 +65,17 @@ const useStyles = createStyles(t => ({
         width: '100%',
         padding: t.spacing.xs,
         borderLeft: `1px solid transparent`,
-        borderTopRightRadius: t.radius.md,
-        borderBottomRightRadius: t.radius.md,
+        borderTopRightRadius: t.radius.sm,
+        borderBottomRightRadius: t.radius.sm,
         color: t.colors.dark[0],
         '&:hover': {
-            backgroundColor: t.colors.dark[5],
+            backgroundColor: t.colors.dark[9],
             color: 'white'
         }
+    },
+    logout: {
+        marginTop: t.spacing.xs,
+        marginBottom: t.spacing.xs
     },
     chevron: {
         color: 'currentcolor',
@@ -76,17 +84,22 @@ const useStyles = createStyles(t => ({
 }));
 
 const MainLink = ({path, icon, color, label}) => {
-    const {classes, theme} = useStyles();
+    const {classes} = useStyles();
+    const theme = useMantineTheme();
 
     return (
-        <Link to={path} exact className={classes.link} activeStyle={{
-            borderLeftColor: theme.colors[color][9],
-            color: theme.colors.gray[0],
-            backgroundColor: theme.fn.rgba(theme.colors[color][9], .45)
-        }}>
+        <Link
+            to={path} exact className={classes.link}
+            activeStyle={{
+                fontWeight: 500,
+                borderLeftColor: theme.colors[color][7],
+                color: theme.colors.gray[2],
+                backgroundColor: theme.fn.rgba(theme.colors[color][9], .45)
+            }}
+        >
             <Group>
                 <ThemeIcon color={color} variant="filled">{icon}</ThemeIcon>
-                <Text size="md" sx={() => ({color: 'currentcolor', fontWeight: 500})}>{label}</Text>
+                <Text size="md" sx={() => ({color: 'currentcolor', fontWeight: 'inherit'})}>{label}</Text>
             </Group>
         </Link>
     );
@@ -98,7 +111,7 @@ const NavWithSubLink = ({icon, color, label, subNav}) => {
 
     return (
         <>
-            <Box className={classes.link} onClick={() => setOpen(o => !o)}>
+            <Box className={classes.link} onClick={() => setOpen((o) => !o)}>
                 <Group>
                     <ThemeIcon color={color}>{icon || getInitials(label)}</ThemeIcon>
                     <Box>{label}</Box>
@@ -114,14 +127,15 @@ const NavWithSubLink = ({icon, color, label, subNav}) => {
                         key={id} to={path} exact className={classes.link}
                         style={{borderLeftColor: theme.colors.dark[4]}}
                         activeStyle={{
-                            borderLeftColor: theme.colors[color][9],
-                            color: theme.colors.gray[0],
+                            fontWeight: 500,
+                            borderLeftColor: theme.colors[color][7],
+                            color: theme.colors.gray[2],
                             backgroundColor: theme.fn.rgba(theme.colors[color][9], .45)
                         }}
                     >
                         <Group>
                             <ThemeIcon ml="md" variant="light">{getInitials(label)}</ThemeIcon>
-                            <Text size="md" style={{color: 'currentcolor', fontWeight: 500}}>
+                            <Text size="md" style={{color: 'currentcolor', fontWeight: 'inherit',}}>
                                 {label}
                             </Text>
                         </Group>
@@ -133,17 +147,30 @@ const NavWithSubLink = ({icon, color, label, subNav}) => {
 };
 
 const Sidebar = () => {
-    const {classes} = useStyles();
+    const {classes, cx} = useStyles();
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const logout = () => dispatch(authLogout());
 
-    const links = navList.map(l => (l.subNav) ? <NavWithSubLink key={l.id} {...l} /> : <MainLink key={l.id} {...l}/>);
+    const handleSignOut = () => {
+        logout();
+        history.push("/SignIn");
+    };
+
+    const getNavList = () => {
+        return navList.map((link) => {
+            if (!link.subNav) {
+                return <MainLink key={link.id} {...link}/>;
+            } else {
+                return <NavWithSubLink key={link.id} {...link}/>;
+            }
+        });
+    };
 
     return (
-        <Navbar width={{base: 240, breakpoints: {sm: '100%', lg: 400}}} className={classes.root}>
-            <Navbar.Section sx={t => ({
-                borderBottom: `1px solid ${t.colors.dark[4]}`,
-                padding: `4px ${t.spacing.sm}px ${t.spacing.sm}px`
-            })}>
-                <Group>
+        <Navbar padding="sm" width={{base: 240, breakpoints: {sm: '100%', lg: 400}}} className={classes.root}>
+            <Navbar.Section sx={t => ({borderBottom: `1px solid ${t.colors.dark[4]}`})}>
+                <Group sx={t => ({paddingTop: 4, paddingBottom: t.spacing.md})}>
                     <ThemeIcon variant="gradient" radius="xl" size="lg" gradient={{from: 'indigo', to: 'cyan'}}>
                         <BrandIcon size={16}/>
                     </ThemeIcon>
@@ -151,8 +178,25 @@ const Sidebar = () => {
                 </Group>
             </Navbar.Section>
 
-            <Navbar.Section grow mt="md">
-                <Scrollbars>{links}</Scrollbars>
+            <Navbar.Section grow mt="xs">
+                <Scrollbars>{getNavList()}</Scrollbars>
+            </Navbar.Section>
+
+            <Navbar.Section
+                mt="xs"
+                sx={t => ({
+                    borderTop: `1px solid ${t.colors.dark[4]}`,
+                    paddingTop: t.spacing.xs,
+                    paddingBottom: t.spacing.xs
+                })}
+            >
+                <MainLink key="setting" path="/Setting" color="indigo" icon={<SettingIcon/>} label="Setting"/>
+                <UnstyledButton onClick={handleSignOut} className={cx(classes.link)}>
+                    <Group>
+                        <ThemeIcon color={"red"} variant="filled"><LogoutIcon/></ThemeIcon>
+                        <Text size="md" sx={() => ({color: 'currentcolor', fontWeight: 'inherit'})}>Logout</Text>
+                    </Group>
+                </UnstyledButton>
             </Navbar.Section>
         </Navbar>
     );
