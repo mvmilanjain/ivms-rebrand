@@ -2,7 +2,12 @@ import {useState} from 'react';
 import {NavLink as Link} from 'react-router-dom';
 import {Scrollbars} from 'react-custom-scrollbars';
 import {Box, Collapse, createStyles, Group, Navbar, Text, ThemeIcon} from '@mantine/core';
-import {ChevronRightIcon, ExclamationTriangleIcon as FaultIcon, IdCardIcon as AddressIcon} from '@modulz/radix-icons';
+import {
+    ChevronRightIcon,
+    ExclamationTriangleIcon as FaultIcon,
+    GearIcon as SettingIcon,
+    IdCardIcon as AddressIcon
+} from '@modulz/radix-icons';
 import {FiTruck as BrandIcon} from 'react-icons/fi';
 import {MdChecklist as RouteOrderIcon, MdOutlineDashboard as DashboardIcon} from 'react-icons/md';
 import {FaRoute as RouteIcon, FaTruck as VehicleIcon} from 'react-icons/fa';
@@ -13,10 +18,10 @@ import {GiAutoRepair as MaintenanceIcon} from 'react-icons/gi';
 import {getInitials} from 'Shared/Utilities/common.util';
 
 const navList = [
-    {id: 'dashboard', path: '/Dashboard', label: 'Dashboard', icon: <DashboardIcon/>, color: 'blue'},
-    {id: 'route', path: '/Route', label: 'Route', icon: <RouteIcon/>, color: 'teal'},
+    {id: 'dashboard', path: '/Dashboard', label: 'Dashboard', icon: DashboardIcon, color: 'blue'},
+    {id: 'route', path: '/Route', label: 'Route', icon: RouteIcon, color: 'teal'},
     {
-        id: 'routeOrder', label: 'Route Order', icon: <RouteOrderIcon/>, color: 'lime', subNav: [
+        id: 'routeOrder', label: 'Route Order', icon: RouteOrderIcon, color: 'lime', subNav: [
             {id: 'planning', path: '/RouteOrder/Planning', label: 'Planning'},
             {id: 'operation', path: '/RouteOrder/Operation', label: 'Operation'},
             {id: 'finance', path: '/RouteOrder/Finance', label: 'Finance'},
@@ -24,28 +29,29 @@ const navList = [
         ]
     },
     {
-        id: 'maintenance', label: 'Maintenance', icon: <MaintenanceIcon/>, color: 'yellow', subNav: [
+        id: 'inspection', label: 'Inspection', icon: InspectionIcon, color: 'green', subNav: [
+            {id: 'inspectionForm', path: '/Inspection/InspectionForm', label: 'Form'},
+            {id: 'inspectionReport', path: '/Inspection/InspectionReport', label: 'Report'},
+        ]
+    },
+    {
+        id: 'maintenance', label: 'Maintenance', icon: MaintenanceIcon, color: 'orange', subNav: [
             {id: 'workorder', path: '/Maintenance/Workorder', label: 'Work Order'},
             {id: 'request', path: '/Maintenance/Request', label: 'Request'},
             {id: 'scheduler', path: '/Maintenance/Scheduler', label: 'Scheduler'},
             {id: 'laborcode', path: '/Maintenance/Laborcode', label: 'Labor Code'}
         ]
     },
+    {id: 'fault', path: '/Fault', label: 'Fault', icon: FaultIcon, color: 'red'},
+    {id: 'product', path: '/Product', label: 'Product', icon: ProductIcon, color: 'yellow'},
+    {id: 'address', path: '/Address', label: 'Address', icon: AddressIcon, color: 'grape'},
     {
-        id: 'inspection', label: 'Inspection', icon: <InspectionIcon/>, color: 'orange', subNav: [
-            {id: 'inspectionForm', path: '/Inspection/InspectionForm', label: 'Form'},
-            {id: 'inspectionReport', path: '/Inspection/InspectionReport', label: 'Report'},
-        ]
-    },
-    {id: 'fault', path: '/Fault', label: 'Fault', icon: <FaultIcon/>, color: 'red'},
-    {id: 'product', path: '/Product', label: 'Product', icon: <ProductIcon/>, color: 'grape'},
-    {id: 'address', path: '/Address', label: 'Address', icon: <AddressIcon/>, color: 'violet'},
-    {
-        id: 'vehicle', label: 'Vehicle', icon: <VehicleIcon/>, color: 'green', subNav: [
+        id: 'vehicle', label: 'Vehicle', icon: VehicleIcon, color: 'violet', subNav: [
             {id: 'truck', path: '/Vehicle/Truck', label: 'Truck'},
             {id: 'trailer', path: '/Vehicle/Trailer', label: 'Trailer'}
         ]
-    }
+    },
+    {id: 'setting', path: '/Setting', label: 'Setting', icon: SettingIcon, color: 'indigo'}
 ];
 
 const useStyles = createStyles(t => ({
@@ -75,7 +81,7 @@ const useStyles = createStyles(t => ({
     }
 }));
 
-const MainLink = ({path, icon, color, label}) => {
+const MainLink = ({path, icon: Icon, color, label}) => {
     const {classes, theme} = useStyles();
 
     return (
@@ -85,14 +91,14 @@ const MainLink = ({path, icon, color, label}) => {
             backgroundColor: theme.fn.rgba(theme.colors[color][9], .45)
         }}>
             <Group>
-                <ThemeIcon color={color} variant="filled">{icon}</ThemeIcon>
+                <ThemeIcon color={color} variant="filled"><Icon/></ThemeIcon>
                 <Text size="md" sx={() => ({color: 'currentcolor', fontWeight: 500})}>{label}</Text>
             </Group>
         </Link>
     );
 };
 
-const NavWithSubLink = ({icon, color, label, subNav}) => {
+const NavWithSubLink = ({icon: Icon, color, label, subNav}) => {
     const {classes, theme} = useStyles();
     const [opened, setOpen] = useState(false);
 
@@ -100,7 +106,7 @@ const NavWithSubLink = ({icon, color, label, subNav}) => {
         <>
             <Box className={classes.link} onClick={() => setOpen(o => !o)}>
                 <Group>
-                    <ThemeIcon color={color}>{icon || getInitials(label)}</ThemeIcon>
+                    <ThemeIcon color={color}><Icon/></ThemeIcon>
                     <Box>{label}</Box>
                 </Group>
                 <ChevronRightIcon
@@ -120,7 +126,7 @@ const NavWithSubLink = ({icon, color, label, subNav}) => {
                         }}
                     >
                         <Group>
-                            <ThemeIcon ml="md" variant="light">{getInitials(label)}</ThemeIcon>
+                            <ThemeIcon ml="md" color={color}>{getInitials(label)}</ThemeIcon>
                             <Text size="md" style={{color: 'currentcolor', fontWeight: 500}}>
                                 {label}
                             </Text>
