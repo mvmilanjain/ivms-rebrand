@@ -60,6 +60,8 @@ const useStyles = createStyles(t => ({
         padding: t.spacing.sm,
         zIndex: 1
     },
+    navbarOpen: {width: 240},
+    navbarClose: {width: 72},
     link: {
         display: 'flex',
         alignItems: 'center',
@@ -81,7 +83,7 @@ const useStyles = createStyles(t => ({
     }
 }));
 
-const MainLink = ({path, icon: Icon, color, label}) => {
+const MainLink = ({path, icon: Icon, color, label, showLabel}) => {
     const {classes, theme} = useStyles();
 
     return (
@@ -92,13 +94,13 @@ const MainLink = ({path, icon: Icon, color, label}) => {
         }}>
             <Group>
                 <ThemeIcon color={color} variant="filled"><Icon/></ThemeIcon>
-                <Text size="md" sx={() => ({color: 'currentcolor', fontWeight: 500})}>{label}</Text>
+                {showLabel && <Text size="md" sx={() => ({color: 'currentcolor', fontWeight: 500})}>{label}</Text>}
             </Group>
         </Link>
     );
 };
 
-const NavWithSubLink = ({icon: Icon, color, label, subNav}) => {
+const NavWithSubLink = ({icon: Icon, color, label, subNav, showLabel}) => {
     const {classes, theme} = useStyles();
     const [opened, setOpen] = useState(false);
 
@@ -107,14 +109,14 @@ const NavWithSubLink = ({icon: Icon, color, label, subNav}) => {
             <Box className={classes.link} onClick={() => setOpen(o => !o)}>
                 <Group>
                     <ThemeIcon color={color}><Icon/></ThemeIcon>
-                    <Box>{label}</Box>
+                    {showLabel && <Box>{label}</Box>}
                 </Group>
-                <ChevronRightIcon
+                {showLabel && <ChevronRightIcon
                     className={classes.chevron}
                     style={{transform: opened ? 'rotate(90deg)' : 'none'}}
-                />
+                />}
             </Box>
-            <Collapse in={opened} ml="xl">
+            <Collapse in={opened} ml={showLabel ? "xl" : 0}>
                 {subNav.map(({id, path, label}) => (
                     <Link
                         key={id} to={path} exact className={classes.link}
@@ -126,10 +128,10 @@ const NavWithSubLink = ({icon: Icon, color, label, subNav}) => {
                         }}
                     >
                         <Group>
-                            <ThemeIcon ml="md" color={color}>{getInitials(label)}</ThemeIcon>
-                            <Text size="md" style={{color: 'currentcolor', fontWeight: 500}}>
+                            <ThemeIcon ml={showLabel ? "md" : 0} color={color}>{getInitials(label)}</ThemeIcon>
+                            {showLabel && <Text size="md" style={{color: 'currentcolor', fontWeight: 500}}>
                                 {label}
-                            </Text>
+                            </Text>}
                         </Group>
                     </Link>
                 ))}
@@ -138,13 +140,15 @@ const NavWithSubLink = ({icon: Icon, color, label, subNav}) => {
     );
 };
 
-const Sidebar = () => {
-    const {classes} = useStyles();
+const Sidebar = ({expand}) => {
+    const {classes, cx} = useStyles();
 
-    const links = navList.map(l => (l.subNav) ? <NavWithSubLink key={l.id} {...l} /> : <MainLink key={l.id} {...l}/>);
+    const links = navList.map(l => (l.subNav) ?
+        <NavWithSubLink key={l.id} {...l} showLabel={expand}/> :
+        <MainLink key={l.id} {...l} showLabel={expand}/>);
 
     return (
-        <Navbar width={{base: 240, breakpoints: {sm: '100%', lg: 400}}} className={classes.root}>
+        <Navbar className={cx(classes.root, {[classes.navbarOpen]: expand, [classes.navbarClose]: !expand})}>
             <Navbar.Section sx={t => ({
                 borderBottom: `1px solid ${t.colors.dark[4]}`,
                 padding: `4px ${t.spacing.sm}px ${t.spacing.sm}px`
@@ -153,7 +157,7 @@ const Sidebar = () => {
                     <ThemeIcon variant="gradient" radius="xl" size="lg" gradient={{from: 'indigo', to: 'cyan'}}>
                         <BrandIcon size={16}/>
                     </ThemeIcon>
-                    <Text size="xl" weight="bold" sx={t => ({color: t.colors.gray[2]})}>IVMS</Text>
+                    {expand && <Text size="xl" weight="bold" sx={t => ({color: t.colors.gray[2]})}>IVMS</Text>}
                 </Group>
             </Navbar.Section>
 
