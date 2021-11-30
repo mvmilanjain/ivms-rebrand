@@ -6,7 +6,7 @@ import {ModalsProvider} from '@mantine/modals';
 import {NotificationsProvider} from '@mantine/notifications';
 
 import {GlobalStyles} from 'Assets/GlobalStyles';
-import {Main1Layout, Main2Layout, MinimalLayout} from 'Layout';
+import {Main1Layout, Main2Layout, Main3Layout, MinimalLayout} from 'Layout';
 import Routes from 'Routes';
 import {authCheckState} from 'Store/actions/auth.actions';
 
@@ -32,6 +32,7 @@ const App = () => {
                             <MinimalLayout><Routes isAuthenticated={isAuthenticated}/></MinimalLayout>
                     )}
                     {/*<Main2Layout><div>Main Content</div></Main2Layout>*/}
+                    {/*<Main3Layout><div>Main Content</div></Main3Layout>*/}
                 </NotificationsProvider>
             </ModalsProvider>
         </MantineProvider>

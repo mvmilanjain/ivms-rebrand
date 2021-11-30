@@ -6,7 +6,7 @@ const Main2 = (props) => (
     <div style={{display: 'flex'}}>
         <Sidebar/>
 
-        <div style={{flexGrow: 1, display: 'flex', flexDirection: "column"}}>
+        <div style={{flexGrow: 1, display: 'flex'}}>
             <Scrollbars>
                 <Box component="div" sx={t => ({height: '100%', padding: t.spacing.md})}>
                     {props.children}

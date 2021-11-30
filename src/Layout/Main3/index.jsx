@@ -1,27 +1,20 @@
 import {Scrollbars} from 'react-custom-scrollbars';
-import {Box, Paper} from '@mantine/core';
+import {Box} from '@mantine/core';
 
-import AppBar from './AppBar';
 import Sidebar from './Sidebar';
 
-const Main1 = (props) => (
-    <Box component="div" sx={() => ({display: 'flex'})}>
+const Main3 = (props) => (
+    <div style={{display: 'flex'}}>
         <Sidebar/>
-        <Box component="div" sx={() => ({flexGrow: 1, display: 'flex', flexDirection: "column"})}>
-            <AppBar/>
+
+        <div style={{flexGrow: 1, display: 'flex'}}>
             <Scrollbars>
-                <Box component="div" sx={t => ({
-                    height: '100%',
-                    backgroundColor: t.colors.gray[0],
-                    padding: t.spacing.sm
-                })}>
-                    <Paper padding="sm" withBorder style={{height: '100%'}}>
-                        {props.children}
-                    </Paper>
+                <Box component="div" sx={t => ({height: '100%', padding: t.spacing.md})}>
+                    {props.children}
                 </Box>
             </Scrollbars>
-        </Box>
-    </Box>
+        </div>
+    </div>
 );
 
-export default Main1;
+export default Main3;

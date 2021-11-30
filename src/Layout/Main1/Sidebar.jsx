@@ -157,7 +157,7 @@ const Sidebar = () => {
                 </Group>
             </Navbar.Section>
 
-            <Navbar.Section grow mt="md">
+            <Navbar.Section grow my="sm">
                 <Scrollbars>{links}</Scrollbars>
             </Navbar.Section>
         </Navbar>
