@@ -1,7 +1,6 @@
 import {useState} from 'react';
 import {NavLink as Link} from 'react-router-dom';
-import {Scrollbars} from 'react-custom-scrollbars';
-import {Box, Collapse, createStyles, Group, Navbar, Text, ThemeIcon} from '@mantine/core';
+import {Box, Collapse, createStyles, Group, Navbar, ScrollArea, Text, ThemeIcon} from '@mantine/core';
 import {
     ChevronRightIcon,
     ExclamationTriangleIcon as FaultIcon,
@@ -57,8 +56,7 @@ const navList = [
 const useStyles = createStyles(t => ({
     root: {
         backgroundColor: t.colors.dark[7],
-        padding: t.spacing.sm,
-        zIndex: 1
+        padding: t.spacing.sm
     },
     navbarOpen: {width: 240},
     navbarClose: {width: 72},
@@ -161,8 +159,15 @@ const Sidebar = ({expand}) => {
                 </Group>
             </Navbar.Section>
 
-            <Navbar.Section grow my="sm">
-                <Scrollbars>{links}</Scrollbars>
+            <Navbar.Section
+                grow my="sm" component={ScrollArea} mr={-10}
+                styles={{
+                    root: {paddingRight: 10},
+                    scrollbar: {"&:hover": {backgroundColor: "transparent"}},
+                    thumb: {backgroundColor: "rgba(255, 255, 255, .1) !important"}
+                }}
+            >
+                {links}
             </Navbar.Section>
         </Navbar>
     );

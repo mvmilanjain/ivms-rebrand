@@ -39,7 +39,6 @@ const NumberFilter = (props) => {
             opened={opened} onClose={handleClose}
             onClick={(e) => e.stopPropagation()}
             position="bottom" transition="scale-y"
-            zIndex={10000}
         >
             <RadioGroup
                 description="Select your option"

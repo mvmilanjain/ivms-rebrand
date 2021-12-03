@@ -15,7 +15,10 @@ import {AiOutlineInbox as ProductIcon} from 'react-icons/ai';
 import {GiAutoRepair as MaintenanceIcon} from 'react-icons/gi';
 
 const useStyles = createStyles(t => ({
-    root: {backgroundColor: t.colors.dark[9]},
+    root: {
+        backgroundColor: t.colors.dark[7],
+        padding: t.spacing.sm,
+    },
     link: {
         width: 50,
         height: 50,
@@ -95,7 +98,7 @@ const Sidebar = () => {
     ));
 
     return (
-        <Navbar width={{base: 84}} padding="md" className={classes.root} zIndex={1}>
+        <Navbar width={{base: 84}} className={classes.root}>
             <Navbar.Section sx={t => ({borderBottom: `1px solid ${t.colors.gray[2]}`})}>
                 <Group sx={t => ({paddingTop: 2, paddingBottom: t.spacing.sm})} position="center">
                     <ThemeIcon variant="gradient" radius="xl" size="lg" gradient={{from: 'indigo', to: 'cyan'}}>

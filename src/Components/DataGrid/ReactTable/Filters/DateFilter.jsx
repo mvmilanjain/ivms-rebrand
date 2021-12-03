@@ -40,7 +40,6 @@ const DateFilter = (props) => {
             opened={opened} onClose={handleClose}
             onClick={(e) => e.stopPropagation()}
             position="bottom" transition="scale-y"
-            zIndex={10000}
         >
             <RadioGroup
                 description="Select your option"
@@ -60,7 +59,7 @@ const DateFilter = (props) => {
                 icon={<CalendarIcon/>}
                 placeholder="Pick date"
                 mb="sm" withSelect
-                zIndex={100001}
+                withinPortal={false}
                 value={state.value}
                 onChange={val => setState({value: val})}
             />
