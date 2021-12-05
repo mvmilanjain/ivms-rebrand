@@ -13,7 +13,7 @@ const RightSelection = ({isLoading, selectedItem, onClear, onClick}) => {
     );
 }
 
-const AsyncSelect = ({label, placeholder, value, selectedValue, limit, icon, onSelection, error, fetchOptions}) => {
+const AsyncSelect = ({value, selectedValue, onSelection, fetchOptions, ...rest}) => {
     const [isOpen, toggleOpen] = useState(false);
     const [isLoading, toggleLoading] = useState(false);
     const [options, setOptions] = useState([]);
@@ -69,21 +69,18 @@ const AsyncSelect = ({label, placeholder, value, selectedValue, limit, icon, onS
 
     return (
         <Autocomplete
-            label={label}
-            placeholder={placeholder}
             styles={{dropdown: {maxHeight: 200}}}
-            icon={icon} transition="scale-y"
+            transition="scale-y"
             rightSectionWidth={(isLoading && selectedItem) ? 72 : 36}
             rightSection={<RightSelection isLoading={isLoading} selectedItem={selectedItem} onClear={handleClear}/>}
             nothingFound={isLoading ? "Loading options..." : "No options"}
             onDropdownOpen={() => toggleOpen(true)}
             onDropdownClose={handleDropDownClose}
-            limit={limit}
             data={options}
             value={searchText}
             onChange={handleSearchTextChange}
             onItemSubmit={handleSelectItem}
-            error={error}
+            {...rest}
         />
     );
 };

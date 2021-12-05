@@ -5,7 +5,7 @@ const InspectionReport = (props) => {
 
     return (
         <>
-            <Group position="apart" mb="sm">
+            <Group position="apart" mb="md">
                 <Title order={2}>Inspection Form</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Inspection Form</Button>
             </Group>

@@ -7,15 +7,13 @@ import {getTrucks} from 'Shared/Services';
 
 const VehicleDropdown = (
     {
-        label = '',
-        placeholder = '',
         optionLabelKey = 'name',
         value = null,
         limit = 50,
         icon,
-        showIcon,
+        withIcon,
         onSelection,
-        error
+        ...rest
     }
 ) => {
     const {requestHandler} = useHttp();
@@ -43,15 +41,14 @@ const VehicleDropdown = (
 
     return (
         <AsyncSelect
-            label={label}
-            placeholder={placeholder || `Select ${label}`}
-            icon={icon || (showIcon && <DefaultIcon/>)}
+            placeholder={rest.placeholder || (rest.label && `Select ${rest.label.toLowerCase()}`)}
+            icon={icon || (withIcon && <DefaultIcon/>)}
             limit={limit}
             value={value && value[optionLabelKey]}
             selectedValue={value ? {id: value.id, value: value[optionLabelKey]} : null}
             fetchOptions={fetchOptions}
             onSelection={handleItemSelection}
-            error={error}
+            {...rest}
         />
     );
 };

@@ -73,7 +73,7 @@ const Product = (props) => {
 
     return (
         <>
-            <Group position="apart" mb="sm">
+            <Group position="apart" mb="md">
                 <Title order={2}>Product</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Product</Button>
             </Group>

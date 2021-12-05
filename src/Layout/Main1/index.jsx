@@ -19,7 +19,7 @@ const Main1 = (props) => {
                         backgroundColor: t.colors.gray[0],
                         padding: t.spacing.sm
                     })}>
-                        <Paper padding="sm" withBorder style={{height: '100%'}}>
+                        <Paper padding="md" withBorder style={{height: '100%'}}>
                             {props.children}
                         </Paper>
                     </Box>

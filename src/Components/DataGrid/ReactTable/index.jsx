@@ -1,6 +1,7 @@
 import {useEffect} from 'react';
 import {useFilters, usePagination, useRowSelect, useSortBy, useTable} from 'react-table';
 import {
+    ThemeIcon,
     Box,
     Checkbox,
     createStyles,
@@ -17,6 +18,7 @@ import {BsArrowDownUp as SortIcon, BsArrowUp as AscIcon,} from 'react-icons/bs';
 
 import filterTypes from './filterTypes';
 import {StringFilter} from './Filters';
+import {AiOutlineInbox} from "react-icons/ai";
 
 const pageSizeOptions = ['10', '25', '50', '100'];
 
@@ -180,16 +182,38 @@ export const ReactTable = (
         ))}
     </tr>);
 
-    const renderRow = rows => rows.map((row, i) => {
-        prepareRow(row);
-        return (
-            <tr {...row.getRowProps({onClick: e => handleRowClick(e, row)})}>
-                {row.cells.map(cell => (
-                    <td align={cell.column.align || "left"} {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                ))}
-            </tr>
-        )
-    });
+    const renderRow = () => {
+        const rowSource = pagination ? page : rows;
+
+        if(!loading && (rowSource.length > 0)) {
+            return rowSource.map((row, i) => {
+                prepareRow(row);
+                return (
+                    <tr {...row.getRowProps({onClick: e => handleRowClick(e, row)})}>
+                        {row.cells.map(cell => (
+                            <td align={cell.column.align || "left"} {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        ))}
+                    </tr>
+                )
+            });
+        }
+
+        if(!loading && (data.length <= 0)) {
+            return <tr>
+                <Box component="td" colSpan="1000">
+                    <Group position="center" direction="column" spacing="xs" mt="xl">
+                        <ThemeIcon color="gray" size="lg" radius="xl" sx={t => ({
+                            color: t.colors.gray[0],
+                            cursor: 'default'
+                        })}>
+                            <AiOutlineInbox/>
+                        </ThemeIcon>
+                        <Text weight={500} size="xl" sx={t => ({color: t.colors.gray[6]})}>No Data</Text>
+                    </Group>
+                </Box>
+            </tr>;
+        }
+    }
 
     return (
         <div className={classes.root}>
@@ -200,7 +224,9 @@ export const ReactTable = (
                 <Table {...getTableProps()}>
                     <thead className={cx({[classes.stickHeader]: stickyHeader})}>{renderHeader()}</thead>
 
-                    <tbody {...getTableBodyProps()}>{pagination ? renderRow(page) : renderRow(rows)}</tbody>
+                    <tbody {...getTableBodyProps()}>
+                        {renderRow()}
+                    </tbody>
                 </Table>
             </div>
             {pagination && <>

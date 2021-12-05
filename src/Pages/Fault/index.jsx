@@ -48,7 +48,7 @@ const Fault = (props) => {
 
     return (
         <>
-            <Group position="apart" mb="sm">
+            <Group position="apart" mb="md">
                 <Title order={2}>Fault</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Fault</Button>
             </Group>

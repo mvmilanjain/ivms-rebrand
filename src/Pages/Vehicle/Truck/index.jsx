@@ -80,7 +80,7 @@ const Truck = (props) => {
 
     return (
         <>
-            <Group position="apart" mb="sm">
+            <Group position="apart" mb="md">
                 <Title order={2}>Truck</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Truck</Button>
             </Group>

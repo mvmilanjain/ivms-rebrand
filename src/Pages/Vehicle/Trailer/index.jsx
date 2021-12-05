@@ -79,7 +79,7 @@ const Trailer = (props) => {
 
     return (
         <>
-            <Group position="apart" mb="sm">
+            <Group position="apart" mb="md">
                 <Title order={2}>Trailer</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Trailer</Button>
             </Group>

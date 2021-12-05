@@ -56,10 +56,10 @@ const navList = [
 const useStyles = createStyles(t => ({
     root: {
         backgroundColor: t.colors.dark[7],
-        padding: t.spacing.sm
+        padding: t.spacing.md
     },
     navbarOpen: {width: 240},
-    navbarClose: {width: 72},
+    navbarClose: {width: 80},
     link: {
         display: 'flex',
         alignItems: 'center',
@@ -152,7 +152,7 @@ const Sidebar = ({expand}) => {
                 padding: `4px ${t.spacing.sm}px ${t.spacing.sm}px`
             })}>
                 <Group>
-                    <ThemeIcon variant="gradient" radius="xl" size="lg" gradient={{from: 'indigo', to: 'cyan'}}>
+                    <ThemeIcon variant="gradient" gradient={{from: 'indigo', to: 'cyan'}}>
                         <BrandIcon size={16}/>
                     </ThemeIcon>
                     {expand && <Text size="xl" weight="bold" sx={t => ({color: t.colors.gray[2]})}>IVMS</Text>}
@@ -160,7 +160,7 @@ const Sidebar = ({expand}) => {
             </Navbar.Section>
 
             <Navbar.Section
-                grow my="sm" component={ScrollArea} mr={-10}
+                grow my="md" component={ScrollArea} mr={-10}
                 styles={{
                     root: {paddingRight: 10},
                     scrollbar: {"&:hover": {backgroundColor: "transparent"}},

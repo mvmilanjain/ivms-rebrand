@@ -79,7 +79,7 @@ const Request = (props) => {
 
     return (
         <>
-            <Group position="apart" mb="sm">
+            <Group position="apart" mb="md">
                 <Title order={2}>Request</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Request</Button>
             </Group>

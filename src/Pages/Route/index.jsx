@@ -17,7 +17,7 @@ import {deleteRoute, getRoutes} from 'Shared/Services';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
 import {ROUTE_SCHEMA} from 'Shared/Utilities/tableSchema';
 
-const Route = (props) => {
+const Route = ({history}) => {
     const {requestHandler} = useHttp();
     const modals = useModals();
     const notifications = useNotifications();
@@ -78,12 +78,15 @@ const Route = (props) => {
         });
     };
 
+    const handleCreateRoute = () => history.push(`/Route/New`, {action: 'New'});
+
     return (
         <>
-            <Group position="apart" mb="sm">
+            <Group position="apart" mb="md">
                 <Title order={2}>Routes</Title>
-                <Button leftIcon={<CreateIcon/>}>Create Route</Button>
+                <Button leftIcon={<CreateIcon/>} onClick={handleCreateRoute}>Create Route</Button>
             </Group>
+
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
                     columns={[

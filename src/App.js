@@ -24,7 +24,7 @@ const App = () => {
         <MantineProvider withNormalizeCSS theme={{dateFormat: 'YYYY-MM-DD'}}>
             <GlobalStyles />
             <LoadingOverlay visible={isLoading} loaderProps={{variant: 'dots'}}/>
-            <ModalsProvider modalProps={{styles: {inner: {alignItems: 'center'}}}}>
+            <ModalsProvider modalProps={{centered: true}}>
                 <NotificationsProvider position="top-center">
                     {isAuthenticated !== null && (
                         isAuthenticated ?

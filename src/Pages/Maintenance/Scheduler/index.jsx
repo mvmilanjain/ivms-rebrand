@@ -79,7 +79,7 @@ const Workorder = (props) => {
 
     return (
         <>
-            <Group position="apart" mb="sm">
+            <Group position="apart" mb="md">
                 <Title order={2}>Scheduler</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Schedule</Button>
             </Group>

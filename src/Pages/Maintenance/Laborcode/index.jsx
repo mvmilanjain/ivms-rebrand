@@ -79,7 +79,7 @@ const LaborCode = (props) => {
 
     return (
         <>
-            <Group position="apart" mb="sm">
+            <Group position="apart" mb="md">
                 <Title order={2}>Labor Code</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Labor Code</Button>
             </Group>

@@ -9,15 +9,13 @@ const getAddressLabel = (address) => address ? (address.name ? address.name : ad
 
 const AddressDropdown = (
     {
-        label = '',
-        placeholder = '',
         optionLabelKey = 'name',
         value = null,
         limit = 50,
         icon,
-        showIcon,
+        withIcon,
         onSelection,
-        error
+        ...rest
     }
 ) => {
     const {requestHandler} = useHttp();
@@ -48,15 +46,14 @@ const AddressDropdown = (
 
     return (
         <AsyncSelect
-            label={label}
-            placeholder={placeholder || `Select ${label}`}
-            icon={icon || (showIcon && <DefaultIcon/>)}
+            placeholder={rest.placeholder || (rest.label && `Select ${rest.label.toLowerCase()}`)}
+            icon={icon || (withIcon && <DefaultIcon/>)}
             limit={limit}
             value={value && getAddressLabel(value)}
             selectedValue={value ? {id: value.id, value: getAddressLabel(value)} : null}
             fetchOptions={fetchOptions}
             onSelection={handleItemSelection}
-            error={error}
+            {...rest}
         />
     );
 };

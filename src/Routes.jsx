@@ -7,7 +7,11 @@ const Address = loadable(() => import('Pages/Address'));
 const Dashboard = loadable(() => import('Pages/Dashboard'));
 const Fault = loadable(() => import('Pages/Fault'));
 const Product = loadable(() => import('Pages/Product'));
-const RoutePage = loadable(() => import('Pages/Route'));
+const RoutePage = {
+    ViewAll: loadable(() => import('Pages/Route')),
+    New: loadable(() => import('Pages/Route/NewOrEditRoute')),
+    Edit: loadable(() => import('Pages/Route/NewOrEditRoute'))
+};
 const Setting = loadable(() => import('Pages/Setting'));
 const SignIn = loadable(() => import('Pages/SignIn'));
 
@@ -34,7 +38,11 @@ const pagesWithAuthentication = [
     {id: "dashboard", path: "/Dashboard", component: Dashboard},
     {id: "fault", path: "/Fault", component: Fault},
     {id: "product", path: "/Product", component: Product},
-    {id: "route", path: "/Route", component: RoutePage},
+
+    {id: "route", path: "/Route", component: RoutePage.ViewAll},
+    {id: "newRoute", path: "/Route/New", component: RoutePage.New},
+    {id: "editRoute", path: "/Route/Edit/:id", component: RoutePage.Edit},
+
     {id: "setting", path: "/Setting", component: Setting},
 
     {id: "laborcode", path: "/Maintenance/Laborcode", component: Laborcode},
