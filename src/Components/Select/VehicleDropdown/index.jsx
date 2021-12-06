@@ -12,7 +12,7 @@ const VehicleDropdown = forwardRef((
         limit = 50,
         icon,
         withIcon,
-        onSelection,
+        onChange,
         ...rest
     }, ref
 ) => {
@@ -36,7 +36,7 @@ const VehicleDropdown = forwardRef((
         if (selectedItem) {
             result = dataSource.find(item => item.id === selectedItem.id) || null;
         }
-        onSelection && onSelection(result);
+        onChange && onChange(result);
     };
 
     return (

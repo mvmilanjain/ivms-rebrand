@@ -24,7 +24,7 @@ const AddressDropdown = forwardRef((
     const fetchOptions = (searchText) => new Promise((resolve, reject) => {
         const params = {
             per_page: limit, sort: 'created_at.desc',
-            filter: {name_cont: searchText, address1_cont: searchText}
+            filter: {name_cont: searchText, address1_cont: searchText, m: 'or'}
         };
         requestHandler(getAddresses(params)).then(res => {
             setDataSource(res.data);

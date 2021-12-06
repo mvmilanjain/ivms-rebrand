@@ -4,9 +4,7 @@ import {AddressDropdown, ContentArea, VehicleDropdown} from 'Components';
 
 const Dashboard = (props) => {
 
-    const handleItemSelection = (item) => {
-        console.log(item);
-    };
+    const handleItemSelection = (item) => console.log(item);
 
     return (
         <ContentArea>
@@ -18,9 +16,9 @@ const Dashboard = (props) => {
                 <Grid justify="center">
                     <Col span={4}>
                         <Group direction="column" grow>
-                            <VehicleDropdown label="Truck" withIcon onSelection={handleItemSelection}/>
+                            <VehicleDropdown label="Truck" withIcon onChange={handleItemSelection}/>
 
-                            <AddressDropdown label="Address" withIcon onSelection={handleItemSelection}/>
+                            <AddressDropdown label="Address" withIcon onChange={handleItemSelection}/>
                         </Group>
                     </Col>
                 </Grid>

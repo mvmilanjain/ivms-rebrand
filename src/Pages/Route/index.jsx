@@ -46,7 +46,7 @@ const Route = ({history}) => {
     const renderActions = ({value}) => {
         return (
             <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
-                <Menu.Item icon={<EditIcon/>}>Edit Route</Menu.Item>
+                <Menu.Item icon={<EditIcon/>} onClick={() => handleEditRoute(value)}>Edit Route</Menu.Item>
                 <Menu.Item icon={<ViewIcon/>}>View Route</Menu.Item>
                 <Menu.Item icon={<DeleteIcon/>} color="red" onClick={() => openDeleteConfirmModal(value)}>
                     Delete Route
@@ -54,6 +54,8 @@ const Route = ({history}) => {
             </Menu>
         );
     };
+
+    const handleEditRoute = (id) => history.push(`/Route/Edit/${id}`, {action: 'Edit'});
 
     const openDeleteConfirmModal = (routeId) => {
         modals.openConfirmModal({

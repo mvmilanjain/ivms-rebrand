@@ -1,44 +1,121 @@
-import {useEffect} from 'react';
-import {useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
+import {useEffect, useState} from 'react';
+import get from 'lodash/get';
+import {useFormik} from 'formik';
 import {Button, Col, Divider, Grid, Group, NumberInput, SimpleGrid, TextInput, Title} from '@mantine/core';
+import {useNotifications} from '@mantine/notifications';
 import {MdOutlineAddLocationAlt as AddStopIcon, MdOutlineSave as SaveIcon} from 'react-icons/md';
 
 import {AddressDropdown, ReactTable, RouteMap} from 'Components';
+import {useHttp} from 'Hooks';
 import {Route} from 'Shared/Models';
 import {ROUTE} from 'Shared/Utilities/validationSchema.util';
+import {errorMessage} from 'Shared/Utilities/common.util';
+import {getRoute, postRoute, putRoute} from 'Shared/Services';
 
-const CreateOrUpdateRoute = ({history, location}) => {
+const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
     const action = location.state.action;
+    const {requestHandler} = useHttp();
+    const notifications = useNotifications();
+    const [initialValue, setInitialValue] = useState({});
 
-    const {formState, register, handleSubmit, reset, setValue, getValues} = useForm({
-        resolver: yupResolver(ROUTE)
+    const register = (fieldName) => ({
+        id: fieldName,
+        value: get(values, fieldName),
+        onChange: handleChange,
+        error: errorMessage(fieldName, touched, errors)
     });
 
     useEffect(() => {
-        let defaultValue = {};
         if (action === 'New') {
-            defaultValue = new Route();
-            reset({...defaultValue});
+            const route = new Route();
+            setInitialValue({...route});
+        } else {
+            const {params} = match;
+            console.log({params});
+            requestHandler(getRoute(params.id), {loader: true}).then(res => {
+                setInitialValue(new Route(res.data));
+            }).catch(e => {
+                console.error(e);
+                notifications.showNotification({
+                    title: "Error", color: 'red', message: 'Not able to fetch route details. Something went wrong!!'
+                });
+            });
         }
     }, []);
 
-    const handleSourceChange = (source) => {
-        const route = new Route(getValues());
-        route.setSource(source);
+    const handleSourceChange = (address) => {
+        const route = new Route(values);
+        route.setSource(address);
+        setValues(route);
+    };
 
+    const handleDestinationChange = (address) => {
+        const route = new Route(values);
+        route.setDestination(address);
+        setValues(route);
+    };
+
+    const handleLoadingTimeChange = (loadingTime) => {
+        const route = new Route(values);
+        route.setLoadingTime(loadingTime);
+        setValues(route);
     };
 
     const handleAddStoppage = () => {
 
     };
 
-    const onSubmit = (values) => {
-        alert(values);
+    const isRouteStopAddressDisabled = (index, stop) => {
+        const activeRouteStop = values.route_planner.route_stops.filter(stop => !stop._destroy);
+        const isSource = (values.source && values.source === stop.address_id && index === 0);
+        const isDestination = (values.destination && values.destination === stop.address_id && index === activeRouteStop.length - 1);
+        return isSource || isDestination;
     };
 
+    const isRouteStopDistanceDisabled = (index, stop) => (values.source && values.source === stop.address_id && index === 0);
+
+    const handleRouteStopAddressChange = (address, index) => {
+        const route = new Route(values);
+        route.route_planner.route_stops[index].setAddress(address);
+        setValues(route);
+    };
+
+    const handleRouteStopChange = (value, index, key) => {
+        const route = new Route(values);
+        route.route_planner.route_stops[index][key] = value;
+        route.updateTotalDistanceAndCycleTime();
+        setValues(route);
+    };
+
+    const onSubmit = (values) => {
+        if (values.source === values.route_planner.route_stops[0].address_id &&
+            values.route_planner.route_stops[0].stop_duration < values.route_planner.loading_time) {
+            setFieldError(`route_planner.route_stops[0].stop_duration`, 'Should be greater than or equal than Loading time')
+        } else {
+            const requestConfig = (action === 'New') ? postRoute({route: values}) : putRoute(values.id, {route: values});
+            requestHandler(requestConfig, {loader: true}).then(res => {
+                notifications.showNotification({
+                    title: "Success", color: 'green', message: 'Route has been saved successfully.'
+                });
+                history.push('/route');
+            }).catch(e => {
+                notifications.showNotification({
+                    title: "Error", color: 'red', message: 'Not able to save route details. Something went wrong!!'
+                });
+            });
+        }
+    };
+
+    const {values, touched, errors, handleChange, handleSubmit, setValues, setFieldValue, setFieldError} = useFormik({
+        enableReinitialize: true,
+        initialValues: initialValue,
+        validationSchema: ROUTE,
+        onSubmit
+    });
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit}>
+            {/*<pre>{JSON.stringify(values, null, 2)}</pre>*/}
             <Group position="apart" mb="md">
                 <Title order={3}>Route</Title>
                 <Group position="apart">
@@ -58,71 +135,62 @@ const CreateOrUpdateRoute = ({history, location}) => {
                     <SimpleGrid cols={2}>
                         <TextInput
                             {...register("route_code")}
-                            label="Route code" placeholder="Enter route code"
-                            required error={formState.errors.route_code?.message}
+                            label="Route code"
+                            placeholder="Enter route code"
+                            required
                         />
 
                         <TextInput
                             {...register("name")}
-                            label="Route name" placeholder="Enter route name"
-                            required error={formState.errors.name?.message}
+                            label="Route name"
+                            placeholder="Enter route name"
+                            required
                         />
 
                         <AddressDropdown
                             {...register("source_address")}
                             label="Source" withIcon required
                             onChange={handleSourceChange}
-                            error={formState.errors.source?.message}
+                            error={errorMessage("source", touched, errors)}
                         />
 
                         <AddressDropdown
                             {...register("destination_address")}
                             label="Destination" withIcon required
-                            error={formState.errors.destination?.message}
+                            onChange={handleDestinationChange}
+                            error={errorMessage("source", touched, errors)}
                         />
 
                         <NumberInput
                             {...register("std_distance_cycle")}
                             label="Distance in kilometers"
                             placeholder="Enter distance"
-                            min={0} value={getValues().std_distance_cycle}
-                            onChange={val => setValue('std_distance_cycle', val, {
-                                shouldValidate: true
-                            })}
-                            error={formState.errors.std_distance_cycle?.message}
+                            min={0}
+                            onChange={val => setFieldValue("std_distance_cycle", val)}
                         />
 
                         <NumberInput
                             {...register("std_cycle_hours")}
                             label="Cycle hours"
                             placeholder="Enter cycle hours"
-                            min={0} value={getValues().std_cycle_hours}
-                            onChange={val => setValue('std_cycle_hours', val, {
-                                shouldValidate: true
-                            })}
-                            error={formState.errors.std_cycle_hours?.message}
+                            min={0}
+                            onChange={val => setFieldValue("std_cycle_hours", val)}
                         />
 
                         <NumberInput
                             {...register("equivalent_loads")}
                             label="Equivalent loads"
                             placeholder="Enter equivalent loads"
-                            min={0} value={getValues().equivalent_loads}
-                            onChange={val => setValue('equivalent_loads', val, {
-                                shouldValidate: true
-                            })}
-                            error={formState.errors.equivalent_loads?.message}
+                            min={0}
+                            onChange={val => setFieldValue("equivalent_loads", val)}
                         />
 
                         <NumberInput
                             {...register("route_planner.loading_time")}
                             label="Loading time in hours"
                             placeholder="Enter loading time"
-                            min={0} value={getValues().route_planner?.loading_time}
-                            onChange={value => setValue('route_planner.loading_time', value, {
-                                shouldValidate: true
-                            })}
-                            error={formState.errors.route_planner?.loading_time?.message}
+                            min={0}
+                            onChange={handleLoadingTimeChange}
                         />
                     </SimpleGrid>
                 </Col>
@@ -144,17 +212,38 @@ const CreateOrUpdateRoute = ({history, location}) => {
                     Add Stoppage
                 </Button>
             </Group>
-            <div>
-                <ReactTable
-                    columns={[
-                        {accessor: 'id', Header: '#', cellWidth: 40},
-                        {accessor: 'address', Header: 'Address', cellWidth: 400},
-                        {accessor: 'distance', Header: 'Distance'},
-                        {accessor: 'stopDuration', Header: 'Stop duration'},
-                    ]}
-                    data={[]}
-                />
-            </div>
+            <ReactTable
+                columns={[
+                    {accessor: 'position', Header: '#', cellWidth: 40},
+                    {
+                        accessor: 'address_id', Header: 'Address',
+                        Cell: ({row}) => <AddressDropdown
+                            {...register(`route_planner.route_stops[${row.index}].address`)}
+                            withIcon required disabled={isRouteStopAddressDisabled(row.index, row.original)}
+                            onChange={(val) => handleRouteStopAddressChange(val, row.index)}
+                            error={errorMessage(`route_planner.route_stops[${row.index}].address_id`, touched, errors)}
+                        />
+                    },
+                    {
+                        accessor: 'distance', Header: 'Distance',
+                        Cell: ({row}) => <NumberInput
+                            {...register(`route_planner.route_stops[${row.index}].distance`)}
+                            placeholder="Enter distance" min={0}
+                            disabled={isRouteStopDistanceDisabled(row.index, row.original)}
+                            onChange={val => handleRouteStopChange(val, row.index, 'distance')}
+                        />
+                    },
+                    {
+                        accessor: 'stop_duration', Header: 'Stop duration',
+                        Cell: ({row}) => <NumberInput
+                            {...register(`route_planner.route_stops[${row.index}].stop_duration`)}
+                            placeholder="Enter stop duration" min={0}
+                            onChange={val => handleRouteStopChange(val, row.index, 'stop_duration')}
+                        />
+                    },
+                ]}
+                data={get(values, 'route_planner.route_stops', []).filter(stop => !stop._destroy)}
+            />
         </form>
     );
 };

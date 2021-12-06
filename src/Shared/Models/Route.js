@@ -92,6 +92,7 @@ class Route {
         if (this.source && this.route_planner.route_stops[0].address_id === this.source) {
             this.route_planner.route_stops[0].stop_duration = loading_time;
         }
+        this.updateTotalDistanceAndCycleTime();
     }
 
     addRouteStop(routeStop) {

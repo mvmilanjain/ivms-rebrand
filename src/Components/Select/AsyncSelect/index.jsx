@@ -19,6 +19,7 @@ const AsyncSelect = forwardRef((
         selectedValue,
         onSelection,
         fetchOptions,
+        disabled,
         ...rest
     }, ref
 ) => {
@@ -27,7 +28,11 @@ const AsyncSelect = forwardRef((
     const [options, setOptions] = useState([]);
     const [searchText, setSearchText] = useState(value || '');
     const [selectedItem, setSelectedItem] = useState(selectedValue);
-    const [debouncedSearchText] = useDebouncedValue(searchText, 500);
+    const [debouncedSearchText] = useDebouncedValue(searchText, 300);
+
+    useEffect(() => {
+        setSearchText(value);
+    }, [value])
 
     useEffect(() => {
         if (!isOpen) {
@@ -81,7 +86,11 @@ const AsyncSelect = forwardRef((
             styles={{dropdown: {maxHeight: 200}}}
             transition="scale-y"
             rightSectionWidth={(isLoading && selectedItem) ? 72 : 36}
-            rightSection={<RightSelection isLoading={isLoading} selectedItem={selectedItem} onClear={handleClear}/>}
+            rightSection={!disabled && <RightSelection
+                isLoading={isLoading}
+                selectedItem={selectedItem}
+                onClear={handleClear}
+            />}
             nothingFound={isLoading ? "Loading options..." : "No options"}
             onDropdownOpen={() => toggleOpen(true)}
             onDropdownClose={handleDropDownClose}
@@ -89,6 +98,7 @@ const AsyncSelect = forwardRef((
             value={searchText}
             onChange={handleSearchTextChange}
             onItemSubmit={handleSelectItem}
+            disabled={disabled}
             {...rest}
         />
     );
