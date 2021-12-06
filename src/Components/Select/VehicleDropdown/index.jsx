@@ -1,11 +1,11 @@
-import {useState} from 'react';
+import {forwardRef, useState} from 'react';
 import {FaTruck as DefaultIcon} from 'react-icons/fa';
 
 import {AsyncSelect} from 'Components';
 import {useHttp} from 'Hooks';
 import {getTrucks} from 'Shared/Services';
 
-const VehicleDropdown = (
+const VehicleDropdown = forwardRef((
     {
         optionLabelKey = 'name',
         value = null,
@@ -14,7 +14,7 @@ const VehicleDropdown = (
         withIcon,
         onSelection,
         ...rest
-    }
+    }, ref
 ) => {
     const {requestHandler} = useHttp();
     const [dataSource, setDataSource] = useState([]);
@@ -33,7 +33,7 @@ const VehicleDropdown = (
 
     const handleItemSelection = (selectedItem) => {
         let result = null;
-        if(selectedItem) {
+        if (selectedItem) {
             result = dataSource.find(item => item.id === selectedItem.id) || null;
         }
         onSelection && onSelection(result);
@@ -41,6 +41,7 @@ const VehicleDropdown = (
 
     return (
         <AsyncSelect
+            ref={ref}
             placeholder={rest.placeholder || (rest.label && `Select ${rest.label.toLowerCase()}`)}
             icon={icon || (withIcon && <DefaultIcon/>)}
             limit={limit}
@@ -51,6 +52,6 @@ const VehicleDropdown = (
             {...rest}
         />
     );
-};
+});
 
 export default VehicleDropdown;

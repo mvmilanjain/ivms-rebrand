@@ -8,16 +8,15 @@ export const SIGN_IN = yup.object({
 });
 
 export const ROUTE = yup.object({
-    route_code: yup.string().required().label('Route Code'),
-    name: yup.string().required().label('Name'),
-    std_distance_cycle: yup.string().required().label('Distance'),
+    route_code: yup.string().required().label('Route code'),
+    name: yup.string().required().label('Route name'),
+    std_distance_cycle: yup.number().moreThan(0).required().label('Distance'),
     std_cycle_hours: yup.number().moreThan(0).required().label('Cycle hours'),
     source: yup.string().required().label('Source'),
     destination: yup.string().required().label('Destination'),
     equivalent_loads: yup.number().moreThan(0).required().label('Equivalent loads'),
     route_planner: yup.object({
-        // origin: yup.string().required().label('Origin'),
-        loading_time: yup.number().min(0).required().label('Loading Time'),
+        loading_time: yup.number().min(0).required().label('Loading time'),
         route_stops: yup.array().of(yup.object({
             address_id: yup.string().required().label('Address'),
             stop_duration: yup.number().min(0, 'Should be greater than or equal to 0').required('Required field')

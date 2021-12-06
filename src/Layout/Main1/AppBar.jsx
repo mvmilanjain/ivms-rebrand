@@ -19,7 +19,7 @@ const AppBar = ({toggleNavbar, expand}) => {
     };
 
     return (
-        <Header padding="sm" height={64} sx={t => ({flexGrow: 1})}>
+        <Header padding="sm"  sx={t => ({flexGrow: 1})}>
             <Center style={{height: '100%'}}>
                 <ActionIcon size="lg" variant="light" onClick={toggleNavbar} color="blue">
                     {expand ? <MenuFoldIcon/> : <MenuUnfoldIcon/>}

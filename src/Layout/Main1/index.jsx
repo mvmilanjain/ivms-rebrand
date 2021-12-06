@@ -10,19 +10,16 @@ const Main1 = (props) => {
 
     return (
         <Box component="div" sx={() => ({display: 'flex'})}>
-            <Sidebar expand={openNavbar} />
-            <Box component="div" sx={() => ({flexGrow: 1, display: 'flex', flexDirection: "column"})}>
+            <Sidebar expand={openNavbar}/>
+            <Box sx={t => ({
+                flexGrow: 1, display: 'flex', flexDirection: "column",
+                backgroundColor: t.colors.gray[0]
+            })}>
                 <AppBar expand={openNavbar} toggleNavbar={() => toggleNavbar(o => !o)}/>
                 <Scrollbars>
-                    <Box component="div" sx={t => ({
-                        height: '100%',
-                        backgroundColor: t.colors.gray[0],
-                        padding: t.spacing.sm
-                    })}>
-                        <Paper padding="md" withBorder style={{height: '100%'}}>
-                            {props.children}
-                        </Paper>
-                    </Box>
+                    <Paper m="md" padding="md" withBorder>
+                        {props.children}
+                    </Paper>
                 </Scrollbars>
             </Box>
         </Box>

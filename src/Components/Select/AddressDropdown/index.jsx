@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {forwardRef, useState} from 'react';
 import {FaAddressBook as DefaultIcon} from 'react-icons/fa';
 
 import {AsyncSelect} from 'Components';
@@ -7,16 +7,16 @@ import {getAddresses} from 'Shared/Services';
 
 const getAddressLabel = (address) => address ? (address.name ? address.name : address.address1) : '';
 
-const AddressDropdown = (
+const AddressDropdown = forwardRef((
     {
         optionLabelKey = 'name',
         value = null,
         limit = 50,
         icon,
         withIcon,
-        onSelection,
+        onChange,
         ...rest
-    }
+    }, ref
 ) => {
     const {requestHandler} = useHttp();
     const [dataSource, setDataSource] = useState([]);
@@ -41,11 +41,12 @@ const AddressDropdown = (
         if (selectedItem) {
             result = dataSource.find(item => item.id === selectedItem.id) || null;
         }
-        onSelection && onSelection(result);
+        onChange && onChange(result);
     };
 
     return (
         <AsyncSelect
+            ref={ref}
             placeholder={rest.placeholder || (rest.label && `Select ${rest.label.toLowerCase()}`)}
             icon={icon || (withIcon && <DefaultIcon/>)}
             limit={limit}
@@ -56,6 +57,6 @@ const AddressDropdown = (
             {...rest}
         />
     );
-};
+});
 
 export default AddressDropdown;

@@ -1,6 +1,6 @@
-import {Group, Title, Center,Grid, Col} from '@mantine/core';
+import {Col, Grid, Group, Title} from '@mantine/core';
 
-import {AddressDropdown, VehicleDropdown} from 'Components';
+import {AddressDropdown, ContentArea, VehicleDropdown} from 'Components';
 
 const Dashboard = (props) => {
 
@@ -9,7 +9,7 @@ const Dashboard = (props) => {
     };
 
     return (
-        <>
+        <ContentArea>
             <Group position="apart" mb="md">
                 <Title order={2}>Dashboard</Title>
             </Group>
@@ -18,14 +18,14 @@ const Dashboard = (props) => {
                 <Grid justify="center">
                     <Col span={4}>
                         <Group direction="column" grow>
-                            <VehicleDropdown label="Truck" showIcon onSelection={handleItemSelection}/>
+                            <VehicleDropdown label="Truck" withIcon onSelection={handleItemSelection}/>
 
-                            <AddressDropdown label="Address" showIcon onSelection={handleItemSelection}/>
+                            <AddressDropdown label="Address" withIcon onSelection={handleItemSelection}/>
                         </Group>
                     </Col>
                 </Grid>
             </div>
-        </>
+        </ContentArea>
     );
 };
 

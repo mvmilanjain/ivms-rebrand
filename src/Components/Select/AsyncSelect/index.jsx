@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {forwardRef, useEffect, useState} from 'react';
 import isNil from 'lodash/isNil';
 import {ActionIcon, Autocomplete, Group, Loader} from '@mantine/core';
 import {useDebouncedValue} from '@mantine/hooks';
@@ -13,7 +13,15 @@ const RightSelection = ({isLoading, selectedItem, onClear, onClick}) => {
     );
 }
 
-const AsyncSelect = ({value, selectedValue, onSelection, fetchOptions, ...rest}) => {
+const AsyncSelect = forwardRef((
+    {
+        value,
+        selectedValue,
+        onSelection,
+        fetchOptions,
+        ...rest
+    }, ref
+) => {
     const [isOpen, toggleOpen] = useState(false);
     const [isLoading, toggleLoading] = useState(false);
     const [options, setOptions] = useState([]);
@@ -69,6 +77,7 @@ const AsyncSelect = ({value, selectedValue, onSelection, fetchOptions, ...rest})
 
     return (
         <Autocomplete
+            ref={ref}
             styles={{dropdown: {maxHeight: 200}}}
             transition="scale-y"
             rightSectionWidth={(isLoading && selectedItem) ? 72 : 36}
@@ -83,6 +92,6 @@ const AsyncSelect = ({value, selectedValue, onSelection, fetchOptions, ...rest})
             {...rest}
         />
     );
-};
+});
 
 export default AsyncSelect;

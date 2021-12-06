@@ -173,15 +173,11 @@ class RoutePlanner {
     constructor(props) {
         const {
             id = '',
-            origin = '',
-            origin_address = null,
             loading_time = 0,
             route_stops = []
         } = props || {};
 
         this.id = id;
-        this.origin = origin;
-        this.origin_address = origin_address;
         this.loading_time = loading_time;
         this.route_stops = this.setRouteStops(route_stops);
     }

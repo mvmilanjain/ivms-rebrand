@@ -11,7 +11,7 @@ import {
     MdOutlineVisibility as ViewIcon
 } from 'react-icons/md';
 
-import {ReactTable} from 'Components';
+import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {deleteRoute, getRoutes} from 'Shared/Services';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
@@ -81,12 +81,11 @@ const Route = ({history}) => {
     const handleCreateRoute = () => history.push(`/Route/New`, {action: 'New'});
 
     return (
-        <>
+        <ContentArea>
             <Group position="apart" mb="md">
                 <Title order={2}>Routes</Title>
                 <Button leftIcon={<CreateIcon/>} onClick={handleCreateRoute}>Create Route</Button>
             </Group>
-
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
                     columns={[
@@ -106,7 +105,7 @@ const Route = ({history}) => {
                     {...state.pagination}
                 />
             </div>
-        </>
+        </ContentArea>
     );
 };
 
