@@ -16,7 +16,7 @@ const initMap = () => {
     directionsRenderer.setMap(map);
 };
 
-const RouteMap = ({routeStoppageList, onRouteStopChange}) => {
+const RouteMap = ({route, activeStoppages, initialLoad, onChange}) => {
     const notifications = useNotifications();
 
     useEffect(() => {
@@ -24,14 +24,14 @@ const RouteMap = ({routeStoppageList, onRouteStopChange}) => {
     }, []);
 
     useEffect(() => {
-        (routeStoppageList.length > 1) && calculateAndDisplayRoute();
-    }, [routeStoppageList]);
+        activeStoppages && (activeStoppages.length > 1) && calculateAndDisplayRoute();
+    }, [activeStoppages]);
 
-    const calculateAndDisplayRoute = (routeStoppageList) => {
-        const originAddress = routeStoppageList[0].address;
-        const destinationAddress = routeStoppageList[routeStoppageList.length - 1].address;
+    const calculateAndDisplayRoute = () => {
+        const originAddress = activeStoppages[0].address;
+        const destinationAddress = activeStoppages[activeStoppages.length - 1].address;
         const waypoints = [];
-        routeStoppageList.slice(1, routeStoppageList.length - 1).filter(stop => stop.address).forEach(stop => {
+        activeStoppages.slice(1, activeStoppages.length - 1).filter(stop => stop.address).forEach(stop => {
             const lat = stop.address.latitude;
             const lng = stop.address.longitude;
             waypoints.push({location: new window.google.maps.LatLng(lat, lng), stopover: true});
@@ -45,18 +45,18 @@ const RouteMap = ({routeStoppageList, onRouteStopChange}) => {
         };
         directionsService.route(payload).then(res => {
             res.routes[0].legs.forEach((leg, i) => {
-                leg.start_address = getAddressLabel(routeStoppageList[i].address);
-                leg.end_address = getAddressLabel(routeStoppageList[i + 1].address);
+                leg.start_address = getAddressLabel(activeStoppages[i].address);
+                leg.end_address = getAddressLabel(activeStoppages[i + 1].address);
             });
             directionsRenderer.setDirections(res);
-            onRouteStopChange('success', res.routes[0]);
+            onChange('success', res.routes[0], route, initialLoad);
         }).catch(error => {
             console.error(error);
             notifications.showNotification({
                 title: "Error", color: 'red',
                 message: error.message
             });
-            onRouteStopChange('fail', []);
+            onChange('fail', [], route, initialLoad);
         });
     };
 

@@ -1,9 +1,17 @@
 import {useEffect, useState} from 'react';
 import get from 'lodash/get';
 import {useFormik} from 'formik';
-import {Button, Col, Divider, Grid, Group, NumberInput, SimpleGrid, TextInput, Title} from '@mantine/core';
+import {ActionIcon, Button, Col, Divider, Grid, Group, NumberInput, SimpleGrid, TextInput, Title} from '@mantine/core';
+import {useSetState} from '@mantine/hooks';
 import {useNotifications} from '@mantine/notifications';
-import {MdOutlineAddLocationAlt as AddStopIcon, MdOutlineSave as SaveIcon} from 'react-icons/md';
+import {useModals} from '@mantine/modals';
+import {
+    MdArrowDownward as MoveDownIcon,
+    MdArrowUpward as MoveUpIcon,
+    MdDeleteOutline as DeleteIcon,
+    MdOutlineAddLocationAlt as AddStopIcon,
+    MdOutlineSave as SaveIcon,
+} from 'react-icons/md';
 
 import {AddressDropdown, ReactTable, RouteMap} from 'Components';
 import {useHttp} from 'Hooks';
@@ -11,12 +19,17 @@ import {Route} from 'Shared/Models';
 import {ROUTE} from 'Shared/Utilities/validationSchema.util';
 import {errorMessage} from 'Shared/Utilities/common.util';
 import {getRoute, postRoute, putRoute} from 'Shared/Services';
+import AddStoppageForm from './AddStoppageForm';
 
 const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
     const action = location.state.action;
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
+    const modals = useModals();
     const [initialValue, setInitialValue] = useState({});
+    const [routeMapState, setRouteMapState] = useSetState({
+        route: null, activeStoppages: [], initialLoad: false
+    });
 
     const register = (fieldName) => ({
         id: fieldName,
@@ -31,9 +44,10 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
             setInitialValue({...route});
         } else {
             const {params} = match;
-            console.log({params});
             requestHandler(getRoute(params.id), {loader: true}).then(res => {
-                setInitialValue(new Route(res.data));
+                const route = new Route(res.data);
+                setInitialValue(route);
+                renderActiveRouteOnMap(route, true);
             }).catch(e => {
                 console.error(e);
                 notifications.showNotification({
@@ -43,16 +57,74 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
         }
     }, []);
 
+    const renderStoppageRowAction = ({row}) => {
+        const {index, original: stop} = row;
+        const activeRouteStop = values.route_planner.route_stops.filter(stop => !stop._destroy);
+        const isSource = (values.source && values.source === stop.address_id && index === 0);
+        const isDestination = (values.destination && values.destination === stop.address_id && index === activeRouteStop.length - 1);
+
+        return (isSource || isDestination) ? null : <Group spacing={0}>
+            <ActionIcon color="red" onClick={() => handleDeleteStoppage(index)}><DeleteIcon size={20}/></ActionIcon>
+            <ActionIcon onClick={() => handleMoveStoppage(index, 'UP')} disabled={index === 0 ||
+                (index === 1 && values.source && activeRouteStop[0].address_id === values.source)
+            }>
+                <MoveUpIcon size={20}/>
+            </ActionIcon>
+            <ActionIcon onClick={() => handleMoveStoppage(index, 'DOWN')} disabled={
+                (index === activeRouteStop.length - 1) || (
+                    index === activeRouteStop.length - 2 && values.destination &&
+                    activeRouteStop[activeRouteStop.length - 1].address_id === values.destination
+                )
+            }>
+                <MoveDownIcon size={20}/>
+            </ActionIcon>
+        </Group>;
+    };
+
+    const renderActiveRouteOnMap = (route, initialLoad) => {
+        const activeRouteStops = route.getActiveRouteStops();
+        if (activeRouteStops.length === 1) {
+            route.route_planner.route_stops.forEach(stop => !stop._destroy && (stop.distance = 0));
+            !initialLoad && route.updateTotalDistanceAndCycleTime();
+            setValues({...route});
+        } else if (activeRouteStops.length > 1) {
+            setRouteMapState({route, activeStoppages: activeRouteStops, initialLoad});
+        } else {
+            !initialLoad && route.updateTotalDistanceAndCycleTime();
+            setValues({...route});
+        }
+    };
+
+    const calculateTimeAndDistanceForRoute = (status, activeStoppages, route, initialLoad) => {
+        if (status === 'success') {
+            let legCounter = 0, routeStopCounter = 0;
+            route.route_planner.route_stops.forEach(stop => {
+                if (routeStopCounter === 0 && stop.address && !stop._destroy) {
+                    stop.distance = 0;
+                    routeStopCounter++;
+                } else if (routeStopCounter !== 0 && stop.address && !stop._destroy) {
+                    stop.distance = Math.round(activeStoppages.legs[legCounter].distance.value / 1000);
+                    legCounter++;
+                }
+            });
+            !initialLoad && route.updateTotalDistanceAndCycleTime();
+            setValues({...route});
+        } else {
+            !initialLoad && route.updateTotalDistanceAndCycleTime();
+            setValues({...route});
+        }
+    };
+
     const handleSourceChange = (address) => {
         const route = new Route(values);
         route.setSource(address);
-        setValues(route);
+        renderActiveRouteOnMap(route);
     };
 
     const handleDestinationChange = (address) => {
         const route = new Route(values);
         route.setDestination(address);
-        setValues(route);
+        renderActiveRouteOnMap(route);
     };
 
     const handleLoadingTimeChange = (loadingTime) => {
@@ -62,7 +134,17 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
     };
 
     const handleAddStoppage = () => {
-
+        const id = modals.openModal({
+            title: 'Add Stoppage',
+            children: <AddStoppageForm
+                onConfirm={(stoppage) => {
+                    modals.closeModal(id);
+                    const route = new Route(values);
+                    route.addRouteStop(stoppage);
+                    renderActiveRouteOnMap(route);
+                }}
+            />
+        });
     };
 
     const isRouteStopAddressDisabled = (index, stop) => {
@@ -77,7 +159,7 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
     const handleRouteStopAddressChange = (address, index) => {
         const route = new Route(values);
         route.route_planner.route_stops[index].setAddress(address);
-        setValues(route);
+        renderActiveRouteOnMap(route);
     };
 
     const handleRouteStopChange = (value, index, key) => {
@@ -85,6 +167,18 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
         route.route_planner.route_stops[index][key] = value;
         route.updateTotalDistanceAndCycleTime();
         setValues(route);
+    };
+
+    const handleDeleteStoppage = (index) => {
+        const route = new Route(values);
+        route.removeRouteStop(index);
+        renderActiveRouteOnMap(route);
+    };
+
+    const handleMoveStoppage = (index, direction) => {
+        const route = new Route(values);
+        route.moveRouteStop(index, direction);
+        renderActiveRouteOnMap(route);
     };
 
     const onSubmit = (values) => {
@@ -115,7 +209,6 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            {/*<pre>{JSON.stringify(values, null, 2)}</pre>*/}
             <Group position="apart" mb="md">
                 <Title order={3}>Route</Title>
                 <Group position="apart">
@@ -127,7 +220,6 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
                     </Button>
                 </Group>
             </Group>
-
             <Divider mb="md" variant="dotted"/>
 
             <Grid mb="md">
@@ -158,7 +250,7 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
                             {...register("destination_address")}
                             label="Destination" withIcon required
                             onChange={handleDestinationChange}
-                            error={errorMessage("source", touched, errors)}
+                            error={errorMessage("destination", touched, errors)}
                         />
 
                         <NumberInput
@@ -198,8 +290,7 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
                 <Col span={5}>
                     <Title order={4} mb="xs">Route Map</Title>
                     <div style={{height: 'calc(100% - 36px)'}}>
-                        <RouteMap routeStoppageList={[]} onRouteStopChange={() => {
-                        }}/>
+                        <RouteMap {...routeMapState} onChange={calculateTimeAndDistanceForRoute}/>
                     </div>
                 </Col>
             </Grid>
@@ -225,7 +316,7 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
                         />
                     },
                     {
-                        accessor: 'distance', Header: 'Distance',
+                        accessor: 'distance', Header: 'Distance', cellWidth: 200,
                         Cell: ({row}) => <NumberInput
                             {...register(`route_planner.route_stops[${row.index}].distance`)}
                             placeholder="Enter distance" min={0}
@@ -234,13 +325,14 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
                         />
                     },
                     {
-                        accessor: 'stop_duration', Header: 'Stop duration',
+                        accessor: 'stop_duration', Header: 'Stop duration', cellWidth: 200,
                         Cell: ({row}) => <NumberInput
                             {...register(`route_planner.route_stops[${row.index}].stop_duration`)}
                             placeholder="Enter stop duration" min={0}
                             onChange={val => handleRouteStopChange(val, row.index, 'stop_duration')}
                         />
                     },
+                    {accessor: 'id', Header: 'Actions', cellWidth: 120, Cell: renderStoppageRowAction}
                 ]}
                 data={get(values, 'route_planner.route_stops', []).filter(stop => !stop._destroy)}
             />
