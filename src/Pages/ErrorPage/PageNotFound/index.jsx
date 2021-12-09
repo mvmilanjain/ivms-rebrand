@@ -1,11 +1,13 @@
 import {Link} from 'react-router-dom';
 import {Anchor, Center, Group, Text, ThemeIcon, Title} from '@mantine/core';
 import {ArrowRightIcon} from '@modulz/radix-icons';
-import {FiTruck as BrandIcon} from "react-icons/fi";
+import {FiTruck as BrandIcon} from 'react-icons/fi';
 
-const PageNotFound = () => {
-    return (
-        <Group position="center" direction="column" mt={40}>
+import {ContentArea} from 'Components';
+
+const PageNotFound = () => (
+    <ContentArea>
+        <Group position="center" direction="column" m="xl">
             <ThemeIcon variant="gradient" radius="xl" size="xl" gradient={{from: 'indigo', to: 'cyan'}}>
                 <BrandIcon size={20}/>
             </ThemeIcon>
@@ -25,7 +27,7 @@ const PageNotFound = () => {
                 </Center>
             </Anchor>
         </Group>
-    );
-};
+    </ContentArea>
+);
 
 export default PageNotFound;

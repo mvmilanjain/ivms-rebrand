@@ -80,13 +80,13 @@ const Route = ({history}) => {
         });
     };
 
-    const handleCreateRoute = () => history.push(`/Route/New`, {action: 'New'});
+    const handleCreate = () => history.push(`/Route/New`, {action: 'New'});
 
     return (
         <ContentArea>
             <Group position="apart" mb="md">
                 <Title order={2}>Routes</Title>
-                <Button leftIcon={<CreateIcon/>} onClick={handleCreateRoute}>Create Route</Button>
+                <Button leftIcon={<CreateIcon/>} onClick={handleCreate}>Create Route</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable

@@ -33,6 +33,12 @@ export const getOptionLabel = (list, value) => get(find(list, {value}), 'label',
 
 export const getAddressLabel = (address) => address ? (address.name ? address.name : address.address1) : '';
 
+export const getAddressString = (address) => {
+    const {address1, address2, city, state, country, zipcode} = address;
+    const arr = [address1, address2, city, state, country, zipcode];
+    return arr.filter(item => !!item).join(", ");
+};
+
 export const getCurrencyLabel = (amount) => amount ? `${CURRENCY} ${amount}` : `${CURRENCY} 0`;
 
 export const getDistanceLabel = (distance) => distance ? `${distance} ${KM}` : `0 ${KM}`;

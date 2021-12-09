@@ -26,8 +26,8 @@ const AsyncSelect = forwardRef((
     const [isOpen, toggleOpen] = useState(false);
     const [isLoading, toggleLoading] = useState(false);
     const [options, setOptions] = useState([]);
-    const [searchText, setSearchText] = useState(value || '');
     const [selectedItem, setSelectedItem] = useState(selectedValue);
+    const [searchText, setSearchText] = useState(value || '');
     const [debouncedSearchText] = useDebouncedValue(searchText, 300);
 
     useEffect(() => {

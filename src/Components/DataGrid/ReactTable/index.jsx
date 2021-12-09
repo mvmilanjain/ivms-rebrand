@@ -15,10 +15,10 @@ import {
     useCss
 } from '@mantine/core';
 import {BsArrowDownUp as SortIcon, BsArrowUp as AscIcon,} from 'react-icons/bs';
+import {AiOutlineInbox} from 'react-icons/ai';
 
 import filterTypes from './filterTypes';
 import {StringFilter} from './Filters';
-import {AiOutlineInbox} from "react-icons/ai";
 
 const pageSizeOptions = ['10', '25', '50', '100'];
 
