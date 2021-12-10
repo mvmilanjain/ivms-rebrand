@@ -3,7 +3,11 @@ import loadable from "@loadable/component";
 
 const PageNotFound = loadable(() => import('Pages/ErrorPage/PageNotFound'));
 
-const Address = loadable(() => import('Pages/Address'));
+const Address = {
+    ViewAll: loadable(() => import('Pages/Address')),
+    NewOrEdit: loadable(() => import('Pages/Address/NewOrEditAddress'))
+};
+
 const Dashboard = loadable(() => import('Pages/Dashboard'));
 const Fault = loadable(() => import('Pages/Fault'));
 const Product = loadable(() => import('Pages/Product'));
@@ -34,7 +38,10 @@ const Trailer = loadable(() => import('Pages/Vehicle/Trailer'));
 const pagesWithoutAuthentication = [{id: "signin", path: "/SignIn", component: SignIn}];
 
 const pagesWithAuthentication = [
-    {id: "address", path: "/Address", component: Address},
+    {id: "address", path: "/Address", component: Address.ViewAll},
+    {id: "newAddress", path: "/Address/New", component: Address.NewOrEdit},
+    {id: "editAddress", path: "/Address/Edit/:id", component: Address.NewOrEdit},
+
     {id: "dashboard", path: "/Dashboard", component: Dashboard},
     {id: "fault", path: "/Fault", component: Fault},
     {id: "product", path: "/Product", component: Product},

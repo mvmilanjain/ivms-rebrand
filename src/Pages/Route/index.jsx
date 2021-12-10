@@ -46,25 +46,25 @@ const Route = ({history}) => {
     const renderActions = ({value}) => {
         return (
             <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
-                <Menu.Item icon={<EditIcon/>} onClick={() => handleEditRoute(value)}>Edit Route</Menu.Item>
+                <Menu.Item icon={<EditIcon/>} onClick={() => handleEdit(value)}>Edit Route</Menu.Item>
                 <Menu.Item icon={<ViewIcon/>}>View Route</Menu.Item>
-                <Menu.Item icon={<DeleteIcon/>} color="red" onClick={() => openDeleteConfirmModal(value)}>
+                <Menu.Item icon={<DeleteIcon/>} color="red" onClick={() => handleDelete(value)}>
                     Delete Route
                 </Menu.Item>
             </Menu>
         );
     };
 
-    const handleEditRoute = (id) => history.push(`/Route/Edit/${id}`, {action: 'Edit'});
+    const handleEdit = (id) => history.push(`/Route/Edit/${id}`, {action: 'Edit'});
 
-    const openDeleteConfirmModal = (routeId) => {
+    const handleDelete = (id) => {
         modals.openConfirmModal({
             title: "Are you sure you want to delete the route?",
             labels: {confirm: "Delete route", cancel: "No don't delete it"},
             confirmProps: {color: "red"},
             onConfirm: () => {
                 toggleLoading(l => !l);
-                requestHandler(deleteRoute(routeId)).then(() => {
+                requestHandler(deleteRoute(id)).then(() => {
                     notifications.showNotification({
                         title: "Success", color: "green",
                         message: "Route has been deleted successfully."

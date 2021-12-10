@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
     ActionIcon,
     Badge,
@@ -16,10 +16,10 @@ import {
     Title,
     useMantineTheme
 } from '@mantine/core';
-import {useSetState} from '@mantine/hooks';
+import {useDebouncedValue, useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
-import {ArrowRightIcon, MagnifyingGlassIcon} from '@modulz/radix-icons';
+import {MagnifyingGlassIcon} from '@modulz/radix-icons';
 import {
     MdLocationPin as MapPinIcon,
     MdOutlineAddBox as CreateIcon,
@@ -30,7 +30,7 @@ import {
 import {AiOutlineInbox} from 'react-icons/ai';
 
 import {useHttp} from 'Hooks';
-import {getAddresses, getStaticMap} from 'Shared/Services';
+import {deleteAddress, getAddresses, getStaticMap} from 'Shared/Services';
 import {getAddressString} from 'Shared/Utilities/common.util';
 
 const Address = ({history}) => {
@@ -41,18 +41,15 @@ const Address = ({history}) => {
     const notifications = useNotifications();
 
     const [loading, toggleLoading] = useState(false);
+    const [state, setState] = useSetState({data: [], pagination: {count: 0, pageNum: 1, next_page: null}});
     const [searchText, setSearchText] = useState(null);
-    const [state, setState] = useSetState({
-        data: [], pagination: {
-            total: 0, pageCount: 0, pageNum: 1, nextPage: null
-        }
-    });
+    const [debouncedSearchText] = useDebouncedValue(searchText, 300);
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [debouncedSearchText]);
 
-    const fetchData = useCallback(() => {
+    const fetchData = () => {
         toggleLoading(l => !l);
         const params = {
             per_page: (PAGE_SIZE * 10), page_no: 1, filter: {
@@ -60,40 +57,58 @@ const Address = ({history}) => {
             }
         };
         requestHandler(getAddresses(params)).then(res => {
-            const {data, meta: {pagination: {count, total_pages, next_page}}} = res;
-            setState({
-                data: [],
-                pagination: {
-                    total: count,
-                    pageCount: total_pages,
-                    pageNum: 1,
-                    nextPage: next_page
-                }
+            const {data, meta: {pagination: {count, next_page}}} = res;
+            setState({data, pagination: {count, pageNum: 1, next_page}});
+        }).catch(e => {
+            notifications.showNotification({
+                title: 'Error', color: 'red', message: 'Not able to fetch addresses. Something went wrong!!!'
             });
-        }).catch(e => console.error(e)).finally(() => toggleLoading(l => !l));
-    }, []);
+        }).finally(() => toggleLoading(l => !l));
+    };
 
-    const handlePageChange = async (pageNum) => {
+    const handleEdit = (id) => history.push(`/Address/Edit/${id}`, {action: 'Edit'});
+
+    const handleDelete = (id) => {
+        modals.openConfirmModal({
+            title: "Are you sure you want to delete the address?",
+            labels: {confirm: "Delete address", cancel: "No don't delete it"},
+            confirmProps: {color: "red"},
+            onConfirm: () => {
+                requestHandler(deleteAddress(id), {loader: true}).then(() => {
+                    notifications.showNotification({
+                        title: 'Success', color: 'green', message: 'Address has been deleted successfully.'
+                    });
+                    fetchData();
+                }).catch(e => {
+                    notifications.showNotification({
+                        title: 'Error', color: 'red', message: 'Not able to delete address. Something went wrong!!'
+                    });
+                });
+            }
+        });
+    };
+
+    const handlePageChange = (pageNum) => {
         const recordNum = pageNum * PAGE_SIZE;
-        if (recordNum > state.data.length && recordNum <= state.pagination.total) {
+        if (recordNum > state.data.length && recordNum <= state.pagination.count) {
             toggleLoading(l => !l);
             const params = {
-                per_page: (PAGE_SIZE * 10), page_no: state.pagination.nextPage, filter: {
+                per_page: (PAGE_SIZE * 10), page_no: state.pagination.next_page, filter: {
                     name_cont: searchText, address1_cont: searchText, m: 'or'
                 }
             };
             requestHandler(getAddresses(params)).then(res => {
-                const {data, meta: {pagination: {count, total_pages, next_page}}} = res;
+                const {data, meta: {pagination: {count, next_page}}} = res;
                 setState({
                     data: [...state.data, ...data],
-                    pagination: {
-                        pageNum,
-                        pageCount: total_pages,
-                        nextPage: next_page,
-                        total: count
-                    }
+                    pagination: {...state.pagination, next_page, count, pageNum}
                 });
-            }).catch(e => console.error(e)).finally(() => toggleLoading(l => !l));
+            }).catch(e => {
+                console.error(e);
+                notifications.showNotification({
+                    title: 'Error', color: 'red', message: 'Not able to fetch addresses. Something went wrong!!!'
+                });
+            }).finally(() => toggleLoading(l => !l));
         } else {
             setState({pagination: {...state.pagination, pageNum}});
         }
@@ -110,16 +125,10 @@ const Address = ({history}) => {
                         placeholder="Search address"
                         icon={<MagnifyingGlassIcon size={16}/>}
                         fullWidth radius="xl"
-                        rightSection={
-                            <ActionIcon size={28} radius="xl" color={theme.primaryColor} variant="filled">
-                                <ArrowRightIcon/>
-                            </ActionIcon>
-                        }
                         rightSectionWidth={40}
                         onChange={e => setSearchText(e.target.value)}
                     />
                 </Box>
-
                 <Button leftIcon={<CreateIcon/>} onClick={handleCreate} ml="xl">Create Address</Button>
             </Group>
 
@@ -152,8 +161,10 @@ const Address = ({history}) => {
                                     </Badge>}
                                 </Box>
                                 <Group align="start" position="right" spacing="xs">
-                                    <ActionIcon><EditIcon/></ActionIcon>
-                                    <ActionIcon color="red"><DeleteIcon/></ActionIcon>
+                                    <ActionIcon onClick={() => handleEdit(item.id)}><EditIcon/></ActionIcon>
+                                    <ActionIcon color="red" onClick={() => handleDelete(item.id)}>
+                                        <DeleteIcon/>
+                                    </ActionIcon>
                                 </Group>
                             </Group>
                         </Group>
@@ -171,7 +182,8 @@ const Address = ({history}) => {
                                 <Skeleton height={16} width={100} radius="xl"/>
                             </Group>
                         </Group>
-                    </Paper>))}
+                    </Paper>))
+                }
             </Group>
 
             {!loading && state.data.length === 0 && <Group position="center" direction="column" m="xl">
@@ -227,7 +239,7 @@ const Address = ({history}) => {
             {state.data.length > 0 && <Pagination
                 position="center" size="lg"
                 page={state.pagination.pageNum}
-                total={Math.ceil(state.pagination.total / PAGE_SIZE)}
+                total={Math.ceil(state.pagination.count / PAGE_SIZE)}
                 onChange={handlePageChange}
             />}
         </>

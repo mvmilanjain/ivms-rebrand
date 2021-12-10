@@ -11,17 +11,20 @@ export const VEHICLE_STATUS = [
 ];
 export const PRIORITY = ['normal', 'low', 'medium', 'high', 'emergency'];
 export const TRIP_STATUS = [
+    {label: 'Trip is not started', value: 'not_started'},
     {label: 'In-Progress', value: 'in_progress'},
     {label: 'Completed', value: 'completed'},
-    {label: 'Cancelled', value: 'cancelled'},
-    {label: 'Trip is not started', value: 'not_started'}
+    {label: 'Cancelled', value: 'cancelled'}
 ];
 export const POD_STATUS = [
     {value: 'awaited', label: 'Load completed - Awaiting POD pack'},
-    {value: 'in_progress', label: 'In progress'},
+    {value: 'in_progress', label: 'In-Progress'},
     {value: 'incomplete', label: 'POD pack received - Incomplete'},
     {value: 'received', label: 'POD pack received - In Full'},
     {value: 'cancelled', label: 'Lead Cancelled'}
+];
+export const POD_STATUS_EMPTY_LEG = [
+    {value: 'empty_leg', label: 'Empty Leg'}
 ];
 export const FAULT_TYPE = ['repair', 'replace'];
 export const TOOL_STATUS = [
@@ -47,7 +50,7 @@ export const WORKORDER_TYPE = [
 ];
 export const TASK_STATUS = [
     {label: 'Initiated', value: 'initiated'},
-    {label: 'In Progress', value: 'in_progress'},
+    {label: 'In-Progress', value: 'in_progress'},
     {label: 'On Hold', value: 'on_hold'},
     {label: 'Completed', value: 'completed'}
 ]
@@ -59,10 +62,14 @@ export const MEMBER_ROLE = [
     {value: 'route_operations', label: 'Route Operation'}
 ];
 export const ADDRESS_TYPE = [
-    {value: 'stoppage', label: 'Stoppage'},
+    {value: 'stoppage', label: 'Truck Stop'},
     {value: 'fuel', label: 'Fuel Station'},
     {value: 'washing', label: 'Washing Station'},
-    {value: 'service', label: 'Service Station'},
+    {value: 'service_provider', label: 'Service Provider'},
+    {value: 'service_dealership', label: 'Service Dealership'},
+    {value: 'loading', label: 'Loading Point'},
+    {value: 'off_loading', label: 'Off Loading Point'},
+    {value: 'rest', label: 'Authorized Rest Point'},
     {value: 'tyre_change', label: 'Tyre Point'}
 ];
 export const EMPLOYMENT_STATUS = [
