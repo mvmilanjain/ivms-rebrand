@@ -119,7 +119,6 @@ export const TRUCK = yup.object({
     vin_number: yup.string().label('VIN No.').required()
 });
 
-// MODALS
 export const ADD_ROUTE_STOP = yup.object({
     address_id: yup.string().required().label('Address'),
     stop_duration: yup.number().min(0).required().label('Stop Duration')
@@ -142,4 +141,10 @@ export const PRODUCT_ROUTE = yup.object({
         rate_per_tone: yup.number().moreThan(0).required().label('Rate per tone'),
         avg_tonnage: yup.number().moreThan(0).required().label('Average tonnage')
     })
+});
+
+export const FAULT = yup.object({
+    name: yup.string().required().label('Name'),
+    fault_type: yup.string().required().label('Fault type'),
+    vehicle_id: yup.string().required().label('Vehicle'),
 });

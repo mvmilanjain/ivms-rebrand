@@ -8,4 +8,6 @@ const postFault = (data) => ({url, method: 'post', data});
 
 const putFault = (id, data) => ({url: `${url}/${id}`, method: 'put', data});
 
-export {getFaults, getFault, postFault, putFault};
+const deleteFault = (id) => ({url: `${url}/${id}`, method: 'delete'});
+
+export {getFaults, getFault, postFault, putFault, deleteFault};

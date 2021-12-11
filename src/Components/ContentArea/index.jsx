@@ -1,12 +1,21 @@
-import {Box} from '@mantine/core';
+import {Box, Paper, useCss} from '@mantine/core';
 import {useViewportSize} from '@mantine/hooks';
 
-const ContentArea = (props) => {
+const ContentArea = ({withPaper, limitToViewPort, heightToReduce = 128, ...rest}) => {
+    const {cx, css} = useCss();
     const {height} = useViewportSize();
 
     return (
-        <Box style={{height: `${height - 128}px`}}>
-            {props.children}
+        <Box sx={t => ({padding: t.spacing.md})}>
+            {withPaper && <Paper padding="md" withBorder>
+                <Box className={cx({[css({height: `${height - heightToReduce}px`})]: limitToViewPort})}>
+                    {rest.children}
+                </Box>
+            </Paper>}
+
+            {!withPaper && <Box className={cx({[css({height: `${height - heightToReduce}px`})]: limitToViewPort})}>
+                {rest.children}
+            </Box>}
         </Box>
     );
 

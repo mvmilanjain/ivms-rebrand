@@ -11,7 +11,7 @@ import {
     MdOutlineVisibility as ViewIcon
 } from 'react-icons/md';
 
-import {ReactTable} from 'Components';
+import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {deleteTruck, getTrucks} from 'Shared/Services';
 import {VEHICLE} from 'Shared/Utilities/tableSchema';
@@ -79,7 +79,7 @@ const Truck = (props) => {
     };
 
     return (
-        <>
+        <ContentArea>
             <Group position="apart" mb="md">
                 <Title order={2}>Truck</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Truck</Button>
@@ -103,7 +103,7 @@ const Truck = (props) => {
                     {...state.pagination}
                 />
             </div>
-        </>
+        </ContentArea>
     );
 };
 

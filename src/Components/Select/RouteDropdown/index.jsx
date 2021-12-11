@@ -36,7 +36,7 @@ const RouteDropdown = forwardRef((
                 }).catch(e => {
                     notifications.showNotification({
                         title: 'Error', color: 'red',
-                        message: 'Not able to fetch selected route details. Something went wrong!!!'
+                        message: 'Not able to fetch selected route details. Something went wrong!!'
                     });
                     onChange(null);
                 });

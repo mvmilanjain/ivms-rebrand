@@ -9,7 +9,10 @@ const Address = {
 };
 
 const Dashboard = loadable(() => import('Pages/Dashboard'));
-const Fault = loadable(() => import('Pages/Fault'));
+const Fault = {
+    ViewAll: loadable(() => import('Pages/Fault')),
+    NewOrEdit: loadable(() => import('Pages/Fault/NewOrEditFault'))
+};
 const Product = {
     ViewAll: loadable(() => import('Pages/Product')),
     NewOrEdit: loadable(() => import('Pages/Product/NewOrEditProduct'))
@@ -34,6 +37,7 @@ const Workorder = loadable(() => import('Pages/Maintenance/Workorder'));
 const InspectionForm = loadable(() => import('Pages/Inspection/InspectionForm'));
 const InspectionReport = loadable(() => import('Pages/Inspection/InspectionReport'));
 
+const Vehicle = loadable(() => import('Pages/Vehicle'));
 const Truck = loadable(() => import('Pages/Vehicle/Truck'));
 const Trailer = loadable(() => import('Pages/Vehicle/Trailer'));
 
@@ -45,7 +49,10 @@ const pagesWithAuthentication = [
     {id: "editAddress", path: "/Address/Edit/:id", component: Address.NewOrEdit},
 
     {id: "dashboard", path: "/Dashboard", component: Dashboard},
-    {id: "fault", path: "/Fault", component: Fault},
+
+    {id: "fault", path: "/Fault", component: Fault.ViewAll},
+    {id: "newFault", path: "/Fault/New", component: Fault.NewOrEdit},
+    {id: "editFault", path: "/Fault/Edit/:id", component: Fault.NewOrEdit},
 
     {id: "product", path: "/Product", component: Product.ViewAll},
     {id: "newProduct", path: "/Product/New", component: Product.NewOrEdit},
@@ -65,6 +72,7 @@ const pagesWithAuthentication = [
     {id: "inspectionForm", path: "/Inspection/InspectionForm", component: InspectionForm},
     {id: "inspectionReport", path: "/Inspection/InspectionReport", component: InspectionReport},
 
+    {id: "vehicle", path: "/Vehicle", component: Vehicle},
     {id: "truck", path: "/Vehicle/Truck", component: Truck},
     {id: "trailer", path: "/Vehicle/Trailer", component: Trailer},
 

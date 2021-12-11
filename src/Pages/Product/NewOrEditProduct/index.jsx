@@ -11,7 +11,7 @@ import {
     MdOutlineSave as SaveIcon
 } from 'react-icons/md';
 
-import {ReactTable} from 'Components';
+import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {Product, ProductRoute, Route} from 'Shared/Models';
 import {getProduct, postProduct, putProduct} from 'Shared/Services';
@@ -62,7 +62,6 @@ const NewOrEditProduct = ({history, location, match, ...rest}) => {
                         modals.closeModal(id);
                         const product = new Product(values);
                         product.addProductRoute(productRoute);
-                        // product.updateProductRoute(productRoute, index);
                         setValues(product);
                     }}
                 />
@@ -116,68 +115,70 @@ const NewOrEditProduct = ({history, location, match, ...rest}) => {
     });
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Group position="apart" mb="md">
-                <Title order={3}>Product</Title>
-                <Group position="apart">
-                    <Button variant="default" onClick={() => history.push('/Product')}>
-                        Cancel
-                    </Button>
-                    <Button leftIcon={<SaveIcon/>} type="submit">
-                        {action === 'New' ? 'Save' : 'Update'}
+        <ContentArea withPaper>
+            <form onSubmit={handleSubmit}>
+                <Group position="apart" mb="md">
+                    <Title order={3}>Product</Title>
+                    <Group position="apart">
+                        <Button variant="default" onClick={() => history.push('/Product')}>
+                            Cancel
+                        </Button>
+                        <Button leftIcon={<SaveIcon/>} type="submit">
+                            {action === 'New' ? 'Save' : 'Update'}
+                        </Button>
+                    </Group>
+                </Group>
+                <Divider mb="md" variant="dotted"/>
+
+                <Grid mb="md">
+                    <Col span={4}>
+                        <TextInput
+                            {...register("name")}
+                            label="Product name"
+                            placeholder="Enter product name"
+                            required mr="xl"
+                        />
+                    </Col>
+                    <Col span={4}>
+                        <NumberInput
+                            {...register("volume")} mr="xl"
+                            label="Product volume" placeholder="Enter volume"
+                            min={0} onChange={val => setFieldValue("volume", val)}
+                        />
+                    </Col>
+                </Grid>
+                <Divider mb="md" variant="dotted"/>
+
+                <Group mb="md" position="apart">
+                    <Title order={4}>Product Routes</Title>
+                    <Button variant="outline" leftIcon={<AddStopIcon/>} onClick={handleAddProductRoute}>
+                        Add Route
                     </Button>
                 </Group>
-            </Group>
-            <Divider mb="md" variant="dotted"/>
 
-            <Grid mb="md">
-                <Col span={4}>
-                    <TextInput
-                        {...register("name")}
-                        label="Product name"
-                        placeholder="Enter product name"
-                        required mr="xl"
-                    />
-                </Col>
-                <Col span={4}>
-                    <NumberInput
-                        {...register("volume")} mr="xl"
-                        label="Product volume" placeholder="Enter volume"
-                        min={0} onChange={val => setFieldValue("volume", val)}
-                    />
-                </Col>
-            </Grid>
-            <Divider mb="md" variant="dotted"/>
-
-            <Group mb="md" position="apart">
-                <Title order={4}>Product Routes</Title>
-                <Button variant="outline" leftIcon={<AddStopIcon/>} onClick={handleAddProductRoute}>
-                    Add Route
-                </Button>
-            </Group>
-
-            <ReactTable
-                columns={[
-                    {accessor: 'route.route_code', Header: 'Route'},
-                    {accessor: 'contractor.name', Header: 'Contractor'},
-                    {accessor: 'std_tonnage', Header: 'Tonnage'},
-                    {accessor: 'avg_rate', Header: 'Avg. Rate'},
-                    {accessor: 'avg_load_weight', Header: 'Avg. Load Weight'},
-                    {accessor: 'max_load_weight', Header: 'Max Load Weight'},
-                    {
-                        accessor: 'id', Header: 'Actions', cellWidth: 100, Cell: ({row}) => <Group spacing="sm">
-                            <ActionIcon onClick={() => handleAEditProductRoute(row.original, row.index)}>
-                                <EditIcon size={20}/>
-                            </ActionIcon>
-                            <ActionIcon color="red" onClick={() => handleADeleteProductRoute(row.index)}>
-                                <DeleteIcon size={20}/>
-                            </ActionIcon>
-                        </Group>
-                    }
-                ]}
-                data={get(values, 'product_routes', []).filter(stop => !stop._destroy)}
-            />
-        </form>
+                <ReactTable
+                    columns={[
+                        {accessor: 'route.route_code', Header: 'Route'},
+                        {accessor: 'contractor.name', Header: 'Contractor'},
+                        {accessor: 'std_tonnage', Header: 'Tonnage'},
+                        {accessor: 'avg_rate', Header: 'Avg. Rate'},
+                        {accessor: 'avg_load_weight', Header: 'Avg. Load Weight'},
+                        {accessor: 'max_load_weight', Header: 'Max Load Weight'},
+                        {
+                            accessor: 'id', Header: 'Actions', cellWidth: 100, Cell: ({row}) => <Group spacing="sm">
+                                <ActionIcon onClick={() => handleAEditProductRoute(row.original, row.index)}>
+                                    <EditIcon size={20}/>
+                                </ActionIcon>
+                                <ActionIcon color="red" onClick={() => handleADeleteProductRoute(row.index)}>
+                                    <DeleteIcon size={20}/>
+                                </ActionIcon>
+                            </Group>
+                        }
+                    ]}
+                    data={get(values, 'product_routes', []).filter(stop => !stop._destroy)}
+                />
+            </form>
+        </ContentArea>
     );
 };
 

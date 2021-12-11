@@ -1,21 +1,21 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Group, Menu, Title} from '@mantine/core';
+import {ActionIcon, Box, Button, Group, Menu, Title} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
+import {useModals} from '@mantine/modals';
+import {useNotifications} from '@mantine/notifications';
 import {DotsVerticalIcon} from '@modulz/radix-icons';
-import {
-    MdOutlineAddBox as CreateIcon,
-    MdOutlineEdit as EditIcon,
-    MdOutlineVisibility as ViewIcon
-} from 'react-icons/md';
+import {MdOutlineAddBox as CreateIcon, MdOutlineDelete as DeleteIcon, MdOutlineEdit as EditIcon} from 'react-icons/md';
 
-import {ReactTable} from 'Components';
+import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
-import {getFaults} from 'Shared/Services';
+import {deleteFault, getFaults} from 'Shared/Services';
 import {FAULT_SCHEMA} from 'Shared/Utilities/tableSchema';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
 
-const Fault = (props) => {
+const Fault = ({history, ...rest}) => {
     const {requestHandler} = useHttp();
+    const modals = useModals();
+    const notifications = useNotifications();
     const [loading, toggleLoading] = useState(false);
     const [state, setState] = useSetState({
         reload: false, data: [],
@@ -40,19 +40,48 @@ const Fault = (props) => {
     const renderActions = ({value}) => {
         return (
             <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
-                <Menu.Item icon={<EditIcon/>}>Edit Fault</Menu.Item>
-                <Menu.Item icon={<ViewIcon/>}>View Fault</Menu.Item>
+                <Menu.Item icon={<EditIcon/>} onClick={() => handleEdit(value)}>Edit Fault</Menu.Item>
+                <Menu.Item icon={<DeleteIcon/>} color="red" onClick={() => handleDelete(value)}>
+                    Delete Fault
+                </Menu.Item>
             </Menu>
         );
     };
 
+    const handleCreate = () => history.push(`/Fault/New`, {action: 'New'});
+
+    const handleEdit = (id) => history.push(`/Fault/Edit/${id}`, {action: 'Edit'});
+
+    const handleDelete = (id) => {
+        modals.openConfirmModal({
+            title: "Are you sure you want to delete the fault?",
+            labels: {confirm: "Delete fault", cancel: "No don't delete it"},
+            confirmProps: {color: "red"},
+            onConfirm: () => {
+                toggleLoading(l => !l);
+                requestHandler(deleteFault(id)).then(() => {
+                    notifications.showNotification({
+                        title: "Success", color: "green",
+                        message: "Fault has been deleted successfully."
+                    });
+                    setState({reload: true});
+                }).catch(e => {
+                    notifications.showNotification({
+                        title: "Error", color: 'red',
+                        message: 'Not able to delete fault. Something went wrong!!'
+                    });
+                }).finally(() => toggleLoading(l => !l));
+            }
+        });
+    };
+
     return (
-        <>
+        <ContentArea withPaper limitToViewPort>
             <Group position="apart" mb="md">
                 <Title order={2}>Fault</Title>
-                <Button leftIcon={<CreateIcon/>}>Create Fault</Button>
+                <Button leftIcon={<CreateIcon/>} onClick={handleCreate}>Create Fault</Button>
             </Group>
-            <div style={{height: 'calc(100% - 60px)'}}>
+            <Box style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
                     columns={[
                         {
@@ -70,8 +99,8 @@ const Fault = (props) => {
                     pagination initialPageSize={50}
                     {...state.pagination}
                 />
-            </div>
-        </>
+            </Box>
+        </ContentArea>
     );
 };
 

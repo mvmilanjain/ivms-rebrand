@@ -83,7 +83,7 @@ const Route = ({history}) => {
     };
 
     return (
-        <ContentArea>
+        <ContentArea withPaper limitToViewPort>
             <Group position="apart" mb="md">
                 <Title order={2}>Routes</Title>
                 <Button leftIcon={<CreateIcon/>} onClick={handleCreate}>Create Route</Button>

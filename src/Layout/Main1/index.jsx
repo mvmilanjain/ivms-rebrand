@@ -17,9 +17,10 @@ const Main1 = (props) => {
             })}>
                 <AppBar expand={openNavbar} toggleNavbar={() => toggleNavbar(o => !o)}/>
                 <Scrollbars>
-                    <Paper m="md" padding="md" withBorder>
+                   {/* <Paper m="md" padding="md" withBorder>
                         {props.children}
-                    </Paper>
+                    </Paper>*/}
+                    {props.children}
                 </Scrollbars>
             </Box>
         </Box>

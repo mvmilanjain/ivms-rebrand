@@ -6,7 +6,7 @@ import {useNotifications} from '@mantine/notifications';
 import {DotsVerticalIcon} from '@modulz/radix-icons';
 import {MdOutlineAddBox as CreateIcon, MdOutlineDelete as DeleteIcon, MdOutlineEdit as EditIcon} from 'react-icons/md';
 
-import {ReactTable} from 'Components';
+import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {deleteProduct, getProducts} from 'Shared/Services';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
@@ -76,7 +76,7 @@ const Product = ({history, ...rest}) => {
     const handleEdit = (id) => history.push(`/Product/Edit/${id}`, {action: 'Edit'});
 
     return (
-        <>
+        <ContentArea withPaper limitToViewPort>
             <Group position="apart" mb="md">
                 <Title order={2}>Product</Title>
                 <Button leftIcon={<CreateIcon/>} onClick={handleCreate}>Create Product</Button>
@@ -100,7 +100,7 @@ const Product = ({history, ...rest}) => {
                     {...state.pagination}
                 />
             </div>
-        </>
+        </ContentArea>
     );
 };
 

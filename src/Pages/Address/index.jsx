@@ -29,6 +29,7 @@ import {
 } from 'react-icons/md';
 import {AiOutlineInbox} from 'react-icons/ai';
 
+import {ContentArea} from 'Components';
 import {useHttp} from 'Hooks';
 import {deleteAddress, getAddresses, getStaticMap} from 'Shared/Services';
 import {getAddressString} from 'Shared/Utilities/common.util';
@@ -61,7 +62,7 @@ const Address = ({history}) => {
             setState({data, pagination: {count, pageNum: 1, next_page}});
         }).catch(e => {
             notifications.showNotification({
-                title: 'Error', color: 'red', message: 'Not able to fetch addresses. Something went wrong!!!'
+                title: 'Error', color: 'red', message: 'Not able to fetch addresses. Something went wrong!!'
             });
         }).finally(() => toggleLoading(l => !l));
     };
@@ -106,7 +107,7 @@ const Address = ({history}) => {
             }).catch(e => {
                 console.error(e);
                 notifications.showNotification({
-                    title: 'Error', color: 'red', message: 'Not able to fetch addresses. Something went wrong!!!'
+                    title: 'Error', color: 'red', message: 'Not able to fetch addresses. Something went wrong!!'
                 });
             }).finally(() => toggleLoading(l => !l));
         } else {
@@ -117,7 +118,7 @@ const Address = ({history}) => {
     const handleCreate = () => history.push(`/Address/New`, {action: 'New'});
 
     return (
-        <>
+        <ContentArea withPaper>
             <Group mb="xl">
                 <Title order={2} mr="xl">Address</Title>
                 <Box mx="xl" style={{flexGrow: 1}}>
@@ -242,7 +243,7 @@ const Address = ({history}) => {
                 total={Math.ceil(state.pagination.count / PAGE_SIZE)}
                 onChange={handlePageChange}
             />}
-        </>
+        </ContentArea>
     );
 };
 

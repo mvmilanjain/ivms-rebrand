@@ -44,12 +44,13 @@ const navList = [
     {id: 'fault', path: '/Fault', label: 'Fault', icon: FaultIcon, color: 'red'},
     {id: 'product', path: '/Product', label: 'Product', icon: ProductIcon, color: 'yellow'},
     {id: 'address', path: '/Address', label: 'Address', icon: AddressIcon, color: 'grape'},
-    {
+    /*{
         id: 'vehicle', label: 'Vehicle', icon: VehicleIcon, color: 'violet', subNav: [
             {id: 'truck', path: '/Vehicle/Truck', label: 'Truck'},
             {id: 'trailer', path: '/Vehicle/Trailer', label: 'Trailer'}
         ]
-    },
+    },*/
+    {id: 'vehicle', path: '/Vehicle', label: 'Vehicle', icon: VehicleIcon, color: 'violet'},
     {id: 'setting', path: '/Setting', label: 'Setting', icon: SettingIcon, color: 'indigo'}
 ];
 

@@ -46,7 +46,7 @@ export const PRODUCT_SCHEMA = [
 export const FAULT_SCHEMA = [
     {accessor: 'name', Header: 'Name'},
     {accessor: 'fault_type', Header: 'Type', Cell: ({value}) => capitalizeStr(value)},
-    {accessor: 'vehicle.vehicle_number', Header: 'Vehicle No.', Cell: ({value}) => value || ''},
+    {accessor: 'vehicle.name', Header: 'Vehicle', Cell: ({value}) => value || ''},
     {accessor: 'description', Header: 'Description', disableSortBy: true}
 ];
 

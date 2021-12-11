@@ -13,7 +13,7 @@ import {
     MdOutlineSave as SaveIcon,
 } from 'react-icons/md';
 
-import {AddressDropdown, ReactTable, RouteMap} from 'Components';
+import {AddressDropdown, ContentArea, ReactTable, RouteMap} from 'Components';
 import {useHttp} from 'Hooks';
 import {Route} from 'Shared/Models';
 import {ROUTE} from 'Shared/Utilities/validationSchema.util';
@@ -208,135 +208,137 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
     });
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Group position="apart" mb="md">
-                <Title order={3}>Route</Title>
-                <Group position="apart">
-                    <Button variant="default" onClick={() => history.push('/Route')}>
-                        Cancel
-                    </Button>
-                    <Button leftIcon={<SaveIcon/>} type="submit">
-                        {action === 'New' ? 'Save' : 'Update'}
+        <ContentArea withPaper>
+            <form onSubmit={handleSubmit}>
+                <Group position="apart" mb="md">
+                    <Title order={3}>Route</Title>
+                    <Group position="apart">
+                        <Button variant="default" onClick={() => history.push('/Route')}>
+                            Cancel
+                        </Button>
+                        <Button leftIcon={<SaveIcon/>} type="submit">
+                            {action === 'New' ? 'Save' : 'Update'}
+                        </Button>
+                    </Group>
+                </Group>
+                <Divider mb="md" variant="dotted"/>
+
+                <Grid mb="md">
+                    <Col span={7}>
+                        <SimpleGrid cols={2}>
+                            <TextInput
+                                {...register("route_code")}
+                                label="Route code"
+                                placeholder="Enter route code"
+                                required
+                            />
+
+                            <TextInput
+                                {...register("name")}
+                                label="Route name"
+                                placeholder="Enter route name"
+                                required
+                            />
+
+                            <AddressDropdown
+                                {...register("source_address")}
+                                label="Source" withIcon required
+                                onChange={handleSourceChange}
+                                error={errorMessage("source", touched, errors)}
+                            />
+
+                            <AddressDropdown
+                                {...register("destination_address")}
+                                label="Destination" withIcon required
+                                onChange={handleDestinationChange}
+                                error={errorMessage("destination", touched, errors)}
+                            />
+
+                            <NumberInput
+                                {...register("std_distance_cycle")}
+                                label="Distance in kilometers"
+                                placeholder="Enter distance"
+                                min={0}
+                                onChange={val => setFieldValue("std_distance_cycle", val)}
+                            />
+
+                            <NumberInput
+                                {...register("std_cycle_hours")}
+                                label="Cycle hours"
+                                placeholder="Enter cycle hours"
+                                min={0}
+                                onChange={val => setFieldValue("std_cycle_hours", val)}
+                            />
+
+                            <NumberInput
+                                {...register("equivalent_loads")}
+                                label="Equivalent loads"
+                                placeholder="Enter equivalent loads"
+                                min={0}
+                                onChange={val => setFieldValue("equivalent_loads", val)}
+                            />
+
+                            <NumberInput
+                                {...register("route_planner.loading_time")}
+                                label="Loading time in hours"
+                                placeholder="Enter loading time"
+                                min={0}
+                                onChange={handleLoadingTimeChange}
+                            />
+                        </SimpleGrid>
+                    </Col>
+
+                    <Col span={5}>
+                        <Title order={4} mb="xs">Route Map</Title>
+                        <div style={{height: 'calc(100% - 36px)'}}>
+                            <RouteMap {...routeMapState} onChange={calculateTimeAndDistanceForRoute}/>
+                        </div>
+                    </Col>
+                </Grid>
+
+                <Divider mb="md" variant="dotted"/>
+
+                <Group mb="md" position="apart">
+                    <Title order={4}>Route Stoppages</Title>
+                    <Button variant="outline" leftIcon={<AddStopIcon/>} onClick={handleAddStoppage}>
+                        Add Stoppage
                     </Button>
                 </Group>
-            </Group>
-            <Divider mb="md" variant="dotted"/>
-
-            <Grid mb="md">
-                <Col span={7}>
-                    <SimpleGrid cols={2}>
-                        <TextInput
-                            {...register("route_code")}
-                            label="Route code"
-                            placeholder="Enter route code"
-                            required
-                        />
-
-                        <TextInput
-                            {...register("name")}
-                            label="Route name"
-                            placeholder="Enter route name"
-                            required
-                        />
-
-                        <AddressDropdown
-                            {...register("source_address")}
-                            label="Source" withIcon required
-                            onChange={handleSourceChange}
-                            error={errorMessage("source", touched, errors)}
-                        />
-
-                        <AddressDropdown
-                            {...register("destination_address")}
-                            label="Destination" withIcon required
-                            onChange={handleDestinationChange}
-                            error={errorMessage("destination", touched, errors)}
-                        />
-
-                        <NumberInput
-                            {...register("std_distance_cycle")}
-                            label="Distance in kilometers"
-                            placeholder="Enter distance"
-                            min={0}
-                            onChange={val => setFieldValue("std_distance_cycle", val)}
-                        />
-
-                        <NumberInput
-                            {...register("std_cycle_hours")}
-                            label="Cycle hours"
-                            placeholder="Enter cycle hours"
-                            min={0}
-                            onChange={val => setFieldValue("std_cycle_hours", val)}
-                        />
-
-                        <NumberInput
-                            {...register("equivalent_loads")}
-                            label="Equivalent loads"
-                            placeholder="Enter equivalent loads"
-                            min={0}
-                            onChange={val => setFieldValue("equivalent_loads", val)}
-                        />
-
-                        <NumberInput
-                            {...register("route_planner.loading_time")}
-                            label="Loading time in hours"
-                            placeholder="Enter loading time"
-                            min={0}
-                            onChange={handleLoadingTimeChange}
-                        />
-                    </SimpleGrid>
-                </Col>
-
-                <Col span={5}>
-                    <Title order={4} mb="xs">Route Map</Title>
-                    <div style={{height: 'calc(100% - 36px)'}}>
-                        <RouteMap {...routeMapState} onChange={calculateTimeAndDistanceForRoute}/>
-                    </div>
-                </Col>
-            </Grid>
-
-            <Divider mb="md" variant="dotted"/>
-
-            <Group mb="md" position="apart">
-                <Title order={4}>Route Stoppages</Title>
-                <Button variant="outline" leftIcon={<AddStopIcon/>} onClick={handleAddStoppage}>
-                    Add Stoppage
-                </Button>
-            </Group>
-            <ReactTable
-                columns={[
-                    {accessor: 'position', Header: '#', cellWidth: 40},
-                    {
-                        accessor: 'address_id', Header: 'Address',
-                        Cell: ({row}) => <AddressDropdown
-                            {...register(`route_planner.route_stops[${row.index}].address`)}
-                            withIcon required disabled={isRouteStopAddressDisabled(row.index, row.original)}
-                            onChange={(val) => handleRouteStopAddressChange(val, row.index)}
-                            error={errorMessage(`route_planner.route_stops[${row.index}].address_id`, touched, errors)}
-                        />
-                    },
-                    {
-                        accessor: 'distance', Header: 'Distance', cellWidth: 200,
-                        Cell: ({row}) => <NumberInput
-                            {...register(`route_planner.route_stops[${row.index}].distance`)}
-                            placeholder="Enter distance" min={0}
-                            disabled={isRouteStopDistanceDisabled(row.index, row.original)}
-                            onChange={val => handleRouteStopChange(val, row.index, 'distance')}
-                        />
-                    },
-                    {
-                        accessor: 'stop_duration', Header: 'Stop duration', cellWidth: 200,
-                        Cell: ({row}) => <NumberInput
-                            {...register(`route_planner.route_stops[${row.index}].stop_duration`)}
-                            placeholder="Enter stop duration" min={0}
-                            onChange={val => handleRouteStopChange(val, row.index, 'stop_duration')}
-                        />
-                    },
-                    {accessor: 'id', Header: 'Actions', cellWidth: 120, Cell: renderStoppageRowAction}
-                ]}
-                data={get(values, 'route_planner.route_stops', []).filter(stop => !stop._destroy)}
-            />
-        </form>
+                <ReactTable
+                    columns={[
+                        {accessor: 'position', Header: '#', cellWidth: 40},
+                        {
+                            accessor: 'address_id', Header: 'Address',
+                            Cell: ({row}) => <AddressDropdown
+                                {...register(`route_planner.route_stops[${row.index}].address`)}
+                                withIcon required disabled={isRouteStopAddressDisabled(row.index, row.original)}
+                                onChange={(val) => handleRouteStopAddressChange(val, row.index)}
+                                error={errorMessage(`route_planner.route_stops[${row.index}].address_id`, touched, errors)}
+                            />
+                        },
+                        {
+                            accessor: 'distance', Header: 'Distance', cellWidth: 200,
+                            Cell: ({row}) => <NumberInput
+                                {...register(`route_planner.route_stops[${row.index}].distance`)}
+                                placeholder="Enter distance" min={0}
+                                disabled={isRouteStopDistanceDisabled(row.index, row.original)}
+                                onChange={val => handleRouteStopChange(val, row.index, 'distance')}
+                            />
+                        },
+                        {
+                            accessor: 'stop_duration', Header: 'Stop duration', cellWidth: 200,
+                            Cell: ({row}) => <NumberInput
+                                {...register(`route_planner.route_stops[${row.index}].stop_duration`)}
+                                placeholder="Enter stop duration" min={0}
+                                onChange={val => handleRouteStopChange(val, row.index, 'stop_duration')}
+                            />
+                        },
+                        {accessor: 'id', Header: 'Actions', cellWidth: 120, Cell: renderStoppageRowAction}
+                    ]}
+                    data={get(values, 'route_planner.route_stops', []).filter(stop => !stop._destroy)}
+                />
+            </form>
+        </ContentArea>
     );
 };
 

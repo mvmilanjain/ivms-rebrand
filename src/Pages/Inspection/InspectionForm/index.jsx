@@ -1,10 +1,12 @@
 import {Button, Group, Title} from '@mantine/core';
 import {MdOutlineAddBox as CreateIcon} from 'react-icons/md';
 
+import {ContentArea} from 'Components';
+
 const InspectionReport = (props) => {
 
     return (
-        <>
+        <ContentArea withPaper limitToViewPort>
             <Group position="apart" mb="md">
                 <Title order={2}>Inspection Form</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Inspection Form</Button>
@@ -12,7 +14,7 @@ const InspectionReport = (props) => {
             <div style={{height: 'calc(100% - 60px)'}}>
 
             </div>
-        </>
+        </ContentArea>
     );
 };
 

@@ -7,7 +7,7 @@ const Dashboard = (props) => {
     const handleItemSelection = (item) => console.log(item);
 
     return (
-        <ContentArea>
+        <ContentArea withPaper limitToViewPort>
             <Group position="apart" mb="md">
                 <Title order={2}>Dashboard</Title>
             </Group>

@@ -6,7 +6,7 @@ import {FiTruck as BrandIcon} from 'react-icons/fi';
 import {ContentArea} from 'Components';
 
 const PageNotFound = () => (
-    <ContentArea>
+    <ContentArea withPaper limitToViewPort heightToReduce={156}>
         <Group position="center" direction="column" m="xl">
             <ThemeIcon variant="gradient" radius="xl" size="xl" gradient={{from: 'indigo', to: 'cyan'}}>
                 <BrandIcon size={20}/>
