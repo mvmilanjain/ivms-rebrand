@@ -10,11 +10,13 @@ const Address = {
 
 const Dashboard = loadable(() => import('Pages/Dashboard'));
 const Fault = loadable(() => import('Pages/Fault'));
-const Product = loadable(() => import('Pages/Product'));
+const Product = {
+    ViewAll: loadable(() => import('Pages/Product')),
+    NewOrEdit: loadable(() => import('Pages/Product/NewOrEditProduct'))
+};
 const RoutePage = {
     ViewAll: loadable(() => import('Pages/Route')),
-    New: loadable(() => import('Pages/Route/NewOrEditRoute')),
-    Edit: loadable(() => import('Pages/Route/NewOrEditRoute'))
+    NewOrEdit: loadable(() => import('Pages/Route/NewOrEditRoute'))
 };
 const Setting = loadable(() => import('Pages/Setting'));
 const SignIn = loadable(() => import('Pages/SignIn'));
@@ -44,11 +46,14 @@ const pagesWithAuthentication = [
 
     {id: "dashboard", path: "/Dashboard", component: Dashboard},
     {id: "fault", path: "/Fault", component: Fault},
-    {id: "product", path: "/Product", component: Product},
+
+    {id: "product", path: "/Product", component: Product.ViewAll},
+    {id: "newProduct", path: "/Product/New", component: Product.NewOrEdit},
+    {id: "editProduct", path: "/Product/Edit/:id", component: Product.NewOrEdit},
 
     {id: "route", path: "/Route", component: RoutePage.ViewAll},
-    {id: "newRoute", path: "/Route/New", component: RoutePage.New},
-    {id: "editRoute", path: "/Route/Edit/:id", component: RoutePage.Edit},
+    {id: "newRoute", path: "/Route/New", component: RoutePage.NewOrEdit},
+    {id: "editRoute", path: "/Route/Edit/:id", component: RoutePage.NewOrEdit},
 
     {id: "setting", path: "/Setting", component: Setting},
 

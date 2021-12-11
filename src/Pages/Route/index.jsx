@@ -55,6 +55,8 @@ const Route = ({history}) => {
         );
     };
 
+    const handleCreate = () => history.push(`/Route/New`, {action: 'New'});
+
     const handleEdit = (id) => history.push(`/Route/Edit/${id}`, {action: 'Edit'});
 
     const handleDelete = (id) => {
@@ -79,8 +81,6 @@ const Route = ({history}) => {
             }
         });
     };
-
-    const handleCreate = () => history.push(`/Route/New`, {action: 'New'});
 
     return (
         <ContentArea>

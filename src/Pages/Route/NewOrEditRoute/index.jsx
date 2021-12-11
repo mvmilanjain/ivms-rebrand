@@ -191,7 +191,7 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
                 notifications.showNotification({
                     title: "Success", color: 'green', message: 'Route has been saved successfully.'
                 });
-                history.push('/route');
+                history.push('/Route');
             }).catch(e => {
                 notifications.showNotification({
                     title: "Error", color: 'red', message: 'Not able to save route details. Something went wrong!!'

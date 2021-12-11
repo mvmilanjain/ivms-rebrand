@@ -8,11 +8,11 @@ import {MdOutlineAddBox as CreateIcon, MdOutlineDelete as DeleteIcon, MdOutlineE
 
 import {ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
-import {deleteRoute, getProducts} from 'Shared/Services';
+import {deleteProduct, getProducts} from 'Shared/Services';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
 import {PRODUCT_SCHEMA} from 'Shared/Utilities/tableSchema';
 
-const Product = (props) => {
+const Product = ({history, ...rest}) => {
     const {requestHandler} = useHttp();
     const modals = useModals();
     const notifications = useNotifications();
@@ -40,7 +40,7 @@ const Product = (props) => {
     const renderActions = ({value}) => {
         return (
             <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
-                <Menu.Item icon={<EditIcon/>}>Edit Product</Menu.Item>
+                <Menu.Item icon={<EditIcon/>} onClick={() => handleEdit(value)}>Edit Product</Menu.Item>
                 <Menu.Item icon={<DeleteIcon/>} color="red" onClick={() => openDeleteConfirmModal(value)}>
                     Delete Product
                 </Menu.Item>
@@ -48,14 +48,14 @@ const Product = (props) => {
         );
     };
 
-    const openDeleteConfirmModal = (routeId) => {
+    const openDeleteConfirmModal = (id) => {
         modals.openConfirmModal({
             title: "Are you sure you want to delete the product?",
             labels: {confirm: "Delete product", cancel: "No don't delete it"},
             confirmProps: {color: "red"},
             onConfirm: () => {
                 toggleLoading(l => !l);
-                requestHandler(deleteRoute(routeId)).then(() => {
+                requestHandler(deleteProduct(id)).then(() => {
                     notifications.showNotification({
                         title: "Success", color: "green",
                         message: "Product has been deleted successfully."
@@ -71,11 +71,15 @@ const Product = (props) => {
         });
     };
 
+    const handleCreate = () => history.push(`/Product/New`, {action: 'New'});
+
+    const handleEdit = (id) => history.push(`/Product/Edit/${id}`, {action: 'Edit'});
+
     return (
         <>
             <Group position="apart" mb="md">
                 <Title order={2}>Product</Title>
-                <Button leftIcon={<CreateIcon/>}>Create Product</Button>
+                <Button leftIcon={<CreateIcon/>} onClick={handleCreate}>Create Product</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable

@@ -79,8 +79,8 @@ export const ROUTE_PLANNER = {
 };
 
 export const ADDRESS = yup.object({
-    name: yup.string().label('Name').nullable().required(),
-    address_type: yup.string().label('Address Type').nullable().required(),
+    name: yup.string().label('Address name').nullable().required(),
+    address_type: yup.string().label('Address type').nullable().required(),
     address1: yup.string().label('Address Line 1').nullable().required()
 });
 
@@ -125,16 +125,21 @@ export const ADD_ROUTE_STOP = yup.object({
     stop_duration: yup.number().min(0).required().label('Stop Duration')
 });
 
+export const PRODUCT = yup.object({
+    name: yup.string().required().label('Product name'),
+    volume: yup.number().moreThan(0).required().label('Volume')
+});
+
 export const PRODUCT_ROUTE = yup.object({
     route_id: yup.string().required().label('Route'),
     contractor_id: yup.string().required().label('Contractor'),
     std_tonnage: yup.number().moreThan(0).required().label('Tonnage'),
-    avg_rate: yup.number().moreThan(0).required().label('Avg. Rate'),
-    avg_load_weight: yup.number().moreThan(0).required().label('Avg. Load Weight'),
-    max_load_weight: yup.number().moreThan(0).required().label('Max Load Weight'),
+    avg_rate: yup.number().moreThan(0).required().label('Average rate'),
+    avg_load_weight: yup.number().moreThan(0).required().label('Average  load weight'),
+    max_load_weight: yup.number().moreThan(0).required().label('Max load weight'),
     route_rate: yup.object({
         count_in_hand: yup.number().moreThan(0).required().label('Count'),
         rate_per_tone: yup.number().moreThan(0).required().label('Rate per tone'),
-        avg_tonnage: yup.number().moreThan(0).required().label('Avg. Tonnage')
+        avg_tonnage: yup.number().moreThan(0).required().label('Average tonnage')
     })
 });

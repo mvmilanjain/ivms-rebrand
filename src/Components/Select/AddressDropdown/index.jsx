@@ -37,10 +37,7 @@ const AddressDropdown = forwardRef((
     });
 
     const handleItemSelection = (selectedItem) => {
-        let result = null;
-        if (selectedItem) {
-            result = dataSource.find(item => item.id === selectedItem.id) || null;
-        }
+        let result = selectedItem ? dataSource.find(item => item.id === selectedItem.id) || null : null;
         onChange && onChange(result);
     };
 

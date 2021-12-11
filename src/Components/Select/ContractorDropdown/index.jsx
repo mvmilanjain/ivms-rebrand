@@ -1,17 +1,15 @@
 import {forwardRef, useState} from 'react';
-import {FaTruck as DefaultIcon} from 'react-icons/fa';
 
 import {AsyncSelect} from 'Components';
 import {useHttp} from 'Hooks';
-import {getTrucks} from 'Shared/Services';
+import {getConfigField} from 'Shared/Services';
+import {CONFIG_FIELD_TYPE} from 'Shared/Utilities/constant';
 
-const VehicleDropdown = forwardRef((
+const ContractorDropdown = forwardRef((
     {
         optionLabelKey = 'name',
         value = null,
         limit = 50,
-        icon,
-        withIcon,
         onChange,
         ...rest
     }, ref
@@ -21,7 +19,7 @@ const VehicleDropdown = forwardRef((
 
     const fetchOptions = (searchText) => new Promise((resolve, reject) => {
         const params = {per_page: limit, filter: {name_cont: searchText}};
-        requestHandler(getTrucks(params)).then(res => {
+        requestHandler(getConfigField(CONFIG_FIELD_TYPE.ROUTE_PLANNER_CONTRACTOR, params)).then(res => {
             setDataSource(res.data);
             const options = res.data.map(item => ({id: item.id, value: item[optionLabelKey]}));
             resolve(options);
@@ -40,7 +38,6 @@ const VehicleDropdown = forwardRef((
         <AsyncSelect
             ref={ref}
             placeholder={rest.placeholder || (rest.label && `Select ${rest.label.toLowerCase()}`)}
-            icon={icon || (withIcon && <DefaultIcon/>)}
             limit={limit}
             value={value && value[optionLabelKey]}
             selectedValue={value ? {id: value.id, value: value[optionLabelKey]} : null}
@@ -51,4 +48,4 @@ const VehicleDropdown = forwardRef((
     );
 });
 
-export default VehicleDropdown;
+export default ContractorDropdown;
