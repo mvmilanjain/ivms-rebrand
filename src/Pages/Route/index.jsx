@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Group, Menu, Title} from '@mantine/core';
+import {ActionIcon, Button, Drawer, Group, Menu, Title} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
@@ -8,31 +8,34 @@ import {
     MdOutlineAddBox as CreateIcon,
     MdOutlineDelete as DeleteIcon,
     MdOutlineEdit as EditIcon,
-    MdOutlineVisibility as ViewIcon
+    MdOutlineVisibility as ViewIcon,
+    MdOutlineFilterList as FilterIcon
 } from 'react-icons/md';
 
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {deleteRoute, getRoutes} from 'Shared/Services';
-import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
+import {getSortText} from 'Shared/Utilities/common.util';
 import {ROUTE_SCHEMA} from 'Shared/Utilities/tableSchema';
+import Filters from "./Filters";
 
 const Route = ({history}) => {
     const {requestHandler} = useHttp();
     const modals = useModals();
     const notifications = useNotifications();
     const [loading, toggleLoading] = useState(false);
+    const [openFilterDrawer, toggleFilterDrawer] = useState(false);
     const [state, setState] = useSetState({
-        reload: false, data: [],
+        reload: false, data: [], outerFilter: {},
         pagination: {total: 0, pageCount: 0, pageIndex: 0}
     });
 
-    const fetchData = useCallback(({pageSize, pageIndex, sortBy, filters}) => {
+    const fetchData = useCallback(({pageSize, pageIndex, sortBy, filters, outerFilter}) => {
         toggleLoading(l => !l);
         const params = {
             per_page: pageSize, page_no: pageIndex + 1,
             include: 'source_address,destination_address',
-            sort: getSortText(sortBy), filter: getFilterList(filters)
+            sort: getSortText(sortBy), filter: outerFilter
         };
         requestHandler(getRoutes(params)).then(res => {
             const {data, meta: {pagination: {count, current_page, total_pages}}} = res;
@@ -82,11 +85,24 @@ const Route = ({history}) => {
         });
     };
 
+    const handleFilterApply = (data) => {
+        toggleFilterDrawer(false);
+        setState({outerFilter: {...data}});
+    };
+
     return (
         <ContentArea withPaper limitToViewPort>
             <Group position="apart" mb="md">
                 <Title order={2}>Routes</Title>
-                <Button leftIcon={<CreateIcon/>} onClick={handleCreate}>Create Route</Button>
+                <Group position="apart">
+                    <Button
+                        leftIcon={<FilterIcon/>} variant="outline"
+                        onClick={() => toggleFilterDrawer(o => !o)}
+                    >
+                        Filters
+                    </Button>
+                    <Button leftIcon={<CreateIcon/>} onClick={handleCreate}>Create Route</Button>
+                </Group>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
@@ -102,11 +118,22 @@ const Route = ({history}) => {
                     fetchData={fetchData}
                     loading={loading}
                     reload={state.reload}
-                    stickyHeader sorting filtering
+                    stickyHeader sorting
+                    // filtering
                     pagination initialPageSize={50}
                     {...state.pagination}
+                    outerFilter={state.outerFilter}
                 />
             </div>
+            <Drawer
+                opened={openFilterDrawer}
+                onClose={() => toggleFilterDrawer(false)}
+                position="right"
+                title="Filters"
+                padding="xl" size="xl"
+            >
+                {openFilterDrawer && <Filters data={state.outerFilter} onConfirm={handleFilterApply}/>}
+            </Drawer>
         </ContentArea>
     );
 };

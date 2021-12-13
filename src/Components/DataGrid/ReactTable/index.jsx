@@ -14,7 +14,7 @@ import {
     Text,
     useCss
 } from '@mantine/core';
-import {BsArrowDownUp as SortIcon, BsArrowUp as AscIcon,} from 'react-icons/bs';
+import {BsArrowDownUp as SortIcon, BsArrowUp as AscIcon} from 'react-icons/bs';
 import {AiOutlineInbox} from 'react-icons/ai';
 
 import filterTypes from './filterTypes';
@@ -88,6 +88,7 @@ export const ReactTable = (
         onRowClick,
         onAllRowsSelection,
         fetchData, // Pass function to fetch data for server side operations
+        outerFilter,
         ...rest
     }
 ) => {
@@ -124,11 +125,11 @@ export const ReactTable = (
     } = tableOptions;
 
     useEffect(() => {
-        fetchData && fetchData({pageIndex, pageSize, sortBy, filters});
-    }, [sortBy, fetchData, pageIndex, pageSize, filters]);
+        fetchData && fetchData({pageIndex, pageSize, sortBy, filters, outerFilter});
+    }, [sortBy, fetchData, pageIndex, pageSize, filters, outerFilter]);
 
     useEffect(() => {
-        reload && fetchData && fetchData({pageIndex, pageSize, sortBy, filters});
+        reload && fetchData && fetchData({pageIndex, pageSize, sortBy, filters, outerFilter});
     }, [reload]);
 
     const handleRowClick = (e, row) => {
