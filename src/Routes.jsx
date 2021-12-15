@@ -39,7 +39,7 @@ const InspectionReport = loadable(() => import('Pages/Inspection/InspectionRepor
 
 const Vehicle = loadable(() => import('Pages/Vehicle'));
 const Truck = {
-    NewOrEdit: loadable(() => import('Pages/Vehicle/Trailer/NewOrEditTrailer'))
+    NewOrEdit: loadable(() => import('Pages/Vehicle/Truck/NewOrEditTruck'))
 };
 const Trailer = {
     NewOrEdit: loadable(() => import('Pages/Vehicle/Trailer/NewOrEditTrailer'))
@@ -77,7 +77,9 @@ const pagesWithAuthentication = [
     {id: "inspectionReport", path: "/Inspection/InspectionReport", component: InspectionReport},
 
     {id: "vehicle", path: "/Vehicle", component: Vehicle},
-    // {id: "truck", path: "/Vehicle/Truck", component: Truck},
+
+    {id: "newTruck", path: "/Vehicle/Truck/New", component: Truck.NewOrEdit},
+    {id: "editTruck", path: "/Vehicle/Truck/Edit/:id", component: Truck.NewOrEdit},
 
     {id: "newTrailer", path: "/Vehicle/Trailer/New", component: Trailer.NewOrEdit},
     {id: "editTrailer", path: "/Vehicle/Trailer/Edit/:id", component: Trailer.NewOrEdit},

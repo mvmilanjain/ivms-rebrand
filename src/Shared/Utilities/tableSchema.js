@@ -97,30 +97,30 @@ export const MAINTENANCE = {
 export const VEHICLE = {
     TRUCK_SCHEMA: [
         {accessor: 'vehicle_number', Header: 'Truck No.'},
-        {accessor: 'vehicle_category.name', Header: 'Vehicle Category', disableFilters: true},
-        {accessor: 'name', Header: 'Vehicle Name', cellMinWidth: 200},
+        {accessor: 'name', Header: 'Name'},
+        {accessor: 'vehicle_category.name', Header: 'Category'},
         {accessor: 'model', Header: 'Model'},
         {
-            accessor: 'meter_reading', Header: 'Meter Reading', disableFilters: true,
+            accessor: 'meter_reading', Header: 'Meter Reading',
             Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
         },
-        {accessor: 'status', Header: 'Status', align: 'center', disableFilters: true, Cell: renderVehicleStatus}
+        {accessor: 'status', Header: 'Status', align: 'center', Cell: renderVehicleStatus}
     ],
     TRAILER_SCHEMA: [
         {accessor: 'name', Header: 'Name'},
-        {accessor: 'trailer_category.name', Header: 'Category', disableFilters: true},
+        {accessor: 'trailer_category.name', Header: 'Category'},
         {accessor: 'vin_number', Header: 'VIN No.'},
         {accessor: 'model', Header: 'Model', disableFilters: true},
         {
-            accessor: 'meter_reading', Header: 'Meter', align: 'center', disableFilters: true,
+            accessor: 'meter_reading', Header: 'Meter', align: 'center',
             Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
         },
         {
             accessor: 'status', Header: 'Status', align: 'center',
-            disableFilters: true, Cell: renderVehicleStatus
+            Cell: renderVehicleStatus
         },
         {
-            accessor: 'license_expiry', Header: 'License Expiry', align: 'center', disableFilters: true,
+            accessor: 'license_expiry', Header: 'License Expiry', align: 'center',
             Cell: ({value}) => value ? <Badge radius="sm" color="cyan">{formatDate(value)}</Badge> : ''
         }
     ]

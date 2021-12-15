@@ -49,7 +49,7 @@ const Trailer = ({history}) => {
         return (
             <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
                 <Menu.Item icon={<EditIcon/>} onClick={() => handleEdit(value)}>Edit Trailer</Menu.Item>
-                <Menu.Item icon={<ViewIcon/>}>View Trailer</Menu.Item>
+                {/*<Menu.Item icon={<ViewIcon/>}>View Trailer</Menu.Item>*/}
                 <Menu.Item icon={<DeleteIcon/>} color="red" onClick={() => handleDelete(value)}>
                     Delete Trailer
                 </Menu.Item>
@@ -91,12 +91,12 @@ const Trailer = ({history}) => {
         <ContentArea withPaper limitToViewPort heightToReduce={200}>
             <Group position="right" mb="md">
                 <Button
-                    leftIcon={<FilterIcon/>} variant="outline"
+                    leftIcon={<FilterIcon/>} size="xs" variant="outline"
                     onClick={() => toggleFilterDrawer(o => !o)}
                 >
                     Filters
                 </Button>
-                <Button leftIcon={<CreateIcon/>} onClick={handleCreate}>Create Trailer</Button>
+                <Button leftIcon={<CreateIcon/>} size="xs" onClick={handleCreate}>Create Trailer</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable

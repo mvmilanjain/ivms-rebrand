@@ -4,7 +4,7 @@ import {ActionIcon, Autocomplete, Group, Loader} from '@mantine/core';
 import {useDebouncedValue} from '@mantine/hooks';
 import {Cross2Icon as ClearIcon} from '@modulz/radix-icons';
 
-const RightSelection = ({isLoading, selectedItem, onClear, onClick}) => {
+const RightSelection = ({isLoading, selectedItem, onClear}) => {
     return (
         <Group spacing={0} style={{backgroundColor: 'white'}} position="right">
             {selectedItem && <ActionIcon variant="transparent" onClick={onClear}><ClearIcon/></ActionIcon>}

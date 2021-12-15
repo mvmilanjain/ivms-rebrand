@@ -111,14 +111,6 @@ export const MEMBER = yup.object({
     })
 });
 
-export const TRUCK = yup.object({
-    name: yup.string().label('Name').required(),
-    model: yup.string().label('Model').required(),
-    meter_reading: yup.number().label('Meter Reading').min(0).required(),
-    status: yup.string().label('Status').required(),
-    vin_number: yup.string().label('VIN No.').required()
-});
-
 export const ADD_ROUTE_STOP = yup.object({
     address_id: yup.string().required().label('Address'),
     stop_duration: yup.number().min(0).required().label('Stop Duration')
@@ -147,6 +139,14 @@ export const FAULT = yup.object({
     name: yup.string().required().label('Name'),
     fault_type: yup.string().required().label('Fault type'),
     vehicle_id: yup.string().required().label('Vehicle'),
+});
+
+export const TRUCK = yup.object({
+    name: yup.string().required().label('Name'),
+    vin_number: yup.string().required().label('VIN number'),
+    model: yup.string().required().label('Model'),
+    status: yup.string().required().label('Status'),
+    meter_reading: yup.number().min(0).required().label('Meter reading')
 });
 
 export const TRAILER = yup.object({

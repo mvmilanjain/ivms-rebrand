@@ -10,6 +10,13 @@ export const VEHICLE_STATUS = [
     {value: 'discontinue', label: 'Discontinue'}
 ];
 export const PRIORITY = ['normal', 'low', 'medium', 'high', 'emergency'];
+export const PRIORITY2 = [
+    {value:'normal', label: 'Normal'},
+    {value:'low', label: 'Low'},
+    {value:'medium', label: 'Medium'},
+    {value:'high', label: 'High'},
+    {value:'emergency', label: 'Emergency'}
+];
 export const TRIP_STATUS = [
     {label: 'Trip is not started', value: 'not_started'},
     {label: 'In-Progress', value: 'in_progress'},

@@ -101,11 +101,11 @@ export const diffInMinutes = (newDate, oldDate) => {
     return (!newDate || !oldDate) ? 0 : differenceInMinutes(new Date(newDate), new Date(oldDate));
 };
 
-export const getYearList = (start = 1900, end) => {
+export const getYearList = (start = 1970, end) => {
     const yearList = [];
     let endYear = end ? end : new Date().getFullYear();
     while (endYear >= start) {
-        yearList.push(endYear);
+        yearList.push(endYear+"");
         endYear--;
     }
     return yearList;
