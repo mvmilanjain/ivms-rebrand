@@ -132,10 +132,9 @@ class Trailer {
             trailer_category = null,
             vin_number = '',
             model = '',
-            meter_reading = '',
+            meter_reading = 0,
             status = '',
-            license_expiry = null,
-            
+            license_expiry = null
         } = props || {};
 
         this.id = id;
@@ -147,7 +146,6 @@ class Trailer {
         this.meter_reading = meter_reading;
         this.status = status;
         this.license_expiry = license_expiry;
-        
     }
 
     setCategory(category) {

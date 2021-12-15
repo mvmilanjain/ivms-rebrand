@@ -132,10 +132,7 @@ export const ReactTable = (
         reload && fetchData && fetchData({pageIndex, pageSize, sortBy, filters, outerFilter});
     }, [reload]);
 
-    const handleRowClick = (e, row) => {
-        console.log('Row Selected: ', row);
-        onRowClick && onRowClick(row);
-    };
+    const handleRowClick = (e, row) => onRowClick && onRowClick(row);
 
     const getPageRecordInfo = () => {
         const firstRowNum = (pageIndex * pageSize) + 1;

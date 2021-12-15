@@ -1,21 +1,26 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Tabs} from '@mantine/core';
-import {FaTrailer as TrailerIcon, FaTruck as TruckIcon} from "react-icons/fa";
-import Truck from "./Truck";
-import Trailer from "./Trailer";
+import {FaTrailer as TrailerIcon, FaTruck as TruckIcon} from 'react-icons/fa';
 
-const Vehicle = ({}) => {
-    const [tabIndex, setTabIndex] = useState(0);
+import {ContentArea} from 'Components';
+import Truck from './Truck';
+import Trailer from './Trailer';
+
+const Vehicle = ({history, location}) => {
+    const [tabIndex, setTabIndex] = useState(location.state ? location.state.tabIndex : 0);
+    const [initialTabIndex] = useState(location.state ? location.state.tabIndex : 0)
 
     return (
-        <Tabs onTabChange={setTabIndex}>
-            <Tabs.Tab label="Truck" icon={<TruckIcon/>}>
-                {tabIndex === 0 && <Truck />}
-            </Tabs.Tab>
-            <Tabs.Tab label="Trailer" icon={<TrailerIcon/>}>
-                {tabIndex === 1 && <Trailer />}
-            </Tabs.Tab>
-        </Tabs>
+        <ContentArea>
+            <Tabs onTabChange={setTabIndex} tabIndex={tabIndex} initialTab={initialTabIndex}>
+                <Tabs.Tab label="Truck" icon={<TruckIcon/>}>
+                    {tabIndex === 0 && <Truck history={history}/>}
+                </Tabs.Tab>
+                <Tabs.Tab label="Trailer" icon={<TrailerIcon/>}>
+                    {tabIndex === 1 && <Trailer history={history}/>}
+                </Tabs.Tab>
+            </Tabs>
+        </ContentArea>
     );
 };
 

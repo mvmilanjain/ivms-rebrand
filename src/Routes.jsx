@@ -38,8 +38,12 @@ const InspectionForm = loadable(() => import('Pages/Inspection/InspectionForm'))
 const InspectionReport = loadable(() => import('Pages/Inspection/InspectionReport'));
 
 const Vehicle = loadable(() => import('Pages/Vehicle'));
-const Truck = loadable(() => import('Pages/Vehicle/Truck'));
-const Trailer = loadable(() => import('Pages/Vehicle/Trailer'));
+const Truck = {
+    NewOrEdit: loadable(() => import('Pages/Vehicle/Trailer/NewOrEditTrailer'))
+};
+const Trailer = {
+    NewOrEdit: loadable(() => import('Pages/Vehicle/Trailer/NewOrEditTrailer'))
+};
 
 const pagesWithoutAuthentication = [{id: "signin", path: "/SignIn", component: SignIn}];
 
@@ -73,8 +77,10 @@ const pagesWithAuthentication = [
     {id: "inspectionReport", path: "/Inspection/InspectionReport", component: InspectionReport},
 
     {id: "vehicle", path: "/Vehicle", component: Vehicle},
-    {id: "truck", path: "/Vehicle/Truck", component: Truck},
-    {id: "trailer", path: "/Vehicle/Trailer", component: Trailer},
+    // {id: "truck", path: "/Vehicle/Truck", component: Truck},
+
+    {id: "newTrailer", path: "/Vehicle/Trailer/New", component: Trailer.NewOrEdit},
+    {id: "editTrailer", path: "/Vehicle/Trailer/Edit/:id", component: Trailer.NewOrEdit},
 
     {id: "planning", path: "/RouteOrder/Planning", component: Planning},
     {id: "operation", path: "/RouteOrder/Operation", component: Operation},

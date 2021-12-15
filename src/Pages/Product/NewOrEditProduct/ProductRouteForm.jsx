@@ -3,10 +3,11 @@ import {useFormik} from 'formik';
 import {Button, Group, NumberInput, Grid, Col, SimpleGrid} from '@mantine/core';
 import {NotificationsProvider} from '@mantine/notifications';
 
-import {ContractorDropdown, RouteDropdown} from 'Components';
+import {ConfigFieldDropdown, RouteDropdown} from 'Components';
 import {ProductRoute} from 'Shared/Models';
 import {PRODUCT_ROUTE} from 'Shared/Utilities/validationSchema.util';
 import {errorMessage} from 'Shared/Utilities/common.util';
+import {CONFIG_FIELD_TYPE} from 'Shared/Utilities/constant';
 
 const ProductRouteForm = ({data, action, onConfirm}) => {
 
@@ -44,9 +45,11 @@ const ProductRouteForm = ({data, action, onConfirm}) => {
                         label="Route" onChange={handleRouteChange}
                         error={errorMessage("route_id", touched, errors)}
                     />
-                    <ContractorDropdown
+                    <ConfigFieldDropdown
                         {...register("contractor")} withIcon required
-                        label="Contractor" onChange={handleContractorChange}
+                        label="Contractor"
+                        fieldType={CONFIG_FIELD_TYPE.ROUTE_PLANNER_CONTRACTOR}
+                        onChange={handleContractorChange}
                         error={errorMessage("contractor_id", touched, errors)}
                     />
                     <NumberInput

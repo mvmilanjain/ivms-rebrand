@@ -3,7 +3,7 @@ import {Button, Group, Title} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {MdOutlineAddBox as CreateIcon} from 'react-icons/md';
 
-import {ReactTable} from 'Components';
+import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {getInspectionReports} from 'Shared/Services';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
@@ -34,7 +34,7 @@ const InspectionReport = (props) => {
     }, []);
 
     return (
-        <>
+        <ContentArea withPaper limitToViewPort>
             <Group position="apart" mb="md">
                 <Title order={2}>Inspection Report</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Inspection Report</Button>
@@ -52,7 +52,7 @@ const InspectionReport = (props) => {
                     {...state.pagination}
                 />
             </div>
-        </>
+        </ContentArea>
     );
 };
 

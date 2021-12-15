@@ -11,7 +11,7 @@ import {
     MdOutlineVisibility as ViewIcon
 } from 'react-icons/md';
 
-import {ReactTable} from 'Components';
+import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {deleteLaborCode, getLaborCodes} from 'Shared/Services';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
@@ -78,7 +78,7 @@ const LaborCode = (props) => {
     };
 
     return (
-        <>
+        <ContentArea withPaper limitToViewPort>
             <Group position="apart" mb="md">
                 <Title order={2}>Labor Code</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Labor Code</Button>
@@ -102,7 +102,7 @@ const LaborCode = (props) => {
                     {...state.pagination}
                 />
             </div>
-        </>
+        </ContentArea>
     );
 };
 

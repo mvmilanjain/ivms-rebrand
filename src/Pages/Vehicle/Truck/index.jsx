@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Group, Menu, Title} from '@mantine/core';
+import {ActionIcon, Button, Group, Menu} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
@@ -8,6 +8,7 @@ import {
     MdOutlineAddBox as CreateIcon,
     MdOutlineDelete as DeleteIcon,
     MdOutlineEdit as EditIcon,
+    MdOutlineFilterList as FilterIcon,
     MdOutlineVisibility as ViewIcon
 } from 'react-icons/md';
 
@@ -22,6 +23,7 @@ const Truck = (props) => {
     const modals = useModals();
     const notifications = useNotifications();
     const [loading, toggleLoading] = useState(false);
+    const [openFilterDrawer, toggleFilterDrawer] = useState(false);
     const [state, setState] = useSetState({
         reload: false, data: [],
         pagination: {total: 0, pageCount: 0, pageIndex: 0}
@@ -79,9 +81,14 @@ const Truck = (props) => {
     };
 
     return (
-        <ContentArea>
-            <Group position="apart" mb="md">
-                <Title order={2}>Truck</Title>
+        <ContentArea withPaper limitToViewPort heightToReduce={200}>
+            <Group position="right" mb="md">
+                <Button
+                    leftIcon={<FilterIcon/>} variant="outline"
+                    onClick={() => toggleFilterDrawer(o => !o)}
+                >
+                    Filters
+                </Button>
                 <Button leftIcon={<CreateIcon/>}>Create Truck</Button>
             </Group>
             <div style={{height: 'calc(100% - 60px)'}}>
@@ -98,7 +105,7 @@ const Truck = (props) => {
                     fetchData={fetchData}
                     loading={loading}
                     reload={state.reload}
-                    stickyHeader sorting filtering
+                    stickyHeader sorting
                     pagination initialPageSize={50}
                     {...state.pagination}
                 />

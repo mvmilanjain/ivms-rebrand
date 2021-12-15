@@ -26,11 +26,11 @@ const AppBar = ({toggleNavbar, expand}) => {
                 </ActionIcon>
                 <Box component="div" sx={() => ({flexGrow: 1})}/>
                 <Menu
-                    control={<Avatar size="md" radius="xl" color="blue">MJ</Avatar>}
+                    control={<Avatar size="md" radius="xl" color="blue">SG</Avatar>}
                     placement="end" withArrow
                 >
                     <Menu.Label>Application</Menu.Label>
-                    <Menu.Item icon={<PersonIcon/>}>Milan Jain</Menu.Item>
+                    <Menu.Item icon={<PersonIcon/>}>Saurabh Gulati</Menu.Item>
                     <Menu.Item icon={<GearIcon/>} onClick={handleSetting}>Settings</Menu.Item>
                     <Divider/>
                     <Menu.Label>Danger Zone</Menu.Label>

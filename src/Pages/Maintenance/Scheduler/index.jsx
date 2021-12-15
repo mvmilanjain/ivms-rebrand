@@ -11,7 +11,7 @@ import {
     MdOutlineVisibility as ViewIcon
 } from 'react-icons/md';
 
-import {ReactTable} from 'Components';
+import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {deleteSchedule, getSchedules} from 'Shared/Services';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
@@ -78,7 +78,7 @@ const Workorder = (props) => {
     };
 
     return (
-        <>
+        <ContentArea withPaper limitToViewPort>
             <Group position="apart" mb="md">
                 <Title order={2}>Scheduler</Title>
                 <Button leftIcon={<CreateIcon/>}>Create Schedule</Button>
@@ -102,7 +102,7 @@ const Workorder = (props) => {
                     {...state.pagination}
                 />
             </div>
-        </>
+        </ContentArea>
     );
 };
 

@@ -8,8 +8,8 @@ import {
     MdOutlineAddBox as CreateIcon,
     MdOutlineDelete as DeleteIcon,
     MdOutlineEdit as EditIcon,
-    MdOutlineVisibility as ViewIcon,
-    MdOutlineFilterList as FilterIcon
+    MdOutlineFilterList as FilterIcon,
+    MdOutlineVisibility as ViewIcon
 } from 'react-icons/md';
 
 import {ContentArea, ReactTable} from 'Components';

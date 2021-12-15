@@ -148,3 +148,11 @@ export const FAULT = yup.object({
     fault_type: yup.string().required().label('Fault type'),
     vehicle_id: yup.string().required().label('Vehicle'),
 });
+
+export const TRAILER = yup.object({
+    name: yup.string().required().label('Trailer name'),
+    vin_number: yup.string().required().label('VIN number'),
+    model: yup.string().required().label('Model'),
+    status: yup.string().required().label('Status'),
+    meter_reading: yup.number().min(0).label('Meter reading')
+});

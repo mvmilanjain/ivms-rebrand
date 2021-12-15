@@ -190,6 +190,13 @@ export const getFilterList = (filters) => {
     return filterObj;
 };
 
+export const registerField = (fieldName, options) => ({
+    id: fieldName,
+    value: get(options.values, fieldName),
+    onChange: options.handleChange,
+    error: errorMessage(fieldName, options.touched, options.errors)
+});
+
 export const hasError = (key, touched, errors) => get(touched, key, false) && Boolean(get(errors, key));
 
 export const errorMessage = (key, touched, errors) => get(touched, key, false) && get(errors, key);

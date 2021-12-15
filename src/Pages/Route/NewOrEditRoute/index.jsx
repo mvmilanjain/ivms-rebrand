@@ -17,7 +17,7 @@ import {AddressDropdown, ContentArea, ReactTable, RouteMap} from 'Components';
 import {useHttp} from 'Hooks';
 import {Route} from 'Shared/Models';
 import {ROUTE} from 'Shared/Utilities/validationSchema.util';
-import {errorMessage} from 'Shared/Utilities/common.util';
+import {errorMessage, registerField} from 'Shared/Utilities/common.util';
 import {getRoute, postRoute, putRoute} from 'Shared/Services';
 import AddStoppageForm from './AddStoppageForm';
 
@@ -31,12 +31,7 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
         route: null, activeStoppages: [], initialLoad: false
     });
 
-    const register = (fieldName) => ({
-        id: fieldName,
-        value: get(values, fieldName),
-        onChange: handleChange,
-        error: errorMessage(fieldName, touched, errors)
-    });
+    const register = (fieldName) => registerField(fieldName, {values, handleChange, touched, errors});
 
     useEffect(() => {
         if (action === 'New') {
@@ -181,7 +176,7 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
         renderActiveRouteOnMap(route);
     };
 
-    const onSubmit = (values) => {
+    const onSubmit = () => {
         if (values.source === values.route_planner.route_stops[0].address_id &&
             values.route_planner.route_stops[0].stop_duration < values.route_planner.loading_time) {
             setFieldError(`route_planner.route_stops[0].stop_duration`, 'Should be greater than or equal than Loading time')

@@ -5,9 +5,10 @@ import {useHttp} from 'Hooks';
 import {getConfigField} from 'Shared/Services';
 import {CONFIG_FIELD_TYPE} from 'Shared/Utilities/constant';
 
-const ContractorDropdown = forwardRef((
+const ConfigFieldDropdown = forwardRef((
     {
         optionLabelKey = 'name',
+        fieldType = CONFIG_FIELD_TYPE.ROUTE_PLANNER_CONTRACTOR,
         value = null,
         limit = 50,
         onChange,
@@ -19,7 +20,7 @@ const ContractorDropdown = forwardRef((
 
     const fetchOptions = (searchText) => new Promise((resolve, reject) => {
         const params = {per_page: limit, filter: {name_cont: searchText}};
-        requestHandler(getConfigField(CONFIG_FIELD_TYPE.ROUTE_PLANNER_CONTRACTOR, params)).then(res => {
+        requestHandler(getConfigField(fieldType, params)).then(res => {
             setDataSource(res.data);
             const options = res.data.map(item => ({id: item.id, value: item[optionLabelKey]}));
             resolve(options);
@@ -48,4 +49,4 @@ const ContractorDropdown = forwardRef((
     );
 });
 
-export default ContractorDropdown;
+export default ConfigFieldDropdown;
