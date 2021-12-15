@@ -1,7 +1,7 @@
 export {default as AsyncSelect} from './AsyncSelect';
-export {default as AddressDropdown} from './AddressDropdown';
-export {default as ConfigFieldDropdown} from './ConfigFieldDropdown';
-export {default as GoogleMapSearchDropdown} from './GoogleMapSearchDropdown';
-export {default as MemberDropdown} from './MemberDropdown';
-export {default as RouteDropdown} from './RouteDropdown';
-export {default as VehicleDropdown} from './VehicleDropdown';
+
+export {default as AddressSelect} from './AddressSelect';
+export {default as ConfigFieldSelect} from './ConfigFieldSelect';
+export {default as MemberSelect} from './MemberSelect';
+export {default as RouteSelect} from './RouteSelect';
+export {default as VehicleSelect} from './VehicleSelect';

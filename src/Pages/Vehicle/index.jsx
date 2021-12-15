@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Tabs} from '@mantine/core';
 import {FaTrailer as TrailerIcon, FaTruck as TruckIcon} from 'react-icons/fa';
 

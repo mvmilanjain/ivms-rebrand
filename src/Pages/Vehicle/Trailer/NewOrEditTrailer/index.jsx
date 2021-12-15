@@ -6,7 +6,7 @@ import {useNotifications} from '@mantine/notifications';
 import {CalendarIcon} from '@modulz/radix-icons';
 import {MdOutlineSave as SaveIcon} from 'react-icons/md';
 
-import {ConfigFieldDropdown, ContentArea} from 'Components';
+import {ConfigFieldSelect, ContentArea} from 'Components';
 import {useHttp} from 'Hooks';
 import {Trailer} from 'Shared/Models';
 import {getTrailer, postTrailer, putTrailer} from 'Shared/Services';
@@ -129,7 +129,7 @@ const NewOrEditTrailer = ({history, location, match, ...rest}) => {
                         />
                     </Col>
                     <Col span={4}>
-                        <ConfigFieldDropdown
+                        <ConfigFieldSelect
                             {...register("trailer_category")}
                             label="Category"
                             fieldType={CONFIG_FIELD_TYPE.TRAILER_CATEGORY}

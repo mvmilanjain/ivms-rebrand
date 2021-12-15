@@ -1,7 +1,7 @@
 import {useFormik} from 'formik';
 import {Button, Group, NumberInput} from '@mantine/core';
 
-import {AddressDropdown} from 'Components';
+import {AddressSelect} from 'Components';
 import {RouteStop} from 'Shared/Models';
 import {ADD_ROUTE_STOP} from 'Shared/Utilities/validationSchema.util';
 import {errorMessage} from 'Shared/Utilities/common.util';
@@ -24,7 +24,7 @@ const AddStoppageForm = ({onConfirm}) => {
     return (
         <form onSubmit={addStoppageForm.handleSubmit}>
             <Group position="center" direction="column" grow>
-                <AddressDropdown
+                <AddressSelect
                     id="address_id" label="Address"
                     value={addStoppageForm.values.address} onChange={handleStoppageAddressChange}
                     error={errorMessage('address_id', addStoppageForm.touched, addStoppageForm.errors)}

@@ -1,28 +1,29 @@
-import {forwardRef, useState} from 'react';
+import {useState} from 'react';
+import {FaTruck as DefaultIcon} from 'react-icons/fa';
 
-import {AsyncSelect} from 'Components';
 import {useHttp} from 'Hooks';
-import {getConfigField} from 'Shared/Services';
-import {CONFIG_FIELD_TYPE} from 'Shared/Utilities/constant';
+import {getTrucks} from 'Shared/Services';
+import AsyncSelect from '../AsyncSelect';
 
-const ConfigFieldDropdown = forwardRef((
+const VehicleSelect = (
     {
         optionLabelKey = 'name',
-        fieldType = CONFIG_FIELD_TYPE.ROUTE_PLANNER_CONTRACTOR,
         value = null,
         limit = 50,
+        icon,
+        withIcon,
         onChange,
         ...rest
-    }, ref
+    }
 ) => {
     const {requestHandler} = useHttp();
     const [dataSource, setDataSource] = useState([]);
 
     const fetchOptions = (searchText) => new Promise((resolve, reject) => {
         const params = {per_page: limit, filter: {name_cont: searchText}};
-        requestHandler(getConfigField(fieldType, params)).then(res => {
+        requestHandler(getTrucks(params)).then(res => {
             setDataSource(res.data);
-            const options = res.data.map(item => ({id: item.id, value: item[optionLabelKey]}));
+            const options = res.data.map(item => ({value: item.id, label: item[optionLabelKey]}));
             resolve(options);
         }).catch(error => {
             setDataSource([]);
@@ -31,22 +32,21 @@ const ConfigFieldDropdown = forwardRef((
     });
 
     const handleItemSelection = (selectedItem) => {
-        let result = selectedItem ? dataSource.find(item => item.id === selectedItem.id) || null : null;
+        let result = selectedItem ? dataSource.find(item => item.id === selectedItem) || null : null;
         onChange && onChange(result);
     };
 
     return (
         <AsyncSelect
-            ref={ref}
             placeholder={rest.placeholder || (rest.label && `Select ${rest.label.toLowerCase()}`)}
+            icon={icon || (withIcon && <DefaultIcon/>)}
             limit={limit}
-            value={value && value[optionLabelKey]}
-            selectedValue={value ? {id: value.id, value: value[optionLabelKey]} : null}
+            selectedValue={value ? {value: value.id, label: value[optionLabelKey]} : null}
             fetchOptions={fetchOptions}
             onSelection={handleItemSelection}
             {...rest}
         />
     );
-});
+};
 
-export default ConfigFieldDropdown;
+export default VehicleSelect;

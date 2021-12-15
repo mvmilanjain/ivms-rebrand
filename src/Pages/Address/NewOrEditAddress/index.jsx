@@ -17,7 +17,7 @@ import {
 import {useNotifications} from '@mantine/notifications';
 import {MdOutlineSave as SaveIcon} from 'react-icons/md';
 
-import {AddressMap, ContentArea, GoogleMapSearchDropdown} from 'Components';
+import {AddressMap, ContentArea, GoogleMapAutocomplete} from 'Components';
 import {useHttp} from 'Hooks';
 import {getAddress, postAddress, putAddress} from 'Shared/Services';
 import {Address} from 'Shared/Models';
@@ -118,7 +118,7 @@ const NewOrEditAddress = ({history, location, match, ...rest}) => {
                 </Group>
                 <Divider mb="md" variant="dotted"/>
 
-                <GoogleMapSearchDropdown
+                <GoogleMapAutocomplete
                     mb="md" radius="xl"
                     placeholder="Google map search for address"
                     onChange={handleGoogleMapSelection}

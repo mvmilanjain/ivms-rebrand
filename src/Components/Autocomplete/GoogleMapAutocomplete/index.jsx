@@ -8,7 +8,7 @@ import {getPlaceDetails} from 'Shared/Services';
 
 const autocompleteService = {current: null};
 
-const GoogleMapSearchDropdown = forwardRef(({onChange, ...rest}, ref) => {
+const GoogleMapAutocomplete = forwardRef(({onChange, ...rest}, ref) => {
     const [isLoading, toggleLoading] = useState(false);
     const [options, setOptions] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -71,4 +71,4 @@ const GoogleMapSearchDropdown = forwardRef(({onChange, ...rest}, ref) => {
     );
 });
 
-export default GoogleMapSearchDropdown;
+export default GoogleMapAutocomplete;

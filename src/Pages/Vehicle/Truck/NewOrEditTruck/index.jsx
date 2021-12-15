@@ -6,7 +6,7 @@ import {useNotifications} from '@mantine/notifications';
 import {CalendarIcon} from '@modulz/radix-icons';
 import {MdOutlineSave as SaveIcon} from 'react-icons/md';
 
-import {ConfigFieldDropdown, ContentArea, MemberDropdown} from 'Components';
+import {ConfigFieldSelect, ContentArea} from 'Components';
 import {useHttp} from 'Hooks';
 import {Truck} from 'Shared/Models';
 import {getTruck, postTruck, putTruck} from 'Shared/Services';
@@ -144,7 +144,7 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
                         />
                     </Col>
                     <Col span={4}>
-                        <ConfigFieldDropdown
+                        <ConfigFieldSelect
                             {...register("vehicle_category")}
                             label="Category"
                             fieldType={CONFIG_FIELD_TYPE.VEHICLE_CATEGORY}
@@ -241,7 +241,7 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
                         />
                     </Col>
                     <Col span={4}>
-                        <ConfigFieldDropdown
+                        <ConfigFieldSelect
                             {...register("depo")}
                             label="Depo"
                             fieldType={CONFIG_FIELD_TYPE.VEHICLE_DEPO}
@@ -250,7 +250,7 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
                         />
                     </Col>
                     <Col span={4}>
-                        <ConfigFieldDropdown
+                        <ConfigFieldSelect
                             {...register("business_unit")}
                             label="Business unit"
                             fieldType={CONFIG_FIELD_TYPE.BUSINESS_UNIT}

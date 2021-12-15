@@ -1,6 +1,7 @@
 import {Col, Grid, Group, Title} from '@mantine/core';
 
-import {AddressDropdown, ContentArea, ConfigFieldDropdown, RouteDropdown, VehicleDropdown, MemberDropdown} from 'Components';
+import {AddressSelect, ConfigFieldSelect, ContentArea, MemberSelect, RouteSelect, VehicleSelect} from 'Components';
+import {CONFIG_FIELD_TYPE} from "../../Shared/Utilities/constant";
 
 const Dashboard = (props) => {
 
@@ -16,15 +17,19 @@ const Dashboard = (props) => {
                 <Grid justify="center">
                     <Col span={4}>
                         <Group direction="column" grow>
-                            <VehicleDropdown label="Truck" withIcon onChange={handleItemSelection}/>
+                            <RouteSelect label="Route" withIcon clearable onChange={handleItemSelection}/>
 
-                            <AddressDropdown label="Address" withIcon onChange={handleItemSelection}/>
+                            <AddressSelect label="Address" withIcon clearable onChange={handleItemSelection}/>
 
-                            <RouteDropdown label="Route" withIcon onChange={handleItemSelection}/>
+                            <VehicleSelect label="Vehicle" withIcon clearable onChange={handleItemSelection}/>
 
-                            <ConfigFieldDropdown label="Contractor" onChange={handleItemSelection}/>
+                            <MemberSelect label="Member" withIcon clearable onChange={handleItemSelection}/>
 
-                            <MemberDropdown label="Member" withIcon onChange={handleItemSelection}/>
+                            <ConfigFieldSelect
+                                label="Contractor" clearable
+                                onChange={handleItemSelection}
+                                fieldType={CONFIG_FIELD_TYPE.ROUTE_PLANNER_CONTRACTOR}
+                            />
                         </Group>
                     </Col>
                 </Grid>

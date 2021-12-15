@@ -9,7 +9,7 @@ const LoadingOptions = () => (
     </Paper>
 );
 
-const AsyncSelect2 = (
+const AsyncMultiSelect = (
     {
         selectedValue,
         onSelection,
@@ -76,4 +76,4 @@ const AsyncSelect2 = (
     );
 };
 
-export default AsyncSelect2;
+export default AsyncMultiSelect;

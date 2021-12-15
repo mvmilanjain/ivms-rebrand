@@ -1,13 +1,13 @@
-import {forwardRef, useState} from 'react';
+import {useState} from 'react';
 import {FaAddressBook as DefaultIcon} from 'react-icons/fa';
 
-import {AsyncSelect} from 'Components';
 import {useHttp} from 'Hooks';
 import {getAddresses} from 'Shared/Services';
+import AsyncSelect from '../AsyncSelect';
 
 const getAddressLabel = (address) => address ? (address.name ? address.name : address.address1) : '';
 
-const AddressDropdown = forwardRef((
+const AddressSelect = (
     {
         optionLabelKey = 'name',
         value = null,
@@ -16,7 +16,7 @@ const AddressDropdown = forwardRef((
         withIcon,
         onChange,
         ...rest
-    }, ref
+    }
 ) => {
     const {requestHandler} = useHttp();
     const [dataSource, setDataSource] = useState([]);
@@ -28,7 +28,7 @@ const AddressDropdown = forwardRef((
         };
         requestHandler(getAddresses(params)).then(res => {
             setDataSource(res.data);
-            const options = res.data.map(item => ({id: item.id, value: getAddressLabel(item)}));
+            const options = res.data.map(item => ({value: item.id, label: getAddressLabel(item)}));
             resolve(options);
         }).catch(error => {
             setDataSource([]);
@@ -37,23 +37,21 @@ const AddressDropdown = forwardRef((
     });
 
     const handleItemSelection = (selectedItem) => {
-        let result = selectedItem ? dataSource.find(item => item.id === selectedItem.id) || null : null;
+        let result = selectedItem ? dataSource.find(item => item.id === selectedItem) || null : null;
         onChange && onChange(result);
     };
 
     return (
         <AsyncSelect
-            ref={ref}
             placeholder={rest.placeholder || (rest.label && `Select ${rest.label.toLowerCase()}`)}
             icon={icon || (withIcon && <DefaultIcon/>)}
             limit={limit}
-            value={value && getAddressLabel(value)}
-            selectedValue={value ? {id: value.id, value: getAddressLabel(value)} : null}
+            selectedValue={value ? {value: value.id, label: getAddressLabel(value)} : null}
             fetchOptions={fetchOptions}
             onSelection={handleItemSelection}
             {...rest}
         />
     );
-});
+};
 
-export default AddressDropdown;
+export default AddressSelect;

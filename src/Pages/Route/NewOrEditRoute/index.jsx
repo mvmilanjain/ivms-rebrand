@@ -13,7 +13,7 @@ import {
     MdOutlineSave as SaveIcon,
 } from 'react-icons/md';
 
-import {AddressDropdown, ContentArea, ReactTable, RouteMap} from 'Components';
+import {AddressSelect, ContentArea, ReactTable, RouteMap} from 'Components';
 import {useHttp} from 'Hooks';
 import {Route} from 'Shared/Models';
 import {ROUTE} from 'Shared/Utilities/validationSchema.util';
@@ -235,14 +235,14 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
                                 required
                             />
 
-                            <AddressDropdown
+                            <AddressSelect
                                 {...register("source_address")}
                                 label="Source" withIcon required
                                 onChange={handleSourceChange}
                                 error={errorMessage("source", touched, errors)}
                             />
 
-                            <AddressDropdown
+                            <AddressSelect
                                 {...register("destination_address")}
                                 label="Destination" withIcon required
                                 onChange={handleDestinationChange}
@@ -304,7 +304,7 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
                         {accessor: 'position', Header: '#', cellWidth: 40},
                         {
                             accessor: 'address_id', Header: 'Address',
-                            Cell: ({row}) => <AddressDropdown
+                            Cell: ({row}) => <AddressSelect
                                 {...register(`route_planner.route_stops[${row.index}].address`)}
                                 withIcon required disabled={isRouteStopAddressDisabled(row.index, row.original)}
                                 onChange={(val) => handleRouteStopAddressChange(val, row.index)}

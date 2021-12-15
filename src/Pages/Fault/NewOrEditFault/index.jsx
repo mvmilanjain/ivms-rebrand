@@ -7,7 +7,7 @@ import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
 import {MdOutlineSave as SaveIcon} from 'react-icons/md';
 
-import {ContentArea, VehicleDropdown} from 'Components';
+import {ContentArea, VehicleSelect} from 'Components';
 import {useHttp} from 'Hooks';
 import {Fault} from 'Shared/Models';
 import {getFault, postFault, putFault} from 'Shared/Services';
@@ -114,7 +114,7 @@ const NewOrEditFault = ({history, location, match, ...rest}) => {
                         />
                     </Col>
                     <Col span={4}>
-                        <VehicleDropdown
+                        <VehicleSelect
                             {...register("vehicle")}
                             label="Vehicle" withIcon required
                             onChange={handleVehicleChange}

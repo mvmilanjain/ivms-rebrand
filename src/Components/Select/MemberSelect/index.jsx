@@ -1,13 +1,13 @@
-import {forwardRef, useState} from 'react';
-import {FaAddressBook as DefaultIcon} from 'react-icons/fa';
+import {useState} from 'react';
+import {MdPerson as DefaultIcon} from 'react-icons/md';
 
-import {AsyncSelect} from 'Components';
 import {useHttp} from 'Hooks';
 import {getMembers} from 'Shared/Services';
+import AsyncSelect from '../AsyncSelect';
 
 const getFullName = (member) => `${!!member.first_name ? member.first_name : ''} ${!!member.last_name ? member.last_name : ''}`.trim();
 
-const MemberDropdown = forwardRef((
+const MemberSelect = (
     {
         value = null,
         limit = 50,
@@ -15,7 +15,7 @@ const MemberDropdown = forwardRef((
         withIcon,
         onChange,
         ...rest
-    }, ref
+    }
 ) => {
     const {requestHandler} = useHttp();
     const [dataSource, setDataSource] = useState([]);
@@ -28,7 +28,7 @@ const MemberDropdown = forwardRef((
         };
         requestHandler(getMembers(params)).then(res => {
             setDataSource(res.data);
-            const options = res.data.map(item => ({id: item.id, value: getFullName(item)}));
+            const options = res.data.map(item => ({value: item.id, label: getFullName(item)}));
             resolve(options);
         }).catch(error => {
             setDataSource([]);
@@ -37,23 +37,21 @@ const MemberDropdown = forwardRef((
     });
 
     const handleItemSelection = (selectedItem) => {
-        let result = selectedItem ? dataSource.find(item => item.id === selectedItem.id) || null : null;
+        let result = selectedItem ? dataSource.find(item => item.id === selectedItem) || null : null;
         onChange && onChange(result);
     };
 
     return (
         <AsyncSelect
-            ref={ref}
             placeholder={rest.placeholder || (rest.label && `Select ${rest.label.toLowerCase()}`)}
             icon={icon || (withIcon && <DefaultIcon/>)}
             limit={limit}
-            value={value && getFullName(value)}
-            selectedValue={value ? {id: value.id, value: getFullName(value)} : null}
+            selectedValue={value ? {value: value.id, label: getFullName(value)} : null}
             fetchOptions={fetchOptions}
             onSelection={handleItemSelection}
             {...rest}
         />
     );
-});
+};
 
-export default MemberDropdown;
+export default MemberSelect;
