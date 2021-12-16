@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import isNil from 'lodash/isNil';
-import {Paper, Select, Skeleton, Text} from '@mantine/core';
+import {Paper, Text, MultiSelect} from '@mantine/core';
 import {useDebouncedValue} from '@mantine/hooks';
 
 const LoadingOptions = () => (
@@ -16,7 +16,7 @@ const AsyncMultiSelect = (
         fetchOptions,
         disabled,
         ...rest
-    }, ref
+    }
 ) => {
     const [isOpen, toggleOpen] = useState(false);
     const [isLoading, toggleLoading] = useState(false);
@@ -28,39 +28,34 @@ const AsyncMultiSelect = (
     useEffect(() => {
         if (selectedItem) {
             toggleLoading(true);
-            fetchOptions(debouncedSearchText).then(options => {
-                toggleLoading(false);
-                setOptions(options);
-            }).catch(error => {
-                toggleLoading(false);
-                setOptions([]);
-            });
+            fetchOptions(debouncedSearchText)
+                .then(options => setOptions(options))
+                .catch(e => setOptions([]))
+                .finally(() => toggleLoading(false));
         }
     }, []);
 
     useEffect(() => {
         if ((isOpen && !isLoading && !options.length) || (isOpen && !isNil(debouncedSearchText))) {
             toggleLoading(true);
-            fetchOptions(debouncedSearchText).then(options => {
-                toggleLoading(false);
-                setOptions(options);
-            }).catch(error => {
-                toggleLoading(false);
-                setOptions([]);
-            });
+            fetchOptions(debouncedSearchText)
+                .then(options => setOptions(options))
+                .catch(e => setOptions([]))
+                .finally(() => toggleLoading(false));
         }
     }, [isOpen, debouncedSearchText]);
 
     const handleSearchTextChange = query => setSearchText(query);
 
-    const handleSelectItem = (item) => {
-        setSelectedItem(item);
-        onSelection && onSelection(item);
+    const handleSelectListChange = (list) => {
+        console.log(list);
+        setSelectedItem(list);
+        onSelection && onSelection(list);
     };
 
     return (
-        <Select
-            ref={ref} searchable
+        <MultiSelect
+            searchable
             transition="scale-y"
             nothingFound="No options"
             onDropdownOpen={() => toggleOpen(true)}
@@ -69,7 +64,7 @@ const AsyncMultiSelect = (
             data={options}
             value={selectedItem}
             onSearchChange={handleSearchTextChange}
-            onChange={handleSelectItem}
+            onChange={handleSelectListChange}
             disabled={disabled}
             {...rest}
         />

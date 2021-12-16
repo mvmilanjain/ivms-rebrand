@@ -4,6 +4,7 @@ import {MdPerson as DefaultIcon} from 'react-icons/md';
 import {useHttp} from 'Hooks';
 import {getMembers} from 'Shared/Services';
 import AsyncSelect from '../AsyncSelect';
+import AsyncMultiSelect from "../AsyncMultiSelect";
 
 const getFullName = (member) => `${!!member.first_name ? member.first_name : ''} ${!!member.last_name ? member.last_name : ''}`.trim();
 
@@ -13,12 +14,15 @@ const MemberSelect = (
         limit = 50,
         icon,
         withIcon,
+        isMulti,
         onChange,
         ...rest
     }
 ) => {
     const {requestHandler} = useHttp();
     const [dataSource, setDataSource] = useState([]);
+    const [selectValues, setSelectedValues] = useState(value);
+    const SelectComponent = isMulti ? AsyncMultiSelect : AsyncSelect;
 
     const fetchOptions = (searchText) => new Promise((resolve, reject) => {
         const params = {
@@ -27,8 +31,14 @@ const MemberSelect = (
             }
         };
         requestHandler(getMembers(params)).then(res => {
-            setDataSource(res.data);
-            const options = res.data.map(item => ({value: item.id, label: getFullName(item)}));
+            const data = res.data;
+            let options = data.map(item => ({value: item.id, label: getFullName(item)}));
+            if(isMulti && selectValues) {
+                selectValues.forEach(item => !data.includes(item.id) && data.push(item));
+                const selectValuesOption = selectValues.map(item => ({value: item.id, label: getFullName(item)}));
+                options = [...selectValuesOption, ...options];
+            }
+            setDataSource(data);
             resolve(options);
         }).catch(error => {
             setDataSource([]);
@@ -36,17 +46,38 @@ const MemberSelect = (
         });
     });
 
+    const getSelectedValue = () => {
+        let result = null;
+        if(!isMulti) {
+            !!selectValues && (result = {value: selectValues.id, label: getFullName(selectValues)});
+        } else {
+            !!selectValues && (result = selectValues.map(item => ({
+                value: item.id,
+                label: getFullName(item)
+            })));
+        }
+        return result;
+    };
+
     const handleItemSelection = (selectedItem) => {
-        let result = selectedItem ? dataSource.find(item => item.id === selectedItem) || null : null;
-        onChange && onChange(result);
+        if(onChange) {
+            let result;
+            if(!isMulti) {
+                result = selectedItem ? dataSource.find(item => item.id === selectedItem) || null : null;
+            } else {
+                result = selectedItem ? dataSource.filter(item => selectedItem.includes(item.id)) : [];
+            }
+            setSelectedValues(result);
+            onChange(result);
+        }
     };
 
     return (
-        <AsyncSelect
+        <SelectComponent
             placeholder={rest.placeholder || (rest.label && `Select ${rest.label.toLowerCase()}`)}
             icon={icon || (withIcon && <DefaultIcon/>)}
             limit={limit}
-            selectedValue={value ? {value: value.id, label: getFullName(value)} : null}
+            selectedValue={getSelectedValue()}
             fetchOptions={fetchOptions}
             onSelection={handleItemSelection}
             {...rest}

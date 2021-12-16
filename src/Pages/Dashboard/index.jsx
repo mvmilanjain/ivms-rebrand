@@ -19,14 +19,14 @@ const Dashboard = (props) => {
                         <Group direction="column" grow>
                             <RouteSelect label="Route" withIcon clearable onChange={handleItemSelection}/>
 
-                            <AddressSelect label="Address" withIcon clearable onChange={handleItemSelection}/>
+                            <AddressSelect label="Address" withIcon clearable isMulti onChange={handleItemSelection}/>
 
                             <VehicleSelect label="Vehicle" withIcon clearable onChange={handleItemSelection}/>
 
                             <MemberSelect label="Member" withIcon clearable onChange={handleItemSelection}/>
 
                             <ConfigFieldSelect
-                                label="Contractor" clearable
+                                label="Contractor" clearable isMulti
                                 onChange={handleItemSelection}
                                 fieldType={CONFIG_FIELD_TYPE.ROUTE_PLANNER_CONTRACTOR}
                             />

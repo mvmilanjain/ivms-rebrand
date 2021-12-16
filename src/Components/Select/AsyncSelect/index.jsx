@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import isNil from 'lodash/isNil';
-import {Paper, Select, Skeleton, Text} from '@mantine/core';
+import {Paper, Select, Text} from '@mantine/core';
 import {useDebouncedValue} from '@mantine/hooks';
 
 const LoadingOptions = () => (
@@ -9,14 +9,14 @@ const LoadingOptions = () => (
     </Paper>
 );
 
-const AsyncSelect2 = (
+const AsyncSelect = (
     {
         selectedValue,
         onSelection,
         fetchOptions,
         disabled,
         ...rest
-    }, ref
+    }
 ) => {
     const [isOpen, toggleOpen] = useState(false);
     const [isLoading, toggleLoading] = useState(false);
@@ -28,26 +28,20 @@ const AsyncSelect2 = (
     useEffect(() => {
         if (selectedItem) {
             toggleLoading(true);
-            fetchOptions(debouncedSearchText).then(options => {
-                toggleLoading(false);
-                setOptions(options);
-            }).catch(error => {
-                toggleLoading(false);
-                setOptions([]);
-            });
+            fetchOptions(debouncedSearchText)
+                .then(options => setOptions(options))
+                .catch(e => setOptions([]))
+                .finally(() => toggleLoading(false));
         }
     }, []);
 
     useEffect(() => {
         if ((isOpen && !isLoading && !options.length) || (isOpen && !isNil(debouncedSearchText))) {
             toggleLoading(true);
-            fetchOptions(debouncedSearchText).then(options => {
-                toggleLoading(false);
-                setOptions(options);
-            }).catch(error => {
-                toggleLoading(false);
-                setOptions([]);
-            });
+            fetchOptions(debouncedSearchText)
+                .then(options => setOptions(options))
+                .catch(e => setOptions([]))
+                .finally(() => toggleLoading(false));
         }
     }, [isOpen, debouncedSearchText]);
 
@@ -60,7 +54,7 @@ const AsyncSelect2 = (
 
     return (
         <Select
-            ref={ref} searchable
+            searchable
             transition="scale-y"
             nothingFound="No options"
             onDropdownOpen={() => toggleOpen(true)}
@@ -76,4 +70,4 @@ const AsyncSelect2 = (
     );
 };
 
-export default AsyncSelect2;
+export default AsyncSelect;
