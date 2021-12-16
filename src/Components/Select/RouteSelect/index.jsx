@@ -1,11 +1,10 @@
-import {useNotifications} from '@mantine/notifications';
+import {useEffect, useState} from 'react';
 import {FaRoute as DefaultIcon} from 'react-icons/fa';
 
 import {useHttp} from 'Hooks';
-import {getRoute, getRoutes} from 'Shared/Services';
+import {getRoutes} from 'Shared/Services';
 import AsyncSelect from '../AsyncSelect';
 import AsyncMultiSelect from '../AsyncMultiSelect';
-import {useState} from "react";
 
 const RouteSelect = (
     {
@@ -20,53 +19,54 @@ const RouteSelect = (
     }
 ) => {
     const {requestHandler} = useHttp();
-    const notifications = useNotifications();
+    const [dataSource, setDataSource] = useState([]);
     const [selectValues, setSelectedValues] = useState(value);
     const SelectComponent = isMulti ? AsyncMultiSelect : AsyncSelect;
 
+    useEffect(() => {
+        if (value) {
+            setSelectedValues(value);
+        } else {
+            setSelectedValues(isMulti ? [] : null);
+        }
+    }, [value]);
+
     const fetchOptions = (searchText) => new Promise((resolve, reject) => {
-        const params = {per_page: limit, filter: {route_code_cont: searchText}};
+        const params = {
+            per_page: limit,
+            filter: {route_code_cont: searchText},
+            include: 'source_address,destination_address,route_planner,route_planner.origin_address,' +
+                'route_planner.route_stops,route_planner.route_stops.address'
+        };
         requestHandler(getRoutes(params)).then(res => {
             const data = res.data;
             let options = data.map(item => ({value: item.id, label: item[optionLabelKey]}));
-            if(isMulti && selectValues) {
+            if (isMulti && selectValues) {
                 selectValues.forEach(item => !data.includes(item.id) && data.push(item));
                 const selectValuesOption = selectValues.map(item => ({value: item.id, label: item[optionLabelKey]}));
                 options = [...selectValuesOption, ...options];
             }
+            setDataSource(data);
             resolve(options);
-        }).catch(error => reject(error));
+        }).catch(error => {
+            setDataSource([]);
+            reject(error);
+        });
     });
 
-    const getSelectedValue = () => {
-        let result = null;
-        if(!isMulti) {
-            !!value && (result = {value: value.id, label: value[optionLabelKey]});
-        } else {
-
-        }
-        return result;
-    };
+    const getSelectedValue = () => isMulti ?
+        (selectValues ? selectValues.map(item => ({value: item.id, label: item[optionLabelKey]})) : []) :
+        (selectValues ? ({value: selectValues.id, label: selectValues[optionLabelKey]}) : null);
 
     const handleItemSelection = (selectedItem) => {
-        let id = selectedItem || '';
         if (onChange) {
-            if (id) {
-                requestHandler(getRoute(id)).then(res => {
-                    setSelectedValues(res.data);
-                    onChange(res.data);
-                }).catch(e => {
-                    notifications.showNotification({
-                        title: 'Error', color: 'red',
-                        message: 'Not able to fetch selected route details. Something went wrong!!'
-                    });
-                    setSelectedValues(null);
-                    onChange(null);
-                });
+            let result;
+            if (!isMulti) {
+                result = selectedItem ? dataSource.find(item => item.id === selectedItem) || null : null;
             } else {
-                setSelectedValues(null);
-                onChange(null);
+                result = selectedItem ? dataSource.filter(item => selectedItem.includes(item.id)) : [];
             }
+            onChange(result);
         }
     };
 

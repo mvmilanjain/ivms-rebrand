@@ -1,6 +1,6 @@
 import {Col, Grid, Group, Title} from '@mantine/core';
 
-import {AddressSelect, ConfigFieldSelect, ContentArea, MemberSelect, RouteSelect, VehicleSelect} from 'Components';
+import {AddressSelect, ConfigFieldSelect, RouteSelect, ContentArea, MemberSelect, VehicleSelect} from 'Components';
 import {CONFIG_FIELD_TYPE} from "../../Shared/Utilities/constant";
 
 const Dashboard = (props) => {
@@ -17,18 +17,45 @@ const Dashboard = (props) => {
                 <Grid justify="center">
                     <Col span={4}>
                         <Group direction="column" grow>
-                            <RouteSelect label="Route" withIcon clearable onChange={handleItemSelection}/>
+                            <AddressSelect
+                                label="Address"
+                                withIcon
+                                clearable
+                                isMulti
+                                onChange={handleItemSelection}
+                            />
 
-                            <AddressSelect label="Address" withIcon clearable isMulti onChange={handleItemSelection}/>
+                            <RouteSelect
+                                label="Route"
+                                withIcon
+                                clearable
+                                isMulti
+                                onChange={handleItemSelection}
+                            />
 
-                            <VehicleSelect label="Vehicle" withIcon clearable onChange={handleItemSelection}/>
+                            <VehicleSelect
+                                label="Vehicle"
+                                withIcon
+                                clearable
+                                isMulti
+                                onChange={handleItemSelection}
+                            />
 
-                            <MemberSelect label="Member" withIcon clearable onChange={handleItemSelection}/>
+                            <MemberSelect
+                                label="Member"
+                                withIcon
+                                clearable
+                                isMulti
+                                onChange={handleItemSelection}
+                            />
 
                             <ConfigFieldSelect
-                                label="Contractor" clearable isMulti
-                                onChange={handleItemSelection}
+                                label="Contractor"
                                 fieldType={CONFIG_FIELD_TYPE.ROUTE_PLANNER_CONTRACTOR}
+                                withIcon
+                                clearable
+                                isMulti
+                                onChange={handleItemSelection}
                             />
                         </Group>
                     </Col>

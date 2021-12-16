@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {FaAddressBook as DefaultIcon} from 'react-icons/fa';
 
 import {useHttp} from 'Hooks';
@@ -10,7 +10,6 @@ const getAddressLabel = (address) => address ? (address.name ? address.name : ad
 
 const AddressSelect = (
     {
-        optionLabelKey = 'name',
         value = null,
         limit = 50,
         icon,
@@ -24,6 +23,14 @@ const AddressSelect = (
     const [dataSource, setDataSource] = useState([]);
     const [selectValues, setSelectedValues] = useState(value);
     const SelectComponent = isMulti ? AsyncMultiSelect : AsyncSelect;
+
+    useEffect(() => {
+        if(value) {
+            setSelectedValues(value);
+        } else {
+            setSelectedValues(isMulti ? [] : null);
+        }
+    }, [value]);
 
     const fetchOptions = (searchText) => new Promise((resolve, reject) => {
         const params = {
@@ -46,18 +53,9 @@ const AddressSelect = (
         });
     });
 
-    const getSelectedValue = () => {
-        let result = null;
-        if(!isMulti) {
-            !!selectValues && (result = {value: selectValues.id, label: getAddressLabel(selectValues)});
-        } else {
-            !!selectValues && (result = selectValues.map(item => ({
-                value: item.id,
-                label: getAddressLabel(item)
-            })));
-        }
-        return result;
-    };
+    const getSelectedValue = () => isMulti ?
+        (selectValues ? selectValues.map(item => ({value: item.id, label: getAddressLabel(item)})) : []) :
+        (selectValues ? ({value: selectValues.id, label: getAddressLabel(selectValues)}) : null);
 
     const handleItemSelection = (selectedItem) => {
         if(onChange) {
@@ -67,7 +65,6 @@ const AddressSelect = (
             } else {
                 result = selectedItem ? dataSource.filter(item => selectedItem.includes(item.id)) : [];
             }
-            setSelectedValues(result);
             onChange(result);
         }
     };

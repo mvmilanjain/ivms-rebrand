@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {MdPerson as DefaultIcon} from 'react-icons/md';
 
 import {useHttp} from 'Hooks';
@@ -24,6 +24,14 @@ const MemberSelect = (
     const [selectValues, setSelectedValues] = useState(value);
     const SelectComponent = isMulti ? AsyncMultiSelect : AsyncSelect;
 
+    useEffect(() => {
+        if (value) {
+            setSelectedValues(value);
+        } else {
+            setSelectedValues(isMulti ? [] : null);
+        }
+    }, [value]);
+
     const fetchOptions = (searchText) => new Promise((resolve, reject) => {
         const params = {
             per_page: limit, filter: {
@@ -33,7 +41,7 @@ const MemberSelect = (
         requestHandler(getMembers(params)).then(res => {
             const data = res.data;
             let options = data.map(item => ({value: item.id, label: getFullName(item)}));
-            if(isMulti && selectValues) {
+            if (isMulti && selectValues) {
                 selectValues.forEach(item => !data.includes(item.id) && data.push(item));
                 const selectValuesOption = selectValues.map(item => ({value: item.id, label: getFullName(item)}));
                 options = [...selectValuesOption, ...options];
@@ -46,28 +54,18 @@ const MemberSelect = (
         });
     });
 
-    const getSelectedValue = () => {
-        let result = null;
-        if(!isMulti) {
-            !!selectValues && (result = {value: selectValues.id, label: getFullName(selectValues)});
-        } else {
-            !!selectValues && (result = selectValues.map(item => ({
-                value: item.id,
-                label: getFullName(item)
-            })));
-        }
-        return result;
-    };
+    const getSelectedValue = () => isMulti ?
+        (selectValues ? selectValues.map(item => ({value: item.id, label: getFullName(item)})) : []) :
+        (selectValues ? ({value: selectValues.id, label: getFullName(selectValues)}) : null);
 
     const handleItemSelection = (selectedItem) => {
-        if(onChange) {
+        if (onChange) {
             let result;
-            if(!isMulti) {
+            if (!isMulti) {
                 result = selectedItem ? dataSource.find(item => item.id === selectedItem) || null : null;
             } else {
                 result = selectedItem ? dataSource.filter(item => selectedItem.includes(item.id)) : [];
             }
-            setSelectedValues(result);
             onChange(result);
         }
     };

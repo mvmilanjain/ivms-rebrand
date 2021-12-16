@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {FaTruck as DefaultIcon} from 'react-icons/fa';
 
 import {useHttp} from 'Hooks';
@@ -23,6 +23,14 @@ const VehicleSelect = (
     const [selectValues, setSelectedValues] = useState(value);
     const SelectComponent = isMulti ? AsyncMultiSelect : AsyncSelect;
 
+    useEffect(() => {
+        if(value) {
+            setSelectedValues(value);
+        } else {
+            setSelectedValues(isMulti ? [] : null);
+        }
+    }, [value]);
+
     const fetchOptions = (searchText) => new Promise((resolve, reject) => {
         const params = {per_page: limit, filter: {name_cont: searchText}};
         requestHandler(getTrucks(params)).then(res => {
@@ -41,18 +49,9 @@ const VehicleSelect = (
         });
     });
 
-    const getSelectedValue = () => {
-        let result = null;
-        if(!isMulti) {
-            !!selectValues && (result = {value: selectValues.id, label: selectValues[optionLabelKey]});
-        } else {
-            !!selectValues && (result = selectValues.map(item => ({
-                value: item.id,
-                label: item[optionLabelKey]
-            })));
-        }
-        return result;
-    };
+    const getSelectedValue = () => isMulti ?
+        (selectValues ? selectValues.map(item => ({value: item.id, label: item[optionLabelKey]})) : []) :
+        (selectValues ? ({value: selectValues.id, label: selectValues[optionLabelKey]}) : null);
 
     const handleItemSelection = (selectedItem) => {
         if(onChange) {
@@ -62,13 +61,12 @@ const VehicleSelect = (
             } else {
                 result = selectedItem ? dataSource.filter(item => selectedItem.includes(item.id)) : [];
             }
-            setSelectedValues(result);
             onChange(result);
         }
     };
 
     return (
-        <AsyncSelect
+        <SelectComponent
             placeholder={rest.placeholder || (rest.label && `Select ${rest.label.toLowerCase()}`)}
             icon={icon || (withIcon && <DefaultIcon/>)}
             limit={limit}
