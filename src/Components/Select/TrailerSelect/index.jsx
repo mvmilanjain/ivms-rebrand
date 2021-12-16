@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react';
-import {FaTruck as DefaultIcon} from 'react-icons/fa';
+import {FaTrailer as DefaultIcon} from 'react-icons/fa';
 
 import {useHttp} from 'Hooks';
-import {getTrucks} from 'Shared/Services';
+import {getTrailers} from 'Shared/Services';
 import AsyncSelect from '../AsyncSelect';
 import AsyncMultiSelect from "../AsyncMultiSelect";
 
-const VehicleSelect = (
+const TrailerSelect = (
     {
         optionLabelKey = 'name',
         value = null,
@@ -33,7 +33,7 @@ const VehicleSelect = (
 
     const fetchOptions = (searchText) => new Promise((resolve, reject) => {
         const params = {per_page: limit, filter: {name_cont: searchText}};
-        requestHandler(getTrucks(params)).then(res => {
+        requestHandler(getTrailers(params)).then(res => {
             const data = res.data;
             let options = data.map(item => ({value: item.id, label: item[optionLabelKey]}));
             if(isMulti && selectValues) {
@@ -78,4 +78,4 @@ const VehicleSelect = (
     );
 };
 
-export default VehicleSelect;
+export default TrailerSelect;

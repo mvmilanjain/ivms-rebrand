@@ -15,6 +15,7 @@ const AsyncSelect = (
         onSelection,
         fetchOptions,
         disabled,
+        searchable = true,
         ...rest
     }
 ) => {
@@ -51,7 +52,7 @@ const AsyncSelect = (
 
     return (
         <Select
-            searchable
+            searchable={searchable}
             transition="scale-y"
             nothingFound="No options"
             onDropdownOpen={() => toggleOpen(true)}

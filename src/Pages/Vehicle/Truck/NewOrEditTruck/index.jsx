@@ -6,7 +6,7 @@ import {useNotifications} from '@mantine/notifications';
 import {CalendarIcon} from '@modulz/radix-icons';
 import {MdOutlineSave as SaveIcon} from 'react-icons/md';
 
-import {ConfigFieldSelect, ContentArea} from 'Components';
+import {ConfigFieldSelect, ContentArea, MemberSelect, TrailerSelect, TrailerSolVehicleSelect} from 'Components';
 import {useHttp} from 'Hooks';
 import {Truck} from 'Shared/Models';
 import {getTruck, postTruck, putTruck} from 'Shared/Services';
@@ -43,6 +43,12 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
         }
     }, []);
 
+    const handleTrailerSolVehicleChange = (trailerSolVehicle) => {
+        const truck = new Truck(values);
+        truck.setTrailerSolVehicle(trailerSolVehicle);
+        setValues(truck);
+    };
+
     const handleCategoryChange = (category) => {
         const truck = new Truck(values);
         truck.setCategory(category);
@@ -58,6 +64,18 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
     const handleBusinessUnitChange = (businessUnit) => {
         const truck = new Truck(values);
         truck.setBusinessUnit(businessUnit);
+        setValues(truck);
+    };
+
+    const handleMemberListChange = (members) => {
+        const truck = new Truck(values);
+        truck.updateMembers(members);
+        setValues(truck);
+    };
+
+    const handleTrailerListChange = (trailers) => {
+        const truck = new Truck(values);
+        truck.updateTrailer(trailers);
         setValues(truck);
     };
 
@@ -107,7 +125,18 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
                             required
                         />
                     </Col>
-                    <Col span={8}/>
+                    <Col span={4}>
+                        <TrailerSolVehicleSelect
+                            {...register("trailersol_vehicle")}
+                            searchable={false}
+                            clearable
+                            label="TrailerSol Vehicle"
+                            onChange={handleTrailerSolVehicleChange}
+                            error={errorMessage("trailersol_vehicle_id", touched, errors)}
+                        />
+                    </Col>
+                    <Col span={4}/>
+
                     <Col span={4}>
                         <TextInput
                             {...register("vin_number")}
@@ -301,6 +330,24 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
                             label="Maintenance priority"
                             placeholder="Select maintenance priority"
                             onChange={val => setFieldValue("maintainence_priority", val)}
+                        />
+                    </Col>
+                    <Col span={4}>
+                        <MemberSelect
+                            {...register("members")}
+                            isMulti
+                            label="Drivers"
+                            onChange={handleMemberListChange}
+                            error={errorMessage("member_ids", touched, errors)}
+                        />
+                    </Col>
+                    <Col span={4}>
+                        <TrailerSelect
+                            {...register("trailer")}
+                            isMulti
+                            label="Trailer"
+                            onChange={handleTrailerListChange}
+                            error={errorMessage("trailer_id", touched, errors)}
                         />
                     </Col>
 
