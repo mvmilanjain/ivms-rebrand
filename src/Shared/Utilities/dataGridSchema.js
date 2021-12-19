@@ -442,36 +442,3 @@ export const STD_VS_ACTUAL = [
     {name: 'actual_time_cycle', header: 'Actual Time Cycle'},
     {name: 'std_act', header: 'Standard vs Actual'}
 ];
-
-export const ALL_MONTH_SCHEMA = [
-    {name: '1', header: 'Jan'},
-    {name: '2', header: 'Feb'},
-    {name: '3', header: 'Mar'},
-    {name: '4', header: 'Apr'},
-    {name: '5', header: 'May'},
-    {name: '6', header: 'Jun'},
-    {name: '7', header: 'Jul'},
-    {name: '8', header: 'Aug'},
-    {name: '9', header: 'Sep'},
-    {name: '10', header: 'Oct'},
-    {name: '11', header: 'Nov'},
-    {name: '12', header: 'Dec'}
-];
-
-export const SUMMARY_REVENUE = [
-    {name: 'type', header: 'Load Type', width: 200},
-    {name: 'total', header: 'Total', width: 120},
-    ...ALL_MONTH_SCHEMA
-];
-
-export const SUMMARY_POD = [
-    {name: 'type', header: 'POD Type', width: 200},
-    {name: 'total', header: 'Total', width: 120},
-    ...ALL_MONTH_SCHEMA
-];
-
-export const SUMMARY_INVOICE = [
-    {name: 'type', header: 'Invoice Type', width: 200},
-    {name: 'total', header: 'Total', width: 120},
-    ...ALL_MONTH_SCHEMA
-];

@@ -25,10 +25,10 @@ const navList = [
     {id: 'route', path: '/Route', label: 'Route', icon: RouteIcon, color: 'teal'},
     {
         id: 'routeOrder', label: 'Route Order', icon: RouteOrderIcon, color: 'lime', subNav: [
-            {id: 'planning', path: '/RouteOrder/Planning', label: 'Planning'},
-            {id: 'operation', path: '/RouteOrder/Operation', label: 'Operation'},
-            {id: 'finance', path: '/RouteOrder/Finance', label: 'Finance'},
-            {id: 'reports', path: '/RouteOrder/Reports', label: 'Reports'}
+            {id: 'planning', path: '/RoutePlanner/Planning', label: 'Planning'},
+            {id: 'operation', path: '/RoutePlanner/Operation', label: 'Operation'},
+            {id: 'finance', path: '/RoutePlanner/Finance', label: 'Finance'},
+            {id: 'reports', path: '/RoutePlanner/Reports', label: 'Reports'}
         ]
     },
     {

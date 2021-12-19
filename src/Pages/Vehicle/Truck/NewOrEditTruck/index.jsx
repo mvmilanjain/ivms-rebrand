@@ -335,7 +335,7 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
                     <Col span={4}>
                         <MemberSelect
                             {...register("members")}
-                            isMulti
+                            isMulti withIcon
                             label="Drivers"
                             onChange={handleMemberListChange}
                             error={errorMessage("member_ids", touched, errors)}
@@ -344,7 +344,7 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
                     <Col span={4}>
                         <TrailerSelect
                             {...register("trailer")}
-                            isMulti
+                            isMulti withIcon
                             label="Trailer"
                             onChange={handleTrailerListChange}
                             error={errorMessage("trailer_id", touched, errors)}

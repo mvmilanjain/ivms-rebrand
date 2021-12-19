@@ -8,11 +8,11 @@ import Trailer from './Trailer';
 
 const Vehicle = ({history, location}) => {
     const [tabIndex, setTabIndex] = useState(location.state ? location.state.tabIndex : 0);
-    const [initialTabIndex] = useState(location.state ? location.state.tabIndex : 0)
+    const [initialTabIndex] = useState(location.state ? location.state.tabIndex : 0);
 
     return (
         <ContentArea>
-            <Tabs onTabChange={setTabIndex} tabIndex={tabIndex} initialTab={initialTabIndex}>
+            <Tabs onTabChange={setTabIndex} tabIndex={tabIndex} initialTab={initialTabIndex} tabPadding="md">
                 <Tabs.Tab label="Truck" icon={<TruckIcon/>}>
                     {tabIndex === 0 && <Truck history={history}/>}
                 </Tabs.Tab>

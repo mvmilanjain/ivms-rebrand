@@ -1,66 +1,22 @@
-import {Col, Grid, Group, Title} from '@mantine/core';
+import {Tabs} from '@mantine/core';
+import {AiOutlineTable as DetailedReportIcon} from 'react-icons/ai';
+import {MdOutlineSummarize as SummaryIcon} from 'react-icons/md';
 
-import {AddressSelect, ConfigFieldSelect, RouteSelect, ContentArea, MemberSelect, VehicleSelect} from 'Components';
-import {CONFIG_FIELD_TYPE} from "../../Shared/Utilities/constant";
+import {ContentArea} from 'Components';
+import Summary from './Summary';
+import DetailReports from './DetailReports';
 
 const Dashboard = (props) => {
-
-    const handleItemSelection = (item) => console.log(item);
-
     return (
-        <ContentArea withPaper limitToViewPort>
-            <Group position="apart" mb="md">
-                <Title order={2}>Dashboard</Title>
-            </Group>
-
-            <div style={{height: 'calc(100% - 60px)'}}>
-                <Grid justify="center">
-                    <Col span={4}>
-                        <Group direction="column" grow>
-                            <AddressSelect
-                                label="Address"
-                                withIcon
-                                clearable
-                                isMulti
-                                onChange={handleItemSelection}
-                            />
-
-                            <RouteSelect
-                                label="Route"
-                                withIcon
-                                clearable
-                                isMulti
-                                onChange={handleItemSelection}
-                            />
-
-                            <VehicleSelect
-                                label="Vehicle"
-                                withIcon
-                                clearable
-                                isMulti
-                                onChange={handleItemSelection}
-                            />
-
-                            <MemberSelect
-                                label="Member"
-                                withIcon
-                                clearable
-                                isMulti
-                                onChange={handleItemSelection}
-                            />
-
-                            <ConfigFieldSelect
-                                label="Contractor"
-                                fieldType={CONFIG_FIELD_TYPE.ROUTE_PLANNER_CONTRACTOR}
-                                withIcon
-                                clearable
-                                isMulti
-                                onChange={handleItemSelection}
-                            />
-                        </Group>
-                    </Col>
-                </Grid>
-            </div>
+        <ContentArea>
+            <Tabs tabPadding="md">
+                <Tabs.Tab label="Summary" icon={<SummaryIcon/>}>
+                    <Summary/>
+                </Tabs.Tab>
+                <Tabs.Tab label="Detailed Report" icon={<DetailedReportIcon/>}>
+                    <DetailReports/>
+                </Tabs.Tab>
+            </Tabs>
         </ContentArea>
     );
 };

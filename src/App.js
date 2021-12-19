@@ -4,11 +4,15 @@ import {useHistory} from 'react-router-dom';
 import {LoadingOverlay, MantineProvider} from '@mantine/core';
 import {ModalsProvider} from '@mantine/modals';
 import {NotificationsProvider} from '@mantine/notifications';
+import {Chart} from 'react-chartjs-2';
 
 import {GlobalStyles} from 'Assets/GlobalStyles';
-import {Main1Layout, Main2Layout, Main3Layout, MinimalLayout} from 'Layout';
+import {Main1Layout, MinimalLayout} from 'Layout';
 import Routes from 'Routes';
+import {draw} from 'Mixins/chartjs';
 import {authCheckState} from 'Store/actions/auth.actions';
+
+Chart.helpers.extend(Chart.elements.Rectangle.prototype, {draw: draw});
 
 const App = () => {
     const history = useHistory();

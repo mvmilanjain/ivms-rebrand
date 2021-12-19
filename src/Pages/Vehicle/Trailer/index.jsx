@@ -88,7 +88,7 @@ const Trailer = ({history}) => {
     };
 
     return (
-        <ContentArea withPaper limitToViewPort heightToReduce={200}>
+        <ContentArea withPaper limitToViewPort heightToReduce={184} withPadding={false}>
             <Group position="right" mb="md">
                 <Button
                     leftIcon={<FilterIcon/>} size="xs" variant="outline"

@@ -18,7 +18,7 @@ export const PRIORITY2 = [
     {value:'emergency', label: 'Emergency'}
 ];
 export const TRIP_STATUS = [
-    {label: 'Trip is not started', value: 'not_started'},
+    {label: 'Not Started', value: 'not_started'},
     {label: 'In-Progress', value: 'in_progress'},
     {label: 'Completed', value: 'completed'},
     {label: 'Cancelled', value: 'cancelled'}
