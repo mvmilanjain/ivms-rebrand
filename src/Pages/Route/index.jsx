@@ -119,7 +119,6 @@ const Route = ({history}) => {
                     loading={loading}
                     reload={state.reload}
                     stickyHeader sorting
-                    // filtering
                     pagination initialPageSize={50}
                     {...state.pagination}
                     outerFilter={state.outerFilter}

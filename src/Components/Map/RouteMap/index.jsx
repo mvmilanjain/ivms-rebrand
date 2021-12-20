@@ -1,4 +1,5 @@
 import {useEffect} from 'react';
+import {Paper} from '@mantine/core';
 import {useNotifications} from '@mantine/notifications';
 
 import {LATLNG} from 'Shared/Utilities/constant';
@@ -60,7 +61,7 @@ const RouteMap = ({route, activeStoppages, initialLoad, onChange}) => {
         });
     };
 
-    return <div style={{height: '100%'}} id="route-map"/>
+    return <Paper withBorder radius="md" style={{height: '100%'}} id="route-map"/>
 };
 
 export default RouteMap;

@@ -68,8 +68,8 @@ const renderPodStatus = ({value}) => {
 };
 
 export const ROUTE_SCHEMA = [
-    {accessor: 'route_code', Header: 'Route Code'},
-    {accessor: 'name', Header: 'Route Name'},
+    {accessor: 'route_code', Header: 'Code'},
+    {accessor: 'name', Header: 'Name'},
     {
         accessor: 'source_address.address1', Header: 'Source',
         Cell: ({row}) => getAddressLabel(row.original.source_address)
@@ -78,8 +78,14 @@ export const ROUTE_SCHEMA = [
         accessor: 'destination_address.address1', Header: 'Destination',
         Cell: ({row}) => getAddressLabel(row.original.destination_address)
     },
-    {accessor: 'std_distance_cycle', Header: 'Distance (KM)'},
-    {accessor: 'std_cycle_hours', Header: 'Cycle Hours'}
+    {
+        accessor: 'std_distance_cycle', Header: 'Distance',
+        Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
+    },
+    {
+        accessor: 'std_cycle_hours', Header: 'Cycle Hours', align: 'center',
+        cellMinWidth: 160, Cell: ({value}) => value ? <Badge radius="sm">{value}</Badge> : ''
+    }
 ];
 
 export const ROUTE_PLANNER_SCHEMA = {

@@ -1,5 +1,5 @@
 import {forwardRef, useCallback, useEffect} from 'react';
-import {Box} from '@mantine/core';
+import {Paper} from '@mantine/core';
 
 let map = null;
 let marker = null;
@@ -55,7 +55,7 @@ const AddressMap = forwardRef(({address, isClosing, onClose, onMarkerChange}, re
         onMarkerChange && onMarkerChange({latitude, longitude});
     }, []);
 
-    return <Box id="address-map" ref={ref} sx={t => ({boxShadow: t.shadows.md, height: '100%'})}/>
+    return <Paper withBorder radius="md" id="address-map" ref={ref} style={{height: '100%'}}/>
 });
 
 export default AddressMap;

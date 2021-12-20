@@ -8,14 +8,14 @@ const Filters = ({data, onConfirm}) => {
     return (
         <>
             <TextInput
-                label="Route Code" mb="lg"
-                placeholder="Enter route code"
+                label="Code" mb="lg"
+                placeholder="Enter code"
                 value={state?.route_code_cont}
                 onChange={e => setState({route_code_cont: e.target.value})}
             />
             <TextInput
-                label="Route Name" mb="lg"
-                placeholder="Enter route name"
+                label="Name" mb="lg"
+                placeholder="Enter name"
                 value={state?.name_cont}
                 onChange={e => setState({name_cont: e.target.value})}
             />

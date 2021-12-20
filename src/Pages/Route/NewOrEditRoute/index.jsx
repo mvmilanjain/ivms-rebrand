@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import get from 'lodash/get';
 import {useFormik} from 'formik';
-import {ActionIcon, Button, Col, Divider, Grid, Group, NumberInput, SimpleGrid, TextInput, Title} from '@mantine/core';
+import {ActionIcon, Button, Col, Divider, Grid, Group, NumberInput, SimpleGrid, TextInput, Title, Text} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useNotifications} from '@mantine/notifications';
 import {useModals} from '@mantine/modals';
@@ -284,8 +284,8 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
                     </Col>
 
                     <Col span={5}>
-                        <Title order={4} mb="xs">Route Map</Title>
-                        <div style={{height: 'calc(100% - 36px)'}}>
+                        <Text size="lg" weight={500}>Route Map</Text>
+                        <div style={{height: 'calc(100% - 30px)'}}>
                             <RouteMap {...routeMapState} onChange={calculateTimeAndDistanceForRoute}/>
                         </div>
                     </Col>
