@@ -20,7 +20,7 @@ import {AiOutlineInbox} from 'react-icons/ai';
 import filterTypes from './filterTypes';
 import {StringFilter} from './Filters';
 
-const pageSizeOptions = ['10', '25', '50', '100'];
+const pageSizeOptions = ['25', '50', '100'];
 
 const useStyles = createStyles((t) => ({
     root: {height: '100%', display: 'block'},
@@ -29,8 +29,8 @@ const useStyles = createStyles((t) => ({
         overflow: 'auto',
         '& > table': {
             '& > thead': {backgroundColor: t.colors.gray[0], zIndex: 1},
-            '& > thead > tr > th': {padding: t.spacing.md},
-            '& > tbody > tr > td': {padding: t.spacing.md},
+            '& > thead > tr > th': {padding: t.spacing.sm},
+            // '& > tbody > tr > td': {padding: t.spacing.md},
         }
     },
     stickHeader: {top: 0, position: 'sticky'},

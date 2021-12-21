@@ -58,7 +58,7 @@ const NewOrEditProduct = ({history, location, match, ...rest}) => {
                 <ProductRouteForm
                     data={new ProductRoute()}
                     action="New"
-                    onConfirm={(productRoute, action, index) => {
+                    onConfirm={(productRoute) => {
                         modals.closeModal(id);
                         const product = new Product(values);
                         product.addProductRoute(productRoute);

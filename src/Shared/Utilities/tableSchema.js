@@ -1,4 +1,4 @@
-import {Badge, Tooltip, ThemeIcon} from '@mantine/core';
+import {Badge, Tooltip, ThemeIcon, Text} from '@mantine/core';
 import {CalendarIcon, CheckIcon, Cross2Icon} from '@modulz/radix-icons';
 import {capitalizeStr, formatDate, formatDateTime, getAddressLabel, getFullName, getOptionLabel} from './common.util';
 import {POD_STATUS, TRIP_STATUS as TRIP_STATUS_LIST, VEHICLE_STATUS} from './referenceData.util';
@@ -6,7 +6,7 @@ import {TRIP_STATUS} from './constant';
 
 const renderBoolean = ({value}) => {
     let result = '';
-    if(typeof value === 'boolean') {
+    if (typeof value === 'boolean') {
         result = value ?
             <ThemeIcon variant="light" color="green"><CheckIcon/></ThemeIcon> :
             <ThemeIcon variant="light" color="red"><Cross2Icon/></ThemeIcon>;
@@ -69,17 +69,25 @@ const renderPodStatus = ({value}) => {
 
 export const ROUTE_SCHEMA = [
     {accessor: 'route_code', Header: 'Code'},
-    {accessor: 'name', Header: 'Name'},
+    {
+        accessor: 'name', Header: 'Name', Cell: ({value}) => <Tooltip label={value} withArrow>
+            <Text size="sm" lineClamp={1}>{value}</Text>
+        </Tooltip>
+    },
     {
         accessor: 'source_address.address1', Header: 'Source',
-        Cell: ({row}) => getAddressLabel(row.original.source_address)
+        Cell: ({row}) => <Tooltip label={getAddressLabel(row.original.source_address)} withArrow>
+            <Text size="sm" lineClamp={1}>{getAddressLabel(row.original.source_address)}</Text>
+        </Tooltip>
     },
     {
         accessor: 'destination_address.address1', Header: 'Destination',
-        Cell: ({row}) => getAddressLabel(row.original.destination_address)
+        Cell: ({row}) => <Tooltip label={getAddressLabel(row.original.destination_address)} withArrow>
+            <Text size="sm" lineClamp={1}>{getAddressLabel(row.original.destination_address)}</Text>
+        </Tooltip>
     },
     {
-        accessor: 'std_distance_cycle', Header: 'Distance',
+        accessor: 'std_distance_cycle', Header: 'Distance', align: 'center',
         Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
     },
     {
@@ -266,7 +274,11 @@ export const DASHBOARD = {
             {accessor: 'type_of_load', Header: 'Commodity'},
             {accessor: 'planned_tonnage', Header: 'Standard Load Weight (Kg)'},
             {accessor: 'planned_cycle_time', Header: 'Standard Cycle Time'},
-            {accessor: 'planned_load_start_time', Header: 'Planned Start Time', Cell: ({value}) => formatDateTime(value)},
+            {
+                accessor: 'planned_load_start_time',
+                Header: 'Planned Start Time',
+                Cell: ({value}) => formatDateTime(value)
+            },
             {accessor: 'planned_eta_destination', Header: 'Planned End Time', Cell: ({value}) => formatDateTime(value)},
             {accessor: 'actual_start_time', Header: 'Actual Start Time', Cell: ({value}) => formatDateTime(value)},
             {accessor: 'actual_end_time', Header: 'Actual End Time', Cell: ({value}) => formatDateTime(value)},
@@ -360,8 +372,10 @@ export const VEHICLE = {
         },
         {accessor: 'status', Header: 'Status', align: 'center', Cell: renderVehicleStatus},
         {
-            accessor: 'license_expiry', Header: 'License Expiry', align: 'center',
-            Cell: ({value}) => value ? <Badge radius="sm" color="cyan">{formatDate(value)}</Badge> : ''
+            accessor: 'license_expiry', Header: 'License Expiry', align: 'center', Cell: ({value}) => value ?
+                <Badge radius="sm" color="cyan" leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}>
+                    {formatDate(value)}
+                </Badge> : ''
         }
     ]
 };
