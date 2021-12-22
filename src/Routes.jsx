@@ -10,7 +10,6 @@ const RoutePage = {
     NewOrEdit: loadable(() => import('Pages/Route/NewOrEditRoute'))
 };
 const RoutePlanner = loadable(() => import('Pages/RoutePlanner'));
-const Reports = loadable(() => import('Pages/RoutePlanner/Reports'));
 const Laborcode = loadable(() => import('Pages/Maintenance/Laborcode'));
 const Request = loadable(() => import('Pages/Maintenance/Request'));
 const Scheduler = loadable(() => import('Pages/Maintenance/Scheduler'));

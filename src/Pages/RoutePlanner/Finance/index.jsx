@@ -1,13 +1,11 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Drawer, Group, Menu} from '@mantine/core';
+import {ActionIcon, Button, Group, Menu} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
 import {DotsVerticalIcon} from '@modulz/radix-icons';
-import {
-    MdOutlineEdit as EditIcon,
-    MdOutlineFilterList as FilterIcon
-} from 'react-icons/md';
+import {MdOutlineEdit as EditIcon, MdOutlineFilterList as FilterIcon} from 'react-icons/md';
+
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {getRouteOrders} from 'Shared/Services';
@@ -85,15 +83,12 @@ const Finance = ({history, ...rest}) => {
                     outerFilter={state.outerFilter}
                 />
             </div>
-            <Drawer
+            <Filters
                 opened={openFilterDrawer}
                 onClose={() => toggleFilterDrawer(false)}
-                position="right"
-                title="Filters"
-                padding="xl" size="xl"
-            >
-                {openFilterDrawer && <Filters data={state.outerFilter} onConfirm={handleFilterApply}/>}
-            </Drawer>
+                data={state.outerFilter}
+                onConfirm={handleFilterApply}
+            />
         </ContentArea>
     );
 };

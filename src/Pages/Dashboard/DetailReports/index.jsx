@@ -1,13 +1,13 @@
 import {useState} from 'react';
 import {Autocomplete, Box, Button, Group} from '@mantine/core';
-import {MdOutlineCloudDownload as ExportIcon} from 'react-icons/md';
+import {AiOutlineExport as ExportIcon} from 'react-icons/ai';
 
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {getReports} from 'Shared/Services';
 import {REPORT_TYPE} from 'Shared/Utilities/constant';
 import {DASHBOARD} from 'Shared/Utilities/tableSchema';
-import {exportCSV} from "../../../Shared/Utilities/common.util";
+import {exportCSV} from 'Shared/Utilities/common.util';
 
 const REPORT_TYPE_LIST = [
     {value: 'Revenue Master', type: REPORT_TYPE.REVENUE_MASTER, schema: DASHBOARD.REPORTS.REVENUE_MASTER},
@@ -75,13 +75,12 @@ const DetailReports = (props) => {
             <Group mb="md">
                 <Box mr="xl" style={{flexGrow: 1}}>
                     <Autocomplete
-                        size="xs"
                         placeholder="Select report type"
                         data={REPORT_TYPE_LIST}
                         onItemSubmit={handleReportTypeChange}
                     />
                 </Box>
-                <Button leftIcon={<ExportIcon/>} size="xs" onClick={handleExport} color="green" disabled={!report.type}>
+                <Button leftIcon={<ExportIcon/>} onClick={handleExport} color="green" disabled={!report.type}>
                     Export
                 </Button>
             </Group>

@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Drawer, Group, Menu, Title} from '@mantine/core';
+import {ActionIcon, Button, Group, Menu, Title} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
@@ -17,7 +17,7 @@ import {useHttp} from 'Hooks';
 import {deleteRoute, getRoutes} from 'Shared/Services';
 import {getSortText} from 'Shared/Utilities/common.util';
 import {ROUTE_SCHEMA} from 'Shared/Utilities/tableSchema';
-import Filters from "./Filters";
+import Filters from './Filters';
 
 const Route = ({history}) => {
     const {requestHandler} = useHttp();
@@ -124,15 +124,12 @@ const Route = ({history}) => {
                     outerFilter={state.outerFilter}
                 />
             </div>
-            <Drawer
+            <Filters
                 opened={openFilterDrawer}
                 onClose={() => toggleFilterDrawer(false)}
-                position="right"
-                title="Filters"
-                padding="xl" size="xl"
-            >
-                {openFilterDrawer && <Filters data={state.outerFilter} onConfirm={handleFilterApply}/>}
-            </Drawer>
+                data={state.outerFilter}
+                onConfirm={handleFilterApply}
+            />
         </ContentArea>
     );
 };

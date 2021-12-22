@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Drawer, Group, Menu} from '@mantine/core';
+import {ActionIcon, Button, Group, Menu} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
@@ -8,15 +8,14 @@ import {
     MdOutlineAddBox as CreateIcon,
     MdOutlineDelete as DeleteIcon,
     MdOutlineEdit as EditIcon,
-    MdOutlineFilterList as FilterIcon,
-    MdOutlineVisibility as ViewIcon
+    MdOutlineFilterList as FilterIcon
 } from 'react-icons/md';
 
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {deleteTruck, getTrucks} from 'Shared/Services';
 import {VEHICLE} from 'Shared/Utilities/tableSchema';
-import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
+import {getSortText} from 'Shared/Utilities/common.util';
 import Filters from "./Filters";
 
 const Truck = ({history}) => {
@@ -121,15 +120,12 @@ const Truck = ({history}) => {
                     outerFilter={state.outerFilter}
                 />
             </div>
-            <Drawer
+            <Filters
                 opened={openFilterDrawer}
                 onClose={() => toggleFilterDrawer(false)}
-                position="right"
-                title="Filters"
-                padding="xl" size="xl"
-            >
-                {openFilterDrawer && <Filters data={state.outerFilter} onConfirm={handleFilterApply}/>}
-            </Drawer>
+                data={state.outerFilter}
+                onConfirm={handleFilterApply}
+            />
         </ContentArea>
     );
 };

@@ -4,7 +4,7 @@ import {BrowserRouter} from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
 
 import App from './App';
-import store from "./Store/store";
+import store from './Store/store';
 
 ReactDOM.render(
     <Provider store={store}><BrowserRouter><App/></BrowserRouter></Provider>,

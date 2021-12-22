@@ -1,33 +1,40 @@
-import {Button, Group, Select, TextInput} from '@mantine/core';
+import {Button, Divider, Drawer, Group, ScrollArea, Select, TextInput} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 
 import {TRIP_STATUS} from 'Shared/Utilities/referenceData.util';
 
-const Filters = ({data, onConfirm}) => {
+const Filters = ({opened, onClose, data, onConfirm}) => {
 
     const [state, setState] = useSetState(data || {});
 
     return (
-        <>
-            <TextInput
-                label="Order number" mb="lg"
-                placeholder="Enter order number"
-                value={state?.order_number_cont}
-                onChange={e => setState({order_number_cont: e.target.value})}
-            />
-            <Select
-                label="Status"
-                placeholder="Select status"
-                mb="lg" clearable
-                data={TRIP_STATUS}
-                value={state?.status_eq}
-                onChange={val => setState({status_eq: val})}
-            />
-            <Group position="right">
-                <Button variant="default" onClick={() => onConfirm({})}>Clear All</Button>
+        <Drawer opened={opened} onClose={onClose} position="right" title="Filters" padding="lg">
+            <Divider mb="md" variant="dotted"/>
+
+            <ScrollArea style={{height: 'calc(100% - 128px)'}}>
+                <TextInput
+                    label="Order number" mb="lg"
+                    placeholder="Enter order number"
+                    value={state?.order_number_cont}
+                    onChange={e => setState({order_number_cont: e.target.value})}
+                />
+                <Select
+                    label="Status"
+                    placeholder="Select status"
+                    mb="lg" clearable
+                    data={TRIP_STATUS}
+                    value={state?.status_eq}
+                    onChange={val => setState({status_eq: val})}
+                />
+            </ScrollArea>
+
+            <Divider my="md" variant="dotted"/>
+
+            <Group position="apart">
+                <Button variant="outline" color="red" onClick={() => onConfirm({})}>Clear All</Button>
                 <Button onClick={() => onConfirm(state)}>Apply Filter</Button>
             </Group>
-        </>
+        </Drawer>
     );
 };
 
