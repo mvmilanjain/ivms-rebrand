@@ -1,15 +1,24 @@
 import {useState} from 'react';
 import {Tabs} from '@mantine/core';
-import {MdOutlineInsertDriveFile as PlanIcon, MdOutlineTask as OperationIcon, MdMoney as FinanceIcon} from 'react-icons/md';
+import {
+    MdMoney as FinanceIcon,
+    MdOutlineInsertDriveFile as PlanIcon,
+    MdOutlineTask as OperationIcon
+} from 'react-icons/md';
 
 import {ContentArea} from 'Components';
 import Planning from './Planning';
 import Operation from './Operation';
 import Finance from './Finance';
 
-const RoutePlanner = ({history, location}) => {
-    const [tabIndex, setTabIndex] = useState(location.state ? location.state.tabIndex : 0);
-    const [initialTabIndex] = useState(location.state ? location.state.tabIndex : 0);
+const RoutePlanner = ({history, location, match}) => {
+    const [tabIndex, setTabIndex] = useState(Number(match.params.tabIndex));
+    const [initialTabIndex] = useState(Number(match.params.tabIndex));
+
+    const handleTabChange = (index) => {
+        setTabIndex(index);
+        history.push(`/RoutePlanner/${index}`);
+    };
 
     return (
         <ContentArea>
@@ -17,7 +26,7 @@ const RoutePlanner = ({history, location}) => {
                 tabPadding="md"
                 initialTab={initialTabIndex}
                 tabIndex={tabIndex}
-                onTabChange={setTabIndex}
+                onTabChange={handleTabChange}
             >
                 <Tabs.Tab label="Planning" icon={<PlanIcon/>}>
                     {tabIndex === 0 && <Planning history={history}/>}

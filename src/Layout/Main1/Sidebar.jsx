@@ -19,7 +19,7 @@ import {getInitials} from 'Shared/Utilities/common.util';
 const navList = [
     {id: 'dashboard', path: '/Dashboard', label: 'Dashboard', icon: DashboardIcon, color: 'blue'},
     {id: 'route', path: '/Route', label: 'Route', icon: RouteIcon, color: 'teal'},
-    {id: 'routePlanner', path: '/RoutePlanner', label: 'Route Planner', icon: RouteOrderIcon, color: 'lime'},
+    {id: 'routePlanner', path: '/RoutePlanner/0', label: 'Route Planner', icon: RouteOrderIcon, color: 'lime'},
     /*{
         id: 'routeOrder', label: 'Route Order', icon: RouteOrderIcon, color: 'lime', subNav: [
             {id: 'planning', path: '/RoutePlanner/Planning', label: 'Planning'},

@@ -47,7 +47,7 @@ const pagesWithAuthentication = [
     {id: "newRoute", path: "/Route/New", component: RoutePage.NewOrEdit},
     {id: "editRoute", path: "/Route/Edit/:id", component: RoutePage.NewOrEdit},
 
-    {id: "routePlanner", path: "/RoutePlanner", component: RoutePlanner},
+    {id: "routePlanner", path: "/RoutePlanner/:tabIndex", component: RoutePlanner},
     {id: "routePlannerFinance", path: "/RoutePlanner/Finance/:id", component: Finance},
 
     {id: "laborcode", path: "/Maintenance/Laborcode", component: Laborcode},
