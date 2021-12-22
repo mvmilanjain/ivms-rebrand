@@ -4,12 +4,20 @@ import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
 import {DotsVerticalIcon} from '@modulz/radix-icons';
-import {MdOutlineEdit as EditIcon, MdOutlineFilterList as FilterIcon} from 'react-icons/md';
+import {
+    MdOutlineCancelPresentation as CancelTripIcon,
+    MdOutlineCheckCircle as CompleteTripIcon,
+    MdOutlineEdit as EditIcon,
+    MdOutlineFilterList as FilterIcon,
+    MdOutlineVisibility as ViewIcon,
+    MdPlayCircleOutline as StartTripIcon
+} from 'react-icons/md';
 import {AiOutlineExport as ExportIcon} from 'react-icons/ai';
 
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {getRouteOrders} from 'Shared/Services';
+import {TRIP_STATUS} from 'Shared/Utilities/constant';
 import {ROUTE_PLANNER_SCHEMA} from 'Shared/Utilities/tableSchema';
 import {exportCSV, getSortText} from 'Shared/Utilities/common.util';
 import Filters from './Filters';
@@ -42,11 +50,21 @@ const Operation = ({history, ...rest}) => {
         }).catch(e => console.error(e)).finally(() => toggleLoading(l => !l));
     }, []);
 
-    const renderActions = ({value}) => {
+    const renderActions = ({row, value}) => {
+        const status = row.original.status;
         return (
             <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
-                <Menu.Item icon={<EditIcon/>}>Edit Plan</Menu.Item>
-                {/*<Menu.Item icon={<ViewIcon/>}>View Trailer</Menu.Item>*/}
+                <Menu.Label>Operation</Menu.Label>
+                {(status === TRIP_STATUS.IN_PROGRESS || status === TRIP_STATUS.COMPLETED) && (
+                    <Menu.Item icon={<EditIcon/>}>Edit Operation</Menu.Item>
+                )}
+                <Menu.Item icon={<ViewIcon/>}>View Operation</Menu.Item>
+
+                {status === TRIP_STATUS.COMPLETED && <Menu.Label>Finance</Menu.Label>}
+                {status === TRIP_STATUS.COMPLETED && <Menu.Item icon={<EditIcon/>}>Edit Finance</Menu.Item>}
+
+                {status === TRIP_STATUS.IN_PROGRESS && <Menu.Label>Event</Menu.Label>}
+                {status === TRIP_STATUS.IN_PROGRESS && <Menu.Item icon={<CompleteTripIcon/>}>Complete Trip</Menu.Item>}
             </Menu>
         );
     };
@@ -81,10 +99,7 @@ const Operation = ({history, ...rest}) => {
             <div style={{height: 'calc(100% - 48px)'}}>
                 <ReactTable
                     columns={[
-                        {
-                            accessor: 'id', Header: '', disableFilters: true,
-                            disableSortBy: true, Cell: renderActions
-                        },
+                        {accessor: 'id', Header: '', disableSortBy: true, Cell: renderActions},
                         ...ROUTE_PLANNER_SCHEMA.OPERATIONS
                     ]}
                     data={state.data}

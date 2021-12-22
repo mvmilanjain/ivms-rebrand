@@ -1,7 +1,12 @@
 import {Button, Divider, Drawer, Group, ScrollArea, Select, TextInput} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 
-import {TRIP_STATUS} from 'Shared/Utilities/referenceData.util';
+const TRIP_STATUS = [
+    {label: 'Not Started', value: '0'},
+    {label: 'In-Progress', value: '1'},
+    {label: 'Completed', value: '2'},
+    {label: 'Cancelled', value: '3'}
+];
 
 const Filters = ({opened, onClose, data, onConfirm}) => {
 

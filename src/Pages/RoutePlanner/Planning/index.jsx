@@ -1,19 +1,25 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Drawer, Group, Menu} from '@mantine/core';
+import {ActionIcon, Button, Group, Menu} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
 import {DotsVerticalIcon} from '@modulz/radix-icons';
 import {
     MdOutlineAddBox as CreateIcon,
+    MdOutlineCancelPresentation as CancelTripIcon,
+    MdOutlineCheckCircle as CompleteTripIcon,
     MdOutlineEdit as EditIcon,
-    MdOutlineFilterList as FilterIcon
+    MdOutlineFileCopy as CopyIcon,
+    MdOutlineFilterList as FilterIcon,
+    MdOutlineVisibility as ViewIcon,
+    MdPlayCircleOutline as StartTripIcon
 } from 'react-icons/md';
 import {AiOutlineExport as ExportIcon} from 'react-icons/ai';
 
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {getRouteOrders} from 'Shared/Services';
+import {TRIP_STATUS} from 'Shared/Utilities/constant';
 import {ROUTE_PLANNER_SCHEMA} from 'Shared/Utilities/tableSchema';
 import {exportCSV, getSortText} from 'Shared/Utilities/common.util';
 import Filters from './Filters';
@@ -44,11 +50,31 @@ const Planning = ({history, ...rest}) => {
         }).catch(e => console.error(e)).finally(() => toggleLoading(l => !l));
     }, []);
 
-    const renderActions = ({value}) => {
+    const renderActions = ({row, value}) => {
+        const status = row.original.status;
         return (
-            <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
+            <Menu withArrow control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
+                <Menu.Label>Planning</Menu.Label>
                 <Menu.Item icon={<EditIcon/>}>Edit Plan</Menu.Item>
-                {/*<Menu.Item icon={<ViewIcon/>}>View Trailer</Menu.Item>*/}
+                <Menu.Item icon={<CopyIcon/>}>Copy Plan</Menu.Item>
+                <Menu.Item icon={<ViewIcon/>}>View Plan</Menu.Item>
+
+                {(status === TRIP_STATUS.IN_PROGRESS || status === TRIP_STATUS.COMPLETED) && (
+                    <Menu.Label>Operation</Menu.Label>
+                )}
+                {(status === TRIP_STATUS.IN_PROGRESS || status === TRIP_STATUS.COMPLETED) && (
+                    <Menu.Item icon={<EditIcon/>}>Edit Operation</Menu.Item>
+                )}
+
+                {status === TRIP_STATUS.COMPLETED && <Menu.Label>Finance</Menu.Label>}
+                {status === TRIP_STATUS.COMPLETED && <Menu.Item icon={<EditIcon/>}>Edit Finance</Menu.Item>}
+
+                {(status === TRIP_STATUS.NOT_STARTED || status === TRIP_STATUS.IN_PROGRESS) && (
+                    <Menu.Label>Event</Menu.Label>
+                )}
+                {status === TRIP_STATUS.NOT_STARTED && <Menu.Item icon={<StartTripIcon/>}>Start Trip</Menu.Item>}
+                {status === TRIP_STATUS.IN_PROGRESS && <Menu.Item icon={<CompleteTripIcon/>}>Complete Trip</Menu.Item>}
+                {status === TRIP_STATUS.NOT_STARTED && <Menu.Item icon={<CancelTripIcon/>}>Cancel Trip</Menu.Item>}
             </Menu>
         );
     };
@@ -81,17 +107,12 @@ const Planning = ({history, ...rest}) => {
                 >
                     Export
                 </Button>
-                <Button leftIcon={<CreateIcon/>} compact onClick={handleCreate}>
-                    Create Plan
-                </Button>
+                <Button leftIcon={<CreateIcon/>} compact onClick={handleCreate}>Create Plan</Button>
             </Group>
             <div style={{height: 'calc(100% - 48px)'}}>
                 <ReactTable
                     columns={[
-                        {
-                            accessor: 'id', Header: '', disableFilters: true,
-                            disableSortBy: true, Cell: renderActions
-                        },
+                        {accessor: 'id', Header: '', disableSortBy: true, Cell: renderActions},
                         ...ROUTE_PLANNER_SCHEMA.PLANNING
                     ]}
                     data={state.data}

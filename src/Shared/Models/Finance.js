@@ -3,6 +3,7 @@ class Finance {
         const {
             id = '',
             order_number = '',
+            status = '',
             document_validated = false,
             document_sent_to_client = false,
             payment_recieved = false,
@@ -10,6 +11,7 @@ class Finance {
         } = props || {};
         this.id = id;
         this.order_number = order_number;
+        this.status = status;
         this.order_state = 'finance';
         this.document_validated = document_validated;
         this.document_sent_to_client = document_sent_to_client;

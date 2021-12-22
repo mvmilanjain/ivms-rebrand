@@ -10,6 +10,7 @@ const RoutePage = {
     NewOrEdit: loadable(() => import('Pages/Route/NewOrEditRoute'))
 };
 const RoutePlanner = loadable(() => import('Pages/RoutePlanner'));
+const Finance = loadable(() => import('Pages/RoutePlanner/Finance/FinanceForm'));
 const Laborcode = loadable(() => import('Pages/Maintenance/Laborcode'));
 const Request = loadable(() => import('Pages/Maintenance/Request'));
 const Scheduler = loadable(() => import('Pages/Maintenance/Scheduler'));
@@ -47,6 +48,7 @@ const pagesWithAuthentication = [
     {id: "editRoute", path: "/Route/Edit/:id", component: RoutePage.NewOrEdit},
 
     {id: "routePlanner", path: "/RoutePlanner", component: RoutePlanner},
+    {id: "routePlannerFinance", path: "/RoutePlanner/Finance/:id", component: Finance},
 
     {id: "laborcode", path: "/Maintenance/Laborcode", component: Laborcode},
     {id: "request", path: "/Maintenance/Request", component: Request},

@@ -39,14 +39,13 @@ const Finance = ({history, ...rest}) => {
         }).catch(e => console.error(e)).finally(() => toggleLoading(l => !l));
     }, []);
 
-    const renderActions = ({value}) => {
-        return (
-            <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
-                <Menu.Item icon={<EditIcon/>}>Edit Plan</Menu.Item>
-                {/*<Menu.Item icon={<ViewIcon/>}>View Trailer</Menu.Item>*/}
-            </Menu>
-        );
-    };
+    const renderActions = ({value}) => (
+        <ActionIcon variant="transparent" onClick={() => handleEdit(value)}>
+            <EditIcon/>
+        </ActionIcon>
+    );
+
+    const handleEdit = (id) => history.push(`/RoutePlanner/Finance/${id}`);
 
     const handleFilterApply = (data) => {
         toggleFilterDrawer(false);
