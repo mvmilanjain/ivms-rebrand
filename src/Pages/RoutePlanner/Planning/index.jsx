@@ -6,6 +6,7 @@ import {useNotifications} from '@mantine/notifications';
 import {DotsVerticalIcon} from '@modulz/radix-icons';
 import {
     MdOutlineAddBox as CreateIcon,
+    MdOutlineCloudDownload as ExportIcon,
     MdOutlineEdit as EditIcon,
     MdOutlineFilterList as FilterIcon
 } from 'react-icons/md';
@@ -13,7 +14,7 @@ import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {getRouteOrders} from 'Shared/Services';
 import {ROUTE_PLANNER_SCHEMA} from 'Shared/Utilities/tableSchema';
-import {getSortText} from 'Shared/Utilities/common.util';
+import {exportCSV, getSortText} from 'Shared/Utilities/common.util';
 import Filters from './Filters';
 
 const Planning = ({history, ...rest}) => {
@@ -53,6 +54,10 @@ const Planning = ({history, ...rest}) => {
 
     const handleCreate = () => history.push(`/RoutePlanner/Plan/New`, {action: 'New'});
 
+    const handleExport = () => {
+        exportCSV('route_planner_plan', ROUTE_PLANNER_SCHEMA.PLANNING, state.data);
+    };
+
     const handleFilterApply = (data) => {
         toggleFilterDrawer(false);
         setState({outerFilter: {...data}});
@@ -62,16 +67,24 @@ const Planning = ({history, ...rest}) => {
         <ContentArea withPaper limitToViewPort heightToReduce={184} withPadding={false}>
             <Group position="right" mb="md">
                 <Button
-                    leftIcon={<FilterIcon/>} size="xs" variant="outline"
+                    leftIcon={<FilterIcon/>} compact variant="outline"
                     onClick={() => toggleFilterDrawer(o => !o)}
                 >
                     Filters
                 </Button>
-                <Button leftIcon={<CreateIcon/>} size="xs" onClick={handleCreate}>
+                <Button
+                    compact color="green"
+                    leftIcon={<ExportIcon/>}
+                    disabled={!state.data.length}
+                    onClick={handleExport}
+                >
+                    Export
+                </Button>
+                <Button leftIcon={<CreateIcon/>} compact onClick={handleCreate}>
                     Create Plan
                 </Button>
             </Group>
-            <div style={{height: 'calc(100% - 60px)'}}>
+            <div style={{height: 'calc(100% - 48px)'}}>
                 <ReactTable
                     columns={[
                         {

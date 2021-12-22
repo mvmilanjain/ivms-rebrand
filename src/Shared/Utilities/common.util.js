@@ -145,12 +145,13 @@ export const getFilters = (filterList) => {
     return filter;
 };
 
-export const exportCSVFromDataGrid = (gridRef, fileName) => {
+export const exportCSV = (fileName, columns = [], data = []) => {
     const SEPARATOR = ',';
     const link = document.createElement('a');
-    const columns = gridRef.current.visibleColumns;
-    const header = columns.map((c) => c.name).join(SEPARATOR);
-    const rows = gridRef.current.data.map((data) => columns.map((c) => data[c.id]).join(SEPARATOR));
+    const header = columns.map((c) => c.accessor).join(SEPARATOR);
+    const rows = data.map(item => columns.map(col => {
+        return col.exportValue ? col.exportValue(item[col.accessor]) : get(item, col.accessor);
+    }).join(SEPARATOR));
     const contents = [header].concat(rows).join('\n');
     const blob = new Blob([contents], {type: 'text/csv;charset=utf-8;'});
     const url = URL.createObjectURL(blob);

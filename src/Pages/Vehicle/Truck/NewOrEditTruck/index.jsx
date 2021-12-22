@@ -18,7 +18,7 @@ import {TRUCK} from 'Shared/Utilities/validationSchema.util';
 const YEAR = getYearList();
 
 const NewOrEditTruck = ({history, location, match, ...rest}) => {
-    const action = location.state.action;
+    const action = (match.params && match.params.id) ? 'Edit' : 'New';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
     const [initialValue, setInitialValue] = useState({});

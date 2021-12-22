@@ -57,9 +57,9 @@ const Trailer = ({history}) => {
         );
     };
 
-    const handleCreate = () => history.push(`/Vehicle/Trailer/New`, {action: 'New'});
+    const handleCreate = () => history.push(`/Vehicle/Trailer/New`);
 
-    const handleEdit = (id) => history.push(`/Vehicle/Trailer/Edit/${id}`, {action: 'Edit'});
+    const handleEdit = (id) => history.push(`/Vehicle/Trailer/Edit/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({
@@ -91,14 +91,14 @@ const Trailer = ({history}) => {
         <ContentArea withPaper limitToViewPort heightToReduce={184} withPadding={false}>
             <Group position="right" mb="md">
                 <Button
-                    leftIcon={<FilterIcon/>} size="xs" variant="outline"
+                    leftIcon={<FilterIcon/>} compact variant="outline"
                     onClick={() => toggleFilterDrawer(o => !o)}
                 >
                     Filters
                 </Button>
-                <Button leftIcon={<CreateIcon/>} size="xs" onClick={handleCreate}>Create Trailer</Button>
+                <Button leftIcon={<CreateIcon/>} compact onClick={handleCreate}>Create Trailer</Button>
             </Group>
-            <div style={{height: 'calc(100% - 60px)'}}>
+            <div style={{height: 'calc(100% - 48px)'}}>
                 <ReactTable
                     columns={[
                         {

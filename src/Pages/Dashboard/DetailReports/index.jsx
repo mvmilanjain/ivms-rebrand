@@ -1,15 +1,21 @@
 import {useState} from 'react';
-import {Autocomplete} from '@mantine/core';
+import {Autocomplete, Box, Button, Group} from '@mantine/core';
+import {MdOutlineCloudDownload as ExportIcon} from 'react-icons/md';
 
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
 import {getReports} from 'Shared/Services';
 import {REPORT_TYPE} from 'Shared/Utilities/constant';
-import {DASHBOARD, VEHICLE} from 'Shared/Utilities/tableSchema';
+import {DASHBOARD} from 'Shared/Utilities/tableSchema';
+import {exportCSV} from "../../../Shared/Utilities/common.util";
 
 const REPORT_TYPE_LIST = [
     {value: 'Revenue Master', type: REPORT_TYPE.REVENUE_MASTER, schema: DASHBOARD.REPORTS.REVENUE_MASTER},
-    {value: 'Driver Load Tracker', type: REPORT_TYPE.DRIVER_LOAD_TRACKER, schema: DASHBOARD.REPORTS.DRIVER_LOAD_TRACKER},
+    {
+        value: 'Driver Load Tracker',
+        type: REPORT_TYPE.DRIVER_LOAD_TRACKER,
+        schema: DASHBOARD.REPORTS.DRIVER_LOAD_TRACKER
+    },
     {value: 'Daily Revenue Tracker', type: REPORT_TYPE.DAILY_REVENUE_TRACKER, schema: []},
     {value: 'Revenue Analysis', type: REPORT_TYPE.REVENUE_ANALYSIS, schema: DASHBOARD.REPORTS.REVENUE_ANALYSIS},
     {value: 'Standard VS Actual ODOTIF', type: REPORT_TYPE.STD_VS_ACTUAL, schema: DASHBOARD.REPORTS.STD_VS_ACTUAL}
@@ -20,7 +26,9 @@ const DetailReports = (props) => {
     const [report, setReport] = useState({type: '', schema: []});
     const [dataSource, setDataSource] = useState([]);
 
-    const onChangeReportType = (report) => {
+    const handleExport = () => exportCSV(report.type, report.schema, dataSource);
+
+    const handleReportTypeChange = (report) => {
         if (!report) {
             setReport({type: '', schema: []});
         } else {
@@ -64,12 +72,19 @@ const DetailReports = (props) => {
 
     return (
         <ContentArea withPaper limitToViewPort heightToReduce={184} withPadding={false}>
-            <Autocomplete
-                mb="md"
-                placeholder="Select report type"
-                data={REPORT_TYPE_LIST}
-                onItemSubmit={onChangeReportType}
-            />
+            <Group mb="md">
+                <Box mr="xl" style={{flexGrow: 1}}>
+                    <Autocomplete
+                        size="xs"
+                        placeholder="Select report type"
+                        data={REPORT_TYPE_LIST}
+                        onItemSubmit={handleReportTypeChange}
+                    />
+                </Box>
+                <Button leftIcon={<ExportIcon/>} size="xs" onClick={handleExport} color="green" disabled={!report.type}>
+                    Export
+                </Button>
+            </Group>
 
             {report.type !== '' && <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable

@@ -1,8 +1,9 @@
-import {Badge, Tooltip, ThemeIcon, Text} from '@mantine/core';
+import {Badge, Text, ThemeIcon, Tooltip} from '@mantine/core';
 import {CalendarIcon, CheckIcon, Cross2Icon} from '@modulz/radix-icons';
+
+import {TRIP_STATUS} from './constant';
 import {capitalizeStr, formatDate, formatDateTime, getAddressLabel, getFullName, getOptionLabel} from './common.util';
 import {POD_STATUS, TRIP_STATUS as TRIP_STATUS_LIST, VEHICLE_STATUS} from './referenceData.util';
-import {TRIP_STATUS} from './constant';
 
 const renderBoolean = ({value}) => {
     let result = '';
@@ -13,6 +14,30 @@ const renderBoolean = ({value}) => {
     }
     return result;
 };
+
+const renderDate = (val) => {
+    let result = '';
+    if (val) {
+        result = <Badge radius="sm" color="cyan" leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}>
+            {formatDate(val)}
+        </Badge>
+    }
+    return result;
+};
+
+const renderDateTime = (val) => {
+    let result = '';
+    if (val) {
+        result = <Badge radius="sm" color="cyan" leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}>
+            {formatDateTime(val)}
+        </Badge>
+    }
+    return result;
+};
+
+const renderTextWithTooltip = (val) => <Tooltip label={val} withArrow>
+    <Text size="sm" lineClamp={1}>{val}</Text>
+</Tooltip>;
 
 const renderVehicleStatus = ({value}) => {
     let result = '';
@@ -69,22 +94,14 @@ const renderPodStatus = ({value}) => {
 
 export const ROUTE_SCHEMA = [
     {accessor: 'route_code', Header: 'Code'},
-    {
-        accessor: 'name', Header: 'Name', Cell: ({value}) => <Tooltip label={value} withArrow>
-            <Text size="sm" lineClamp={1}>{value}</Text>
-        </Tooltip>
-    },
+    {accessor: 'name', Header: 'Name', Cell: ({value}) => renderTextWithTooltip(value)},
     {
         accessor: 'source_address.address1', Header: 'Source',
-        Cell: ({row}) => <Tooltip label={getAddressLabel(row.original.source_address)} withArrow>
-            <Text size="sm" lineClamp={1}>{getAddressLabel(row.original.source_address)}</Text>
-        </Tooltip>
+        Cell: ({row}) => renderTextWithTooltip(getAddressLabel(row.original.source_address))
     },
     {
         accessor: 'destination_address.address1', Header: 'Destination',
-        Cell: ({row}) => <Tooltip label={getAddressLabel(row.original.destination_address)} withArrow>
-            <Text size="sm" lineClamp={1}>{getAddressLabel(row.original.destination_address)}</Text>
-        </Tooltip>
+        Cell: ({row}) => renderTextWithTooltip(getAddressLabel(row.original.destination_address))
     },
     {
         accessor: 'std_distance_cycle', Header: 'Distance', align: 'center',
@@ -101,30 +118,24 @@ export const ROUTE_PLANNER_SCHEMA = {
         {accessor: 'order_number', Header: 'Order #', cellMinWidth: 120},
         {accessor: 'status', Header: 'Status', align: 'center', Cell: renderTripStatus},
         {
-            accessor: 'planned_load_start_time', Header: 'Planned Start Time', cellMinWidth: 200, align: 'center',
-            Cell: ({value}) => value ? <Badge
-                radius="sm" color="cyan"
-                leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}
-            >
-                {formatDateTime(value)}
-            </Badge> : ''
+            accessor: 'planned_load_start_time', Header: 'Planned Start Time',
+            cellMinWidth: 200, Cell: ({value}) => renderDateTime(value)
         },
         {
-            accessor: 'planned_eta_destination', Header: 'Planned End Time', cellMinWidth: 200, align: 'center',
-            Cell: ({value}) => value ?
-                <Badge radius="sm" color="cyan" leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}>
-                    {formatDateTime(value)}
-                </Badge> : ''
+            accessor: 'planned_eta_destination', Header: 'Planned End Time', cellMinWidth: 200,
+            Cell: ({value}) => renderDateTime(value)
         },
-        {accessor: 'vehicle.name', Header: 'Truck'},
+        {accessor: 'vehicle.name', Header: 'Truck', cellMinWidth: 120, Cell: ({value}) => renderTextWithTooltip(value)},
         {
-            accessor: 'member', Header: 'Driver',
-            Cell: ({row}) => <Tooltip withArrow
-                                      label={getFullName(row.original.member.first_name, row.original.member.last_name)}>
-                {row.original.member.first_name}
-            </Tooltip>
+            accessor: 'member', Header: 'Driver', Cell: ({row}) => renderTextWithTooltip(
+                getFullName(row.original.member.first_name, row.original.member.last_name)
+            ),
+            exportValue: (member) => getFullName(member.first_name, member.last_name)
         },
-        {accessor: 'route.route_code', Header: 'Route'},
+        {
+            accessor: 'route.route_code', Header: 'Route', cellMinWidth: 100,
+            Cell: ({value}) => renderTextWithTooltip(value)
+        },
         {accessor: 'product.name', Header: 'Product', cellMinWidth: 150},
         {
             accessor: 'planned_distance', Header: 'Distance', align: 'center',
@@ -141,32 +152,24 @@ export const ROUTE_PLANNER_SCHEMA = {
         {accessor: 'order_number', Header: 'Order #', cellMinWidth: 120},
         {accessor: 'status', Header: 'Status', align: 'center', Cell: renderTripStatus},
         {
-            accessor: 'route_order_actual_info.start_time', Header: 'Actual Start Time', cellMinWidth: 182,
-            align: 'center', Cell: ({value}) => value ? <Badge
-                radius="sm" color="cyan"
-                leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}
-            >
-                {formatDateTime(value)}
-            </Badge> : ''
+            accessor: 'route_order_actual_info.start_time', Header: 'Actual Start Time',
+            cellMinWidth: 182, Cell: ({value}) => renderDateTime(value)
         },
         {
-            accessor: 'route_order_actual_info.end_time', Header: 'Actual End Time', cellMinWidth: 180,
-            align: 'center', Cell: ({value}) => value ? <Badge
-                radius="sm" color="cyan"
-                leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}
-            >
-                {formatDateTime(value)}
-            </Badge> : ''
+            accessor: 'route_order_actual_info.end_time', Header: 'Actual End Time',
+            cellMinWidth: 180, Cell: ({value}) => renderDateTime(value)
         },
-        {accessor: 'vehicle.name', Header: 'Truck'},
+        {accessor: 'vehicle.name', Header: 'Truck', cellMinWidth: 120, Cell: ({value}) => renderTextWithTooltip(value)},
         {
-            accessor: 'member', Header: 'Driver', Cell: ({row}) => (
-                <Tooltip withArrow label={getFullName(row.original.member.first_name, row.original.member.last_name)}>
-                    {row.original.member.first_name}
-                </Tooltip>
-            )
+            accessor: 'member', Header: 'Driver', Cell: ({row}) => renderTextWithTooltip(
+                getFullName(row.original.member.first_name, row.original.member.last_name)
+            ),
+            exportValue: (member) => getFullName(member.first_name, member.last_name)
         },
-        {accessor: 'route.route_code', Header: 'Route'},
+        {
+            accessor: 'route.route_code', Header: 'Route', cellMinWidth: 100,
+            Cell: ({value}) => renderTextWithTooltip(value)
+        },
         {
             accessor: 'route_order_actual_info.fuel_liters_filled', Header: 'Fuel Filled', align: 'center',
             cellMinWidth: 140, Cell: ({value}) => value ? <Badge radius="sm">{value} ltr</Badge> : ''
@@ -225,25 +228,31 @@ export const DASHBOARD = {
     ],
     REPORTS: {
         REVENUE_MASTER: [
-            {accessor: 'order_number', Header: 'Order no.'},
-            {accessor: 'order_date', Header: 'Date', Cell: ({value}) => formatDate(value)},
-            {accessor: 'driver_name', Header: 'Driver'},
-            {accessor: 'vehicle_number', Header: 'Truck Reg.'},
-            {accessor: 'route_name', Header: 'Trip (to & from)'},
-            {accessor: 'type_of_load', Header: 'Type of Load'},
-            {accessor: 'pod_status', Header: 'Pod Status'},
-            {accessor: 'pod_number', Header: 'Pod no.'},
-            {accessor: 'delivery_note_number', Header: 'Delivery note no.'},
-            {accessor: 'tonnage_loaded', Header: 'Load Weight (ton)'},
+            {accessor: 'order_number', Header: 'Order #', align: 'center', cellMinWidth: 80},
+            {accessor: 'order_date', Header: 'Order Date', Cell: ({value}) => renderDate(value)},
+            {accessor: 'driver_name', Header: 'Driver', Cell: ({value}) => renderTextWithTooltip(value)},
+            {accessor: 'vehicle_number', Header: 'Registration No.', align: 'center', cellMinWidth: 140},
+            {
+                accessor: 'route_name', Header: 'Trip (Start to End)', cellMinWidth: 180,
+                Cell: ({value}) => renderTextWithTooltip(value)
+            },
+            {accessor: 'type_of_load', Header: 'Type of Load', cellMinWidth: 160},
+            {accessor: 'pod_status', Header: 'Pod Status', align: 'center', Cell: renderPodStatus},
+            {
+                accessor: 'pod_number', Header: 'Pod #', align: 'center',
+                Cell: ({value}) => value ? <Badge radius="sm">{value}</Badge> : ''
+            },
+            {accessor: 'delivery_note_number', Header: 'Delivery note #', cellMinWidth: 130},
+            {accessor: 'tonnage_loaded', Header: 'Load Weight', cellMinWidth: 110},
             {accessor: 'rate_per_ton', Header: 'Rate'},
-            {accessor: 'loading_distance', Header: 'Planned Distance'},
-            {accessor: 'actual_distance', Header: 'Actual Distance'},
-            {accessor: 'planned_cost', Header: 'Planned Cost'},
-            {accessor: 'actual_cost', Header: 'Actual Cost'},
-            {accessor: 'pod_collected', Header: 'POD Collected', Cell: renderBoolean},
-            {accessor: 'loading_odo_km', Header: "Loading KM's"},
-            {accessor: 'offloading_odo_km', Header: "Off Loading KM's"},
-            {accessor: 'invoice_recieved', Header: 'Invoice Received'}
+            {accessor: 'loading_distance', Header: 'Planned Distance', cellMinWidth: 144},
+            {accessor: 'actual_distance', Header: 'Actual Distance', cellMinWidth: 134},
+            {accessor: 'planned_cost', Header: 'Planned Cost', cellMinWidth: 120},
+            {accessor: 'actual_cost', Header: 'Actual Cost', cellMinWidth: 110},
+            {accessor: 'pod_collected', Header: 'POD Collected', cellMinWidth: 124, Cell: renderBoolean},
+            {accessor: 'loading_odo_km', Header: "Loading KM's", cellMinWidth: 120},
+            {accessor: 'offloading_odo_km', Header: "Off Loading KM's", cellMinWidth: 150},
+            {accessor: 'invoice_recieved', Header: 'Invoice Received', cellMinWidth: 140}
         ],
         DRIVER_LOAD_TRACKER: [
             {
@@ -319,9 +328,9 @@ export const MAINTENANCE = {
     ],
     ORDER_SCHEMA: [
         {accessor: 'work_order_number', Header: 'Order no.'},
-        {accessor: 'created_at', Header: 'Create Date', Cell: ({value}) => value ? formatDateTime(value) : ''},
+        {accessor: 'created_at', Header: 'Create Date', Cell: ({value}) => renderDateTime(value)},
         {accessor: 'vehicle.vehicle_number', Header: 'Vehicle'},
-        {accessor: 'due_date', Header: 'Due Date', Cell: ({value}) => value ? formatDateTime(value) : ''},
+        {accessor: 'due_date', Header: 'Due Date', Cell: ({value}) => renderDateTime(value)},
         {accessor: 'status', Header: 'Status'},
         {accessor: 'priority', Header: 'Priority'},
         {
@@ -371,11 +380,6 @@ export const VEHICLE = {
             Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
         },
         {accessor: 'status', Header: 'Status', align: 'center', Cell: renderVehicleStatus},
-        {
-            accessor: 'license_expiry', Header: 'License Expiry', align: 'center', Cell: ({value}) => value ?
-                <Badge radius="sm" color="cyan" leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}>
-                    {formatDate(value)}
-                </Badge> : ''
-        }
+        {accessor: 'license_expiry', Header: 'License Expiry', Cell: ({value}) => renderDate(value)}
     ]
 };

@@ -26,7 +26,7 @@ import {ADDRESS} from 'Shared/Utilities/validationSchema.util';
 import {ADDRESS_TYPE} from 'Shared/Utilities/referenceData.util';
 
 const NewOrEditAddress = ({history, location, match, ...rest}) => {
-    const action = location.state.action;
+    const action = (match.params && match.params.id) ? 'Edit' : 'New';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
     const [initialValue, setInitialValue] = useState({});

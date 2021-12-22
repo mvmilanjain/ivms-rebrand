@@ -20,7 +20,7 @@ import {PRODUCT} from 'Shared/Utilities/validationSchema.util';
 import ProductRouteForm from './ProductRouteForm';
 
 const NewOrEditProduct = ({history, location, match, ...rest}) => {
-    const action = location.state.action;
+    const action = (match.params && match.params.id) ? 'Edit' : 'New';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
     const modals = useModals();

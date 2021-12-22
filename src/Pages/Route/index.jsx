@@ -58,9 +58,9 @@ const Route = ({history}) => {
         );
     };
 
-    const handleCreate = () => history.push(`/Route/New`, {action: 'New'});
+    const handleCreate = () => history.push(`/Route/New`);
 
-    const handleEdit = (id) => history.push(`/Route/Edit/${id}`, {action: 'Edit'});
+    const handleEdit = (id) => history.push(`/Route/Edit/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({

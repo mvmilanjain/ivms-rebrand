@@ -59,13 +59,13 @@ const Finance = ({history, ...rest}) => {
         <ContentArea withPaper limitToViewPort heightToReduce={184} withPadding={false}>
             <Group position="right" mb="md">
                 <Button
-                    leftIcon={<FilterIcon/>} size="xs" variant="outline"
+                    leftIcon={<FilterIcon/>} compact variant="outline"
                     onClick={() => toggleFilterDrawer(o => !o)}
                 >
                     Filters
                 </Button>
             </Group>
-            <div style={{height: 'calc(100% - 60px)'}}>
+            <div style={{height: 'calc(100% - 48px)'}}>
                 <ReactTable
                     columns={[
                         {

@@ -67,7 +67,9 @@ const Address = ({history}) => {
         }).finally(() => toggleLoading(l => !l));
     };
 
-    const handleEdit = (id) => history.push(`/Address/Edit/${id}`, {action: 'Edit'});
+    const handleCreate = () => history.push(`/Address/New`);
+
+    const handleEdit = (id) => history.push(`/Address/Edit/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({
@@ -115,8 +117,6 @@ const Address = ({history}) => {
         }
     };
 
-    const handleCreate = () => history.push(`/Address/New`, {action: 'New'});
-
     return (
         <ContentArea withPaper>
             <Group mb="xl">
@@ -135,45 +135,48 @@ const Address = ({history}) => {
 
             <Group mb="xl" direction="column" grow>
                 {!loading && state.data.slice((state.pagination.pageNum - 1) * PAGE_SIZE, state.pagination.pageNum * PAGE_SIZE)
-                    .map(item => (<Paper withBorder shadow="sm" padding={0} key={item.id}>
-                        <Group align="start" spacing="md">
-                            <Image src={getStaticMap(item.latitude, item.longitude)} width={160} height={120}/>
-                            <Group align="start" position="apart" sx={t => ({padding: t.spacing.sm})}
-                                   style={{flexGrow: 1}}>
-                                <Box>
-                                    <Text size="md" weight={500}>{item.name}</Text>
+                    .map(item => (
+                        <Paper key={item.id} withBorder shadow="sm" padding={0} radius="md"
+                               style={{overflow: 'hidden'}}>
+                            <Group align="start" spacing="md">
+                                <Image src={getStaticMap(item.latitude, item.longitude)} width={160} height={120}/>
+                                <Group align="start" position="apart" sx={t => ({padding: t.spacing.sm})}
+                                       style={{flexGrow: 1}}>
                                     <Box>
-                                        <Center inline>
-                                            <MapPinIcon size={12} color={theme.colors.gray[5]}/>
-                                            <Text size="sm" color="dimmed" ml={4}>{getAddressString(item)}</Text>
-                                        </Center>
+                                        <Text size="md" weight={500}>{item.name}</Text>
+                                        <Box>
+                                            <Center inline>
+                                                <MapPinIcon size={12} color={theme.colors.gray[5]}/>
+                                                <Text size="sm" color="dimmed" ml={4}>{getAddressString(item)}</Text>
+                                            </Center>
+                                        </Box>
+                                        {item.phone && <Box>
+                                            <Center inline>
+                                                <PhoneIcon size={12} color={theme.colors.gray[5]}/>
+                                                <Text size="sm" color="dimmed" ml={4}>{item.phone}</Text>
+                                            </Center>
+                                        </Box>}
+                                        {item.address_type && <Badge
+                                            size={"sm"} mt="xs" variant="gradient"
+                                            gradient={{from: 'yellow', to: 'red'}}
+                                        >
+                                            {item.address_type}
+                                        </Badge>}
                                     </Box>
-                                    {item.phone && <Box>
-                                        <Center inline>
-                                            <PhoneIcon size={12} color={theme.colors.gray[5]}/>
-                                            <Text size="sm" color="dimmed" ml={4}>{item.phone}</Text>
-                                        </Center>
-                                    </Box>}
-                                    {item.address_type && <Badge
-                                        size={"sm"} mt="xs" variant="gradient"
-                                        gradient={{from: 'yellow', to: 'red'}}
-                                    >
-                                        {item.address_type}
-                                    </Badge>}
-                                </Box>
-                                <Group align="start" position="right" spacing="xs">
-                                    <ActionIcon onClick={() => handleEdit(item.id)}><EditIcon/></ActionIcon>
-                                    <ActionIcon color="red" onClick={() => handleDelete(item.id)}>
-                                        <DeleteIcon/>
-                                    </ActionIcon>
+                                    <Group align="start" position="right" spacing="xs">
+                                        <ActionIcon onClick={() => handleEdit(item.id)}><EditIcon/></ActionIcon>
+                                        <ActionIcon color="red" onClick={() => handleDelete(item.id)}>
+                                            <DeleteIcon/>
+                                        </ActionIcon>
+                                    </Group>
                                 </Group>
                             </Group>
-                        </Group>
-                    </Paper>))
+                        </Paper>
+                    ))
                 }
 
                 {loading && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => (
-                    <Paper withBorder shadow="sm" padding={0} key={item}>
+                    <Paper withBorder shadow="sm" padding={0} key={item} radius="md">
                         <Group align="start" spacing="md">
                             <Skeleton width={160} height={120} radius={0}/>
                             <Group align="start" direction="column" sx={t => ({padding: t.spacing.sm})}
@@ -238,7 +241,7 @@ const Address = ({history}) => {
             </Grid>*/}
 
             {state.data.length > 0 && <Pagination
-                position="center" size="lg"
+                position="center" size="lg" radius="md"
                 page={state.pagination.pageNum}
                 total={Math.ceil(state.pagination.count / PAGE_SIZE)}
                 onChange={handlePageChange}

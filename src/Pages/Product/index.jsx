@@ -71,9 +71,9 @@ const Product = ({history, ...rest}) => {
         });
     };
 
-    const handleCreate = () => history.push(`/Product/New`, {action: 'New'});
+    const handleCreate = () => history.push(`/Product/New`);
 
-    const handleEdit = (id) => history.push(`/Product/Edit/${id}`, {action: 'Edit'});
+    const handleEdit = (id) => history.push(`/Product/Edit/${id}`);
 
     return (
         <ContentArea withPaper limitToViewPort>

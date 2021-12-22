@@ -22,7 +22,7 @@ import {getRoute, postRoute, putRoute} from 'Shared/Services';
 import AddStoppageForm from './AddStoppageForm';
 
 const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
-    const action = location.state.action;
+    const action = (match.params && match.params.id) ? 'Edit' : 'New';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
     const modals = useModals();

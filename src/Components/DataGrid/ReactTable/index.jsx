@@ -162,7 +162,7 @@ export const ReactTable = (
             >
                 <Group noWrap position={column.align || "apart"}>
                     <div>{column.render('Header')}</div>
-                    <Group noWrap position="left">
+                    {(column.canSort || column.canFilter) && <Group noWrap position="left">
                         {column.canFilter ? column.render('Filter') : null}
                         {column.canSort ?
                             (
@@ -174,7 +174,7 @@ export const ReactTable = (
                                     <SortIcon className={classes.disableSortIcon}/>
                             ) : null
                         }
-                    </Group>
+                    </Group>}
                 </Group>
             </th>
         ))}
