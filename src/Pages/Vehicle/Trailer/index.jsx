@@ -56,9 +56,9 @@ const Trailer = ({history}) => {
         );
     };
 
-    const handleCreate = () => history.push(`/Vehicle/Trailer/New`);
+    const handleCreate = () => history.push('/Trailer');
 
-    const handleEdit = (id) => history.push(`/Vehicle/Trailer/Edit/${id}`);
+    const handleEdit = (id) => history.push(`/Trailer/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({
@@ -100,10 +100,7 @@ const Trailer = ({history}) => {
             <div style={{height: 'calc(100% - 48px)'}}>
                 <ReactTable
                     columns={[
-                        {
-                            accessor: 'id', Header: '', disableFilters: true,
-                            disableSortBy: true, Cell: renderActions
-                        },
+                        {accessor: 'id', Header: '', disableSortBy: true, Cell: renderActions},
                         ...VEHICLE.TRAILER_SCHEMA
                     ]}
                     data={state.data}

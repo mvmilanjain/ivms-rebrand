@@ -74,7 +74,7 @@ const NavbarLink = ({icon: Icon, label, color, active, onClick}) => {
 const mockdata = [
     {id: 'dashboard', label: 'Dashboard', icon: DashboardIcon, color: 'blue'},
     {id: 'route', label: 'Route', icon: RouteIcon, color: 'teal'},
-    {id: 'routeOrder', label: 'Route Order', icon: RouteOrderIcon, color: 'lime'},
+    {id: 'routeOrder', label: 'TripRoutes Order', icon: RouteOrderIcon, color: 'lime'},
     {id: 'maintenance', label: 'Maintenance', icon: MaintenanceIcon, color: 'yellow'},
     {id: 'inspection', label: 'Inspection', icon: InspectionIcon, color: 'orange'},
     {id: 'fault', label: 'Fault', icon: FaultIcon, color: 'red'},

@@ -19,8 +19,8 @@ import {errorMessage} from 'Shared/Utilities/common.util';
 import {PRODUCT} from 'Shared/Utilities/validationSchema.util';
 import ProductRouteForm from './ProductRouteForm';
 
-const NewOrEditProduct = ({history, location, match, ...rest}) => {
-    const action = (match.params && match.params.id) ? 'Edit' : 'New';
+const ProductForm = ({history, location, match, ...rest}) => {
+    const action = (match.params && match.params.id) ? 'Update' : 'Save';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
     const modals = useModals();
@@ -34,7 +34,7 @@ const NewOrEditProduct = ({history, location, match, ...rest}) => {
     });
 
     useEffect(() => {
-        if (action === 'New') {
+        if (action === 'Save') {
             const product = new Product();
             setInitialValue(product);
         } else {
@@ -54,7 +54,7 @@ const NewOrEditProduct = ({history, location, match, ...rest}) => {
 
     const handleAddProductRoute = () => {
         const id = modals.openModal({
-            size: 'lg', title: 'Add Product Route', children: (
+            size: 'lg', title: 'Add Products TripRoutes', children: (
                 <ProductRouteForm
                     data={new ProductRoute()}
                     action="New"
@@ -71,7 +71,7 @@ const NewOrEditProduct = ({history, location, match, ...rest}) => {
 
     const handleAEditProductRoute = (data, index) => {
         const id = modals.openModal({
-            size: 'lg', title: 'Edit Product Route', children: (
+            size: 'lg', title: 'Edit Products TripRoutes', children: (
                 <ProductRouteForm
                     data={new ProductRoute(data)}
                     action="Edit"
@@ -94,12 +94,12 @@ const NewOrEditProduct = ({history, location, match, ...rest}) => {
 
     const onSubmit = (values) => {
         const payload = {product: values};
-        const requestConfig = (action === 'New') ? postProduct(payload) : putProduct(values.id, payload);
+        const requestConfig = (action === 'Save') ? postProduct(payload) : putProduct(values.id, payload);
         requestHandler(requestConfig, {loader: true}).then(res => {
             notifications.showNotification({
-                title: 'Success', color: 'green', message: 'Product has been saved successfully.'
+                title: 'Success', color: 'green', message: 'Products has been saved successfully.'
             });
-            history.push('/Product');
+            history.push('/Products');
         }).catch(e => {
             notifications.showNotification({
                 title: 'Error', color: 'red', message: 'Not able to save product details. Something went wrong!!'
@@ -120,12 +120,8 @@ const NewOrEditProduct = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Product</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/Product')}>
-                            Cancel
-                        </Button>
-                        <Button leftIcon={<SaveIcon/>} type="submit">
-                            {action === 'New' ? 'Save' : 'Update'}
-                        </Button>
+                        <Button variant="default" onClick={() => history.push('/Products')}>Cancel</Button>
+                        <Button leftIcon={<SaveIcon/>} type="submit">{action}</Button>
                     </Group>
                 </Group>
                 <Divider mb="md" variant="dotted"/>
@@ -182,4 +178,4 @@ const NewOrEditProduct = ({history, location, match, ...rest}) => {
     );
 };
 
-export default NewOrEditProduct;
+export default ProductForm;

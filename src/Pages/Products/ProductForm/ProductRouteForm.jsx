@@ -96,7 +96,7 @@ const ProductRouteForm = ({data, action, onConfirm}) => {
                     />
                 </SimpleGrid>
                 <Group position="right">
-                    <Button type="submit">{action === 'New' ? 'Add Product Route' : 'Update Product Route'}</Button>
+                    <Button type="submit">{action === 'New' ? 'Add Products TripRoutes' : 'Update Products TripRoutes'}</Button>
                 </Group>
             </form>
         </NotificationsProvider>

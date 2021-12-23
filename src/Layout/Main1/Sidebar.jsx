@@ -18,16 +18,8 @@ import {getInitials} from 'Shared/Utilities/common.util';
 
 const navList = [
     {id: 'dashboard', path: '/Dashboard', label: 'Dashboard', icon: DashboardIcon, color: 'blue'},
-    {id: 'route', path: '/Route', label: 'Route', icon: RouteIcon, color: 'teal'},
+    {id: 'tripRoutes', path: '/TripRoutes', label: 'Route', icon: RouteIcon, color: 'teal'},
     {id: 'routePlanner', path: '/RoutePlanner/0', label: 'Route Planner', icon: RouteOrderIcon, color: 'lime'},
-    /*{
-        id: 'routeOrder', label: 'Route Order', icon: RouteOrderIcon, color: 'lime', subNav: [
-            {id: 'planning', path: '/RoutePlanner/Planning', label: 'Planning'},
-            {id: 'operation', path: '/RoutePlanner/Operation', label: 'Operation'},
-            {id: 'finance', path: '/RoutePlanner/Finance', label: 'Finance'},
-            {id: 'reports', path: '/RoutePlanner/Reports', label: 'Reports'}
-        ]
-    },*/
     {
         id: 'inspection', label: 'Inspection', icon: InspectionIcon, color: 'green', subNav: [
             {id: 'inspectionForm', path: '/Inspection/InspectionForm', label: 'Form'},
@@ -42,16 +34,10 @@ const navList = [
             {id: 'laborcode', path: '/Maintenance/Laborcode', label: 'Labor Code'}
         ]
     },
-    {id: 'fault', path: '/Fault', label: 'Fault', icon: FaultIcon, color: 'red'},
-    {id: 'product', path: '/Product', label: 'Product', icon: ProductIcon, color: 'yellow'},
-    {id: 'address', path: '/Address', label: 'Address', icon: AddressIcon, color: 'grape'},
-    /*{
-        id: 'vehicle', label: 'Vehicle', icon: VehicleIcon, color: 'violet', subNav: [
-            {id: 'truck', path: '/Vehicle/Truck', label: 'Truck'},
-            {id: 'trailer', path: '/Vehicle/Trailer', label: 'Trailer'}
-        ]
-    },*/
-    {id: 'vehicle', path: '/Vehicle', label: 'Vehicle', icon: VehicleIcon, color: 'violet'},
+    {id: 'faults', path: '/Faults', label: 'Fault', icon: FaultIcon, color: 'red'},
+    {id: 'products', path: '/Products', label: 'Product', icon: ProductIcon, color: 'yellow'},
+    {id: 'addresses', path: '/Addresses', label: 'Address', icon: AddressIcon, color: 'grape'},
+    {id: 'vehicle', path: '/Vehicle/0', label: 'Vehicle', icon: VehicleIcon, color: 'violet'},
     {id: 'setting', path: '/Setting', label: 'Setting', icon: SettingIcon, color: 'indigo'}
 ];
 

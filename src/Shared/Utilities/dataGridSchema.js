@@ -17,8 +17,8 @@ import {EMPLOYMENT_STATUS, MEMBER_ROLE, TOOL_STATUS, TRIP_STATUS, VEHICLE_STATUS
 
 export const RouteSchema = {
     columns: [
-        {name: 'route_code', header: 'Route Code', defaultFlex: 1},
-        {name: 'name', header: 'Route Name', defaultFlex: 2},
+        {name: 'route_code', header: 'TripRoutes Code', defaultFlex: 1},
+        {name: 'name', header: 'TripRoutes Name', defaultFlex: 2},
         {
             name: 'source_address_address1', header: 'Source', defaultFlex: 1,
             render: ({data}) => (data.source_address && data.source_address.address1) || ''
@@ -81,7 +81,7 @@ export const OperationSchema = {
     columns: [
         {name: 'order_number', header: 'Order #'},
         {
-            name: 'route_route_code', header: 'Route Code',
+            name: 'route_route_code', header: 'TripRoutes Code',
             render: ({data}) => (data.route && data.route.route_code) || ''
         },
         {

@@ -26,17 +26,18 @@ const App = () => {
 
     return (
         <MantineProvider withNormalizeCSS theme={{dateFormat: 'YYYY-MM-DD'}}>
-            <GlobalStyles />
-            <LoadingOverlay visible={isLoading}/>
+            <GlobalStyles/>
             <ModalsProvider modalProps={{centered: true}}>
                 <NotificationsProvider position="top-center">
-                    {isAuthenticated !== null && (
-                        isAuthenticated ?
-                            <Main1Layout><Routes isAuthenticated={isAuthenticated}/></Main1Layout> :
-                            <MinimalLayout><Routes isAuthenticated={isAuthenticated}/></MinimalLayout>
-                    )}
-                    {/*<Main2Layout><div>Main Content</div></Main2Layout>*/}
-                    {/*<Main3Layout><div>Main Content</div></Main3Layout>*/}
+                    {isAuthenticated !== null &&
+                        (isAuthenticated ? <Main1Layout>
+                            <LoadingOverlay visible={isLoading}/>
+                            <Routes isAuthenticated={isAuthenticated}/>
+                        </Main1Layout> : <MinimalLayout>
+                            <LoadingOverlay visible={isLoading}/>
+                            <Routes isAuthenticated={isAuthenticated}/>
+                        </MinimalLayout>)
+                    }
                 </NotificationsProvider>
             </ModalsProvider>
         </MantineProvider>

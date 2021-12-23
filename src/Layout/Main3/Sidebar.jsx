@@ -22,9 +22,9 @@ import {authLogout} from 'Store/actions/auth.actions';
 
 const navList = [
     {id: 'dashboard', path: '/Dashboard', label: 'Dashboard', icon: DashboardIcon, color: 'blue'},
-    {id: 'route', path: '/Route', label: 'Route', icon: RouteIcon, color: 'teal'},
+    {id: 'route', path: '/TripRoutes', label: 'Route', icon: RouteIcon, color: 'teal'},
     {
-        id: 'routeOrder', label: 'Route Order', icon: RouteOrderIcon, color: 'lime', subNav: [
+        id: 'routeOrder', label: 'TripRoutes Order', icon: RouteOrderIcon, color: 'lime', subNav: [
             {id: 'planning', path: '/RoutePlanner/Planning', label: 'Planning'},
             {id: 'operation', path: '/RoutePlanner/Operation', label: 'Operation'},
             {id: 'finance', path: '/RoutePlanner/Finance', label: 'Finance'},
@@ -45,9 +45,9 @@ const navList = [
             {id: 'laborcode', path: '/Maintenance/Laborcode', label: 'Labor Code'}
         ]
     },
-    {id: 'fault', path: '/Fault', label: 'Fault', icon: FaultIcon, color: 'red'},
-    {id: 'product', path: '/Product', label: 'Product', icon: ProductIcon, color: 'yellow'},
-    {id: 'address', path: '/Address', label: 'Address', icon: AddressIcon, color: 'grape'},
+    {id: 'fault', path: '/Faults', label: 'Fault', icon: FaultIcon, color: 'red'},
+    {id: 'product', path: '/Products', label: 'Product', icon: ProductIcon, color: 'yellow'},
+    {id: 'address', path: '/Addresses', label: 'Address', icon: AddressIcon, color: 'grape'},
     {
         id: 'vehicle', label: 'Vehicle', icon: VehicleIcon, color: 'violet', subNav: [
             {id: 'truck', path: '/Vehicle/Truck', label: 'Truck'},

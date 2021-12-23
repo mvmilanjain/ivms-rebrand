@@ -21,8 +21,8 @@ import {errorMessage, registerField} from 'Shared/Utilities/common.util';
 import {getRoute, postRoute, putRoute} from 'Shared/Services';
 import AddStoppageForm from './AddStoppageForm';
 
-const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
-    const action = (match.params && match.params.id) ? 'Edit' : 'New';
+const TripRouteForm = ({history, location, match, ...rest}) => {
+    const action = (match.params && match.params.id) ? 'Update' : 'Save';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
     const modals = useModals();
@@ -34,7 +34,7 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
     const register = (fieldName) => registerField(fieldName, {values, handleChange, touched, errors});
 
     useEffect(() => {
-        if (action === 'New') {
+        if (action === 'Save') {
             const route = new Route();
             setInitialValue({...route});
         } else {
@@ -46,7 +46,7 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
             }).catch(e => {
                 console.error(e);
                 notifications.showNotification({
-                    title: "Error", color: 'red', message: 'Not able to fetch route details. Something went wrong!!'
+                    title: 'Error', color: 'red', message: 'Not able to fetch route details. Something went wrong!!'
                 });
             });
         }
@@ -181,12 +181,12 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
             values.route_planner.route_stops[0].stop_duration < values.route_planner.loading_time) {
             setFieldError(`route_planner.route_stops[0].stop_duration`, 'Should be greater than or equal than Loading time')
         } else {
-            const requestConfig = (action === 'New') ? postRoute({route: values}) : putRoute(values.id, {route: values});
+            const requestConfig = (action === 'Save') ? postRoute({route: values}) : putRoute(values.id, {route: values});
             requestHandler(requestConfig, {loader: true}).then(res => {
                 notifications.showNotification({
-                    title: "Success", color: 'green', message: 'Route has been saved successfully.'
+                    title: "Success", color: 'green', message: 'TripRoutes has been saved successfully.'
                 });
-                history.push('/Route');
+                history.push('/TripRoutes');
             }).catch(e => {
                 notifications.showNotification({
                     title: "Error", color: 'red', message: 'Not able to save route details. Something went wrong!!'
@@ -208,12 +208,8 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Route</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/Route')}>
-                            Cancel
-                        </Button>
-                        <Button leftIcon={<SaveIcon/>} type="submit">
-                            {action === 'New' ? 'Save' : 'Update'}
-                        </Button>
+                        <Button variant="default" onClick={() => history.push('/TripRoutes')}>Cancel</Button>
+                        <Button leftIcon={<SaveIcon/>} type="submit">{action}</Button>
                     </Group>
                 </Group>
                 <Divider mb="md" variant="dotted"/>
@@ -337,4 +333,4 @@ const CreateOrUpdateRoute = ({history, location, match, ...rest}) => {
     );
 };
 
-export default CreateOrUpdateRoute
+export default TripRouteForm

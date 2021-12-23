@@ -16,12 +16,7 @@ const Main1 = (props) => {
                 backgroundColor: t.colors.gray[0]
             })}>
                 <AppBar expand={openNavbar} toggleNavbar={() => toggleNavbar(o => !o)}/>
-                <Scrollbars>
-                   {/* <Paper m="md" padding="md" withBorder>
-                        {props.children}
-                    </Paper>*/}
-                    {props.children}
-                </Scrollbars>
+                <Scrollbars>{props.children}</Scrollbars>
             </Box>
         </Box>
     );

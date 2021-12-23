@@ -15,8 +15,8 @@ import {CONFIG_FIELD_TYPE} from 'Shared/Utilities/constant';
 import {VEHICLE_STATUS} from 'Shared/Utilities/referenceData.util';
 import {TRAILER} from 'Shared/Utilities/validationSchema.util';
 
-const NewOrEditTrailer = ({history, location, match, ...rest}) => {
-    const action = (match.params && match.params.id) ? 'Edit' : 'New';
+const TrailerForm = ({history, location, match, ...rest}) => {
+    const action = (match.params && match.params.id) ? 'Update' : 'Save';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
     const [initialValue, setInitialValue] = useState({});
@@ -24,7 +24,7 @@ const NewOrEditTrailer = ({history, location, match, ...rest}) => {
     const register = (fieldName) => registerField(fieldName, {values, handleChange, touched, errors});
 
     useEffect(() => {
-        if (action === 'New') {
+        if (action === 'Save') {
             const trailer = new Trailer();
             setInitialValue({...trailer});
         } else {
@@ -47,12 +47,12 @@ const NewOrEditTrailer = ({history, location, match, ...rest}) => {
     };
 
     const onSubmit = () => {
-        const requestConfig = (action === 'New') ? postTrailer({trailer: values}) : putTrailer(match.params.id, {trailer: values});
+        const requestConfig = (action === 'Save') ? postTrailer({trailer: values}) : putTrailer(match.params.id, {trailer: values});
         requestHandler(requestConfig, {loader: true}).then(res => {
             notifications.showNotification({
                 title: "Success", color: 'green', message: 'Trailer has been saved successfully.'
             });
-            history.push('/Vehicle', {tabIndex: 1});
+            history.push('/Vehicle/1');
         }).catch(e => {
             notifications.showNotification({
                 title: "Error", color: 'red', message: 'Not able to save trailer details. Something went wrong!!'
@@ -73,12 +73,8 @@ const NewOrEditTrailer = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Trailer</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/Vehicle', {tabIndex: 1})}>
-                            Cancel
-                        </Button>
-                        <Button leftIcon={<SaveIcon/>} type="submit">
-                            {action === 'New' ? 'Save' : 'Update'}
-                        </Button>
+                        <Button variant="default" onClick={() => history.push('/Vehicle/1')}>Cancel</Button>
+                        <Button leftIcon={<SaveIcon/>} type="submit">{action}</Button>
                     </Group>
                 </Group>
                 <Divider mb="md" variant="dotted"/>
@@ -153,4 +149,4 @@ const NewOrEditTrailer = ({history, location, match, ...rest}) => {
     );
 };
 
-export default NewOrEditTrailer;
+export default TrailerForm;

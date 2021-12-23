@@ -32,9 +32,10 @@ import {AiOutlineInbox} from 'react-icons/ai';
 import {ContentArea} from 'Components';
 import {useHttp} from 'Hooks';
 import {deleteAddress, getAddresses, getStaticMap} from 'Shared/Services';
-import {getAddressString} from 'Shared/Utilities/common.util';
+import {getAddressString, getOptionLabel} from 'Shared/Utilities/common.util';
+import {ADDRESS_TYPE} from "../../Shared/Utilities/referenceData.util";
 
-const Address = ({history}) => {
+const Addresses = ({history}) => {
     const PAGE_SIZE = 10;
     const {requestHandler} = useHttp();
     const theme = useMantineTheme();
@@ -67,9 +68,9 @@ const Address = ({history}) => {
         }).finally(() => toggleLoading(l => !l));
     };
 
-    const handleCreate = () => history.push(`/Address/New`);
+    const handleCreate = () => history.push(`/Addresses/Address`);
 
-    const handleEdit = (id) => history.push(`/Address/Edit/${id}`);
+    const handleEdit = (id) => history.push(`/Addresses/Address/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({
@@ -79,7 +80,7 @@ const Address = ({history}) => {
             onConfirm: () => {
                 requestHandler(deleteAddress(id), {loader: true}).then(() => {
                     notifications.showNotification({
-                        title: 'Success', color: 'green', message: 'Address has been deleted successfully.'
+                        title: 'Success', color: 'green', message: 'Addresses has been deleted successfully.'
                     });
                     fetchData();
                 }).catch(e => {
@@ -140,8 +141,7 @@ const Address = ({history}) => {
                                style={{overflow: 'hidden'}}>
                             <Group align="start" spacing="md">
                                 <Image src={getStaticMap(item.latitude, item.longitude)} width={160} height={120}/>
-                                <Group align="start" position="apart" sx={t => ({padding: t.spacing.sm})}
-                                       style={{flexGrow: 1}}>
+                                <Group align="start" position="apart" sx={t => ({padding: t.spacing.sm, flexGrow: 1})}>
                                     <Box>
                                         <Text size="md" weight={500}>{item.name}</Text>
                                         <Box>
@@ -160,7 +160,7 @@ const Address = ({history}) => {
                                             size={"sm"} mt="xs" variant="gradient"
                                             gradient={{from: 'yellow', to: 'red'}}
                                         >
-                                            {item.address_type}
+                                            {getOptionLabel(ADDRESS_TYPE, item.address_type)}
                                         </Badge>}
                                     </Box>
                                     <Group align="start" position="right" spacing="xs">
@@ -250,4 +250,4 @@ const Address = ({history}) => {
     );
 };
 
-export default Address;
+export default Addresses;

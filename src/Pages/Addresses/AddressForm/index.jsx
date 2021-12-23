@@ -25,7 +25,7 @@ import {errorMessage} from 'Shared/Utilities/common.util';
 import {ADDRESS} from 'Shared/Utilities/validationSchema.util';
 import {ADDRESS_TYPE} from 'Shared/Utilities/referenceData.util';
 
-const NewOrEditAddress = ({history, location, match, ...rest}) => {
+const AddressForm = ({history, location, match, ...rest}) => {
     const action = (match.params && match.params.id) ? 'Edit' : 'New';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
@@ -85,9 +85,9 @@ const NewOrEditAddress = ({history, location, match, ...rest}) => {
         const requestConfig = (action === 'New') ? postAddress(payload) : putAddress(values.id, payload);
         requestHandler(requestConfig, {loader: true}).then(res => {
             notifications.showNotification({
-                title: "Success", color: 'green', message: 'Address has been saved successfully.'
+                title: "Success", color: 'green', message: 'Addresses has been saved successfully.'
             });
-            history.push('/Address');
+            history.push('/Addresses');
         }).catch(e => {
             notifications.showNotification({
                 title: "Error", color: 'red', message: 'Not able to save address. Something went wrong!!'
@@ -108,7 +108,7 @@ const NewOrEditAddress = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Address</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/Address')}>
+                        <Button variant="default" onClick={() => history.push('/Addresses')}>
                             Cancel
                         </Button>
                         <Button leftIcon={<SaveIcon/>} type="submit">
@@ -209,4 +209,4 @@ const NewOrEditAddress = ({history, location, match, ...rest}) => {
     );
 };
 
-export default NewOrEditAddress;
+export default AddressForm;

@@ -16,7 +16,7 @@ import {useHttp} from 'Hooks';
 import {deleteTruck, getTrucks} from 'Shared/Services';
 import {VEHICLE} from 'Shared/Utilities/tableSchema';
 import {getSortText} from 'Shared/Utilities/common.util';
-import Filters from "./Filters";
+import Filters from './Filters';
 
 const Truck = ({history}) => {
     const {requestHandler} = useHttp();
@@ -57,9 +57,9 @@ const Truck = ({history}) => {
         );
     };
 
-    const handleCreate = () => history.push(`/Vehicle/Truck/New`);
+    const handleCreate = () => history.push('/Truck');
 
-    const handleEdit = (id) => history.push(`/Vehicle/Truck/Edit/${id}`);
+    const handleEdit = (id) => history.push(`/Truck/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({
@@ -103,10 +103,7 @@ const Truck = ({history}) => {
             <div style={{height: 'calc(100% - 48px)'}}>
                 <ReactTable
                     columns={[
-                        {
-                            accessor: 'id', Header: '', disableFilters: true,
-                            disableSortBy: true, Cell: renderActions
-                        },
+                        {accessor: 'id', Header: '', disableSortBy: true, Cell: renderActions},
                         ...VEHICLE.TRUCK_SCHEMA
                     ]}
                     data={state.data}

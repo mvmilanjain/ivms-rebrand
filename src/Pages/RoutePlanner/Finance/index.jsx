@@ -1,9 +1,6 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Group, Menu} from '@mantine/core';
+import {ActionIcon, Button, Group} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
-import {useModals} from '@mantine/modals';
-import {useNotifications} from '@mantine/notifications';
-import {DotsVerticalIcon} from '@modulz/radix-icons';
 import {MdOutlineEdit as EditIcon, MdOutlineFilterList as FilterIcon} from 'react-icons/md';
 
 import {ContentArea, ReactTable} from 'Components';
@@ -15,8 +12,6 @@ import Filters from './Filters';
 
 const Finance = ({history, ...rest}) => {
     const {requestHandler} = useHttp();
-    const modals = useModals();
-    const notifications = useNotifications();
     const [loading, toggleLoading] = useState(false);
     const [openFilterDrawer, toggleFilterDrawer] = useState(false);
     const [state, setState] = useSetState({
@@ -45,7 +40,7 @@ const Finance = ({history, ...rest}) => {
         </ActionIcon>
     );
 
-    const handleEdit = (id) => history.push(`/RoutePlanner/Finance/${id}`);
+    const handleEdit = (id) => history.push(`/Finance/${id}`);
 
     const handleFilterApply = (data) => {
         toggleFilterDrawer(false);
@@ -65,10 +60,7 @@ const Finance = ({history, ...rest}) => {
             <div style={{height: 'calc(100% - 48px)'}}>
                 <ReactTable
                     columns={[
-                        {
-                            accessor: 'id', Header: '', disableFilters: true,
-                            disableSortBy: true, Cell: renderActions
-                        },
+                        {accessor: 'id', Header: '', disableSortBy: true, Cell: renderActions},
                         ...ROUTE_PLANNER_SCHEMA.FINANCE
                     ]}
                     data={state.data}

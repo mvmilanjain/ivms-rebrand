@@ -17,8 +17,8 @@ import {TRUCK} from 'Shared/Utilities/validationSchema.util';
 
 const YEAR = getYearList();
 
-const NewOrEditTruck = ({history, location, match, ...rest}) => {
-    const action = (match.params && match.params.id) ? 'Edit' : 'New';
+const TruckForm = ({history, location, match, ...rest}) => {
+    const action = (match.params && match.params.id) ? 'Update' : 'Save';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
     const [initialValue, setInitialValue] = useState({});
@@ -26,7 +26,7 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
     const register = (fieldName) => registerField(fieldName, {values, handleChange, touched, errors});
 
     useEffect(() => {
-        if (action === 'New') {
+        if (action === 'Save') {
             const initialData = new Truck();
             setInitialValue({...initialData});
         } else {
@@ -80,12 +80,12 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
     };
 
     const onSubmit = () => {
-        const requestConfig = (action === 'New') ? postTruck({vehicle: values}) : putTruck(match.params.id, {vehicle: values});
+        const requestConfig = (action === 'Save') ? postTruck({vehicle: values}) : putTruck(match.params.id, {vehicle: values});
         requestHandler(requestConfig, {loader: true}).then(res => {
             notifications.showNotification({
                 title: "Success", color: 'green', message: 'Truck has been saved successfully.'
             });
-            history.push('/Vehicle', {tabIndex: 0});
+            history.push('/Vehicle/0');
         }).catch(e => {
             notifications.showNotification({
                 title: "Error", color: 'red', message: 'Not able to save truck details. Something went wrong!!'
@@ -106,12 +106,8 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Truck</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/Vehicle', {tabIndex: 0})}>
-                            Cancel
-                        </Button>
-                        <Button leftIcon={<SaveIcon/>} type="submit">
-                            {action === 'New' ? 'Save' : 'Update'}
-                        </Button>
+                        <Button variant="default" onClick={() => history.push('/Vehicle/0')}>Cancel</Button>
+                        <Button leftIcon={<SaveIcon/>} type="submit">{action}</Button>
                     </Group>
                 </Group>
                 <Divider mb="md" variant="dotted"/>
@@ -341,6 +337,7 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
                             error={errorMessage("member_ids", touched, errors)}
                         />
                     </Col>
+
                     <Col span={4}>
                         <TrailerSelect
                             {...register("trailer")}
@@ -364,4 +361,4 @@ const NewOrEditTruck = ({history, location, match, ...rest}) => {
     );
 };
 
-export default NewOrEditTruck;
+export default TruckForm;

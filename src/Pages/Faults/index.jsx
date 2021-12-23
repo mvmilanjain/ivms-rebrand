@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import {ActionIcon, Button, Group, Menu, Title} from '@mantine/core';
+import {ActionIcon, Box, Button, Group, Menu, Title} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
@@ -8,11 +8,11 @@ import {MdOutlineAddBox as CreateIcon, MdOutlineDelete as DeleteIcon, MdOutlineE
 
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
-import {deleteProduct, getProducts} from 'Shared/Services';
+import {deleteFault, getFaults} from 'Shared/Services';
+import {FAULT_SCHEMA} from 'Shared/Utilities/tableSchema';
 import {getFilterList, getSortText} from 'Shared/Utilities/common.util';
-import {PRODUCT_SCHEMA} from 'Shared/Utilities/tableSchema';
 
-const Product = ({history, ...rest}) => {
+const Faults = ({history, ...rest}) => {
     const {requestHandler} = useHttp();
     const modals = useModals();
     const notifications = useNotifications();
@@ -25,10 +25,10 @@ const Product = ({history, ...rest}) => {
     const fetchData = useCallback(({pageSize, pageIndex, sortBy, filters}) => {
         toggleLoading(l => !l);
         const params = {
-            per_page: pageSize, page_no: pageIndex + 1,
+            per_page: pageSize, page_no: pageIndex + 1, include: 'vehicle',
             sort: getSortText(sortBy), filter: getFilterList(filters)
         };
-        requestHandler(getProducts(params)).then(res => {
+        requestHandler(getFaults(params)).then(res => {
             const {data, meta: {pagination: {count, current_page, total_pages}}} = res;
             setState({
                 reload: false, data,
@@ -40,68 +40,68 @@ const Product = ({history, ...rest}) => {
     const renderActions = ({value}) => {
         return (
             <Menu withArrow size="sm" control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
-                <Menu.Item icon={<EditIcon/>} onClick={() => handleEdit(value)}>Edit Product</Menu.Item>
-                <Menu.Item icon={<DeleteIcon/>} color="red" onClick={() => openDeleteConfirmModal(value)}>
-                    Delete Product
+                <Menu.Item icon={<EditIcon/>} onClick={() => handleEdit(value)}>Edit Fault</Menu.Item>
+                <Menu.Item icon={<DeleteIcon/>} color="red" onClick={() => handleDelete(value)}>
+                    Delete Fault
                 </Menu.Item>
             </Menu>
         );
     };
 
-    const openDeleteConfirmModal = (id) => {
+    const handleCreate = () => history.push(`/Faults/Fault`);
+
+    const handleEdit = (id) => history.push(`/Faults/Fault/${id}`);
+
+    const handleDelete = (id) => {
         modals.openConfirmModal({
-            title: "Are you sure you want to delete the product?",
-            labels: {confirm: "Delete product", cancel: "No don't delete it"},
+            title: "Are you sure you want to delete the fault?",
+            labels: {confirm: "Delete fault", cancel: "No don't delete it"},
             confirmProps: {color: "red"},
             onConfirm: () => {
                 toggleLoading(l => !l);
-                requestHandler(deleteProduct(id)).then(() => {
+                requestHandler(deleteFault(id)).then(() => {
                     notifications.showNotification({
                         title: "Success", color: "green",
-                        message: "Product has been deleted successfully."
+                        message: "Faults has been deleted successfully."
                     });
                     setState({reload: true});
                 }).catch(e => {
                     notifications.showNotification({
                         title: "Error", color: 'red',
-                        message: 'Not able to delete product. Something went wrong!!'
+                        message: 'Not able to delete fault. Something went wrong!!'
                     });
                 }).finally(() => toggleLoading(l => !l));
             }
         });
     };
 
-    const handleCreate = () => history.push(`/Product/New`);
-
-    const handleEdit = (id) => history.push(`/Product/Edit/${id}`);
-
     return (
         <ContentArea withPaper limitToViewPort>
             <Group position="apart" mb="md">
-                <Title order={2}>Product</Title>
-                <Button leftIcon={<CreateIcon/>} onClick={handleCreate}>Create Product</Button>
+                <Title order={2}>Fault</Title>
+                <Button leftIcon={<CreateIcon/>} onClick={handleCreate}>Create Fault</Button>
             </Group>
-            <div style={{height: 'calc(100% - 60px)'}}>
+            <Box style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
                     columns={[
                         {
                             accessor: 'id', Header: '', disableFilters: true, disableSortBy: true,
                             cellMinWidth: 40, cellWidth: 40, Cell: renderActions
                         },
-                        ...PRODUCT_SCHEMA
+                        ...FAULT_SCHEMA
                     ]}
                     data={state.data}
                     serverSideDataSource
                     fetchData={fetchData}
                     loading={loading}
                     reload={state.reload}
-                    stickyHeader sorting filtering
+                    stickyHeader sorting
                     pagination initialPageSize={50}
                     {...state.pagination}
                 />
-            </div>
+            </Box>
         </ContentArea>
     );
 };
 
-export default Product;
+export default Faults;

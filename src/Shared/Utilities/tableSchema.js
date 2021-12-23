@@ -353,7 +353,7 @@ export const FAULT_SCHEMA = [
 ];
 
 export const PRODUCT_SCHEMA = [
-    {accessor: 'name', Header: 'Product Name'},
+    {accessor: 'name', Header: 'Products Name'},
     {accessor: 'std_tonnage', Header: 'Tonnage'},
     {accessor: 'volume', Header: 'Volume', disableSortBy: true}
 ];

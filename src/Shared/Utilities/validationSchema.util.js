@@ -8,8 +8,8 @@ export const SIGN_IN = yup.object({
 });
 
 export const ROUTE = yup.object({
-    route_code: yup.string().required().label('Route code'),
-    name: yup.string().required().label('Route name'),
+    route_code: yup.string().required().label('TripRoutes code'),
+    name: yup.string().required().label('TripRoutes name'),
     std_distance_cycle: yup.number().moreThan(0).required().label('Distance'),
     std_cycle_hours: yup.number().moreThan(0).required().label('Cycle hours'),
     source: yup.string().required().label('Source'),
@@ -31,8 +31,8 @@ export const ROUTE_PLANNER = {
         route_id: yup.string().label('Route').required(),
         product_id: yup.string().label('Product').required(),
         // contractor_id: yup.string().label('Contractor').nullable().required(),
-        planned_distance: yup.number().label('Route distance').min(0).required(),
-        planned_cycle_time: yup.number().label('Route cycle time').min(0).required(),
+        planned_distance: yup.number().label('TripRoutes distance').min(0).required(),
+        planned_cycle_time: yup.number().label('TripRoutes cycle time').min(0).required(),
         planned_load_start_time: yup.date().label('Planned Load Start Time').nullable().required(),
         // planned_origin_departure_time: yup.date().label('Planned Origin Departure Time').nullable().required()
         //     .min(yup.ref('planned_load_start_time'), ({min}) => `Date needs to be after ${formatDateTime(min)}!!`),
@@ -79,9 +79,9 @@ export const ROUTE_PLANNER = {
 };
 
 export const ADDRESS = yup.object({
-    name: yup.string().label('Address name').nullable().required(),
-    address_type: yup.string().label('Address type').nullable().required(),
-    address1: yup.string().label('Address Line 1').nullable().required()
+    name: yup.string().label('Addresses name').nullable().required(),
+    address_type: yup.string().label('Addresses type').nullable().required(),
+    address1: yup.string().label('Addresses Line 1').nullable().required()
 });
 
 export const INSPECTION_REPORT = {
@@ -117,7 +117,7 @@ export const ADD_ROUTE_STOP = yup.object({
 });
 
 export const PRODUCT = yup.object({
-    name: yup.string().required().label('Product name'),
+    name: yup.string().required().label('Products name'),
     volume: yup.number().moreThan(0).required().label('Volume')
 });
 
@@ -137,7 +137,7 @@ export const PRODUCT_ROUTE = yup.object({
 
 export const FAULT = yup.object({
     name: yup.string().required().label('Name'),
-    fault_type: yup.string().required().label('Fault type'),
+    fault_type: yup.string().required().label('Faults type'),
     vehicle_id: yup.string().required().label('Vehicle'),
 });
 

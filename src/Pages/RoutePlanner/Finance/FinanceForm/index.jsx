@@ -8,7 +8,6 @@ import {ContentArea} from 'Components';
 import {useHttp} from 'Hooks';
 import {getRouteOrder, putRouteOrder} from 'Shared/Services';
 import {Finance} from 'Shared/Models';
-import {registerField} from 'Shared/Utilities/common.util';
 
 const FinanceForm = ({history, location, match, ...rest}) => {
     const {requestHandler} = useHttp();
@@ -32,17 +31,17 @@ const FinanceForm = ({history, location, match, ...rest}) => {
     const onSubmit = () => {
         requestHandler(putRouteOrder(match.params.id, {route_order: values}), {loader: true}).then(res => {
             notifications.showNotification({
-                title: "Success", color: 'green', message: 'Finance has been saved successfully.'
+                title: 'Success', color: 'green', message: 'Finance has been saved successfully.'
             });
             history.goBack();
         }).catch(e => {
             notifications.showNotification({
-                title: "Error", color: 'red', message: 'Not able to save finance details. Something went wrong!!'
+                title: 'Error', color: 'red', message: 'Not able to save finance details. Something went wrong!!'
             });
         });
     };
 
-    const {values, touched, errors, handleSubmit, setFieldValue} = useFormik({
+    const {values, handleSubmit, setFieldValue} = useFormik({
         enableReinitialize: true,
         initialValues: initialValue,
         onSubmit
@@ -54,9 +53,7 @@ const FinanceForm = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Finance</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/RoutePlanner')}>
-                            Cancel
-                        </Button>
+                        <Button variant="default" onClick={() => history.goBack()}>Cancel</Button>
                         <Button leftIcon={<SaveIcon/>} type="submit">Update</Button>
                     </Group>
                 </Group>

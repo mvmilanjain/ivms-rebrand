@@ -5,9 +5,9 @@ const SignIn = loadable(() => import('Pages/SignIn'));
 const PageNotFound = loadable(() => import('Pages/ErrorPage/PageNotFound'));
 
 const Dashboard = loadable(() => import('Pages/Dashboard'));
-const RoutePage = {
-    ViewAll: loadable(() => import('Pages/Route')),
-    NewOrEdit: loadable(() => import('Pages/Route/NewOrEditRoute'))
+const TripRoute = {
+    ViewAll: loadable(() => import('Pages/TripRoutes')),
+    NewOrEdit: loadable(() => import('Pages/TripRoutes/TripRouteForm'))
 };
 const RoutePlanner = loadable(() => import('Pages/RoutePlanner'));
 const Finance = loadable(() => import('Pages/RoutePlanner/Finance/FinanceForm'));
@@ -16,25 +16,25 @@ const Request = loadable(() => import('Pages/Maintenance/Request'));
 const Scheduler = loadable(() => import('Pages/Maintenance/Scheduler'));
 const Workorder = loadable(() => import('Pages/Maintenance/Workorder'));
 const Fault = {
-    ViewAll: loadable(() => import('Pages/Fault')),
-    NewOrEdit: loadable(() => import('Pages/Fault/NewOrEditFault'))
+    ViewAll: loadable(() => import('Pages/Faults')),
+    NewOrEdit: loadable(() => import('Pages/Faults/FaultForm'))
 };
 const Product = {
-    ViewAll: loadable(() => import('Pages/Product')),
-    NewOrEdit: loadable(() => import('Pages/Product/NewOrEditProduct'))
+    ViewAll: loadable(() => import('Pages/Products')),
+    NewOrEdit: loadable(() => import('Pages/Products/ProductForm'))
 };
 const Address = {
-    ViewAll: loadable(() => import('Pages/Address')),
-    NewOrEdit: loadable(() => import('Pages/Address/NewOrEditAddress'))
+    ViewAll: loadable(() => import('Pages/Addresses')),
+    NewOrEdit: loadable(() => import('Pages/Addresses/AddressForm'))
 };
 const InspectionForm = loadable(() => import('Pages/Inspection/InspectionForm'));
 const InspectionReport = loadable(() => import('Pages/Inspection/InspectionReport'));
 const Vehicle = loadable(() => import('Pages/Vehicle'));
 const Truck = {
-    NewOrEdit: loadable(() => import('Pages/Vehicle/Truck/NewOrEditTruck'))
+    NewOrEdit: loadable(() => import('Pages/Vehicle/Truck/TruckForm'))
 };
 const Trailer = {
-    NewOrEdit: loadable(() => import('Pages/Vehicle/Trailer/NewOrEditTrailer'))
+    NewOrEdit: loadable(() => import('Pages/Vehicle/Trailer/TrailerForm'))
 };
 const Setting = loadable(() => import('Pages/Setting'));
 
@@ -43,12 +43,12 @@ const pagesWithoutAuthentication = [{id: "signin", path: "/SignIn", component: S
 const pagesWithAuthentication = [
     {id: "dashboard", path: "/Dashboard", component: Dashboard},
 
-    {id: "route", path: "/Route", component: RoutePage.ViewAll},
-    {id: "newRoute", path: "/Route/New", component: RoutePage.NewOrEdit},
-    {id: "editRoute", path: "/Route/Edit/:id", component: RoutePage.NewOrEdit},
+    {id: "tripRoutes", path: "/TripRoutes", component: TripRoute.ViewAll},
+    {id: "newTripRoute", path: "/TripRoutes/Route", component: TripRoute.NewOrEdit},
+    {id: "editTripRoute", path: "/TripRoutes/Route/:id", component: TripRoute.NewOrEdit},
 
     {id: "routePlanner", path: "/RoutePlanner/:tabIndex", component: RoutePlanner},
-    {id: "routePlannerFinance", path: "/RoutePlanner/Finance/:id", component: Finance},
+    {id: "routePlannerFinance", path: "/Finance/:id", component: Finance},
 
     {id: "laborcode", path: "/Maintenance/Laborcode", component: Laborcode},
     {id: "request", path: "/Maintenance/Request", component: Request},
@@ -58,24 +58,25 @@ const pagesWithAuthentication = [
     {id: "inspectionForm", path: "/Inspection/InspectionForm", component: InspectionForm},
     {id: "inspectionReport", path: "/Inspection/InspectionReport", component: InspectionReport},
 
-    {id: "fault", path: "/Fault", component: Fault.ViewAll},
-    {id: "newFault", path: "/Fault/New", component: Fault.NewOrEdit},
-    {id: "editFault", path: "/Fault/Edit/:id", component: Fault.NewOrEdit},
+    {id: "faults", path: "/Faults", component: Fault.ViewAll},
+    {id: "newFault", path: "/Faults/Fault", component: Fault.NewOrEdit},
+    {id: "editFault", path: "/Faults/Fault/:id", component: Fault.NewOrEdit},
 
-    {id: "product", path: "/Product", component: Product.ViewAll},
-    {id: "newProduct", path: "/Product/New", component: Product.NewOrEdit},
-    {id: "editProduct", path: "/Product/Edit/:id", component: Product.NewOrEdit},
+    {id: "products", path: "/Products", component: Product.ViewAll},
+    {id: "newProduct", path: "/Products/Product", component: Product.NewOrEdit},
+    {id: "editProduct", path: "/Products/Product/:id", component: Product.NewOrEdit},
 
-    {id: "address", path: "/Address", component: Address.ViewAll},
-    {id: "newAddress", path: "/Address/New", component: Address.NewOrEdit},
-    {id: "editAddress", path: "/Address/Edit/:id", component: Address.NewOrEdit},
+    {id: "addresses", path: "/Addresses", component: Address.ViewAll},
+    {id: "newAddress", path: "/Addresses/Address", component: Address.NewOrEdit},
+    {id: "editAddress", path: "/Addresses/Address/:id", component: Address.NewOrEdit},
 
-    {id: "vehicle", path: "/Vehicle", component: Vehicle},
-    {id: "newTruck", path: "/Vehicle/Truck/New", component: Truck.NewOrEdit},
-    {id: "editTruck", path: "/Vehicle/Truck/Edit/:id", component: Truck.NewOrEdit},
+    {id: "vehicle", path: "/Vehicle/:tabIndex", component: Vehicle},
 
-    {id: "newTrailer", path: "/Vehicle/Trailer/New", component: Trailer.NewOrEdit},
-    {id: "editTrailer", path: "/Vehicle/Trailer/Edit/:id", component: Trailer.NewOrEdit},
+    {id: "newTruck", path: "/Truck", component: Truck.NewOrEdit},
+    {id: "editTruck", path: "/Truck/:id", component: Truck.NewOrEdit},
+
+    {id: "newTrailer", path: "/Trailer", component: Trailer.NewOrEdit},
+    {id: "editTrailer", path: "/Trailer/:id", component: Trailer.NewOrEdit},
 
     {id: "setting", path: "/Setting", component: Setting}
 ];

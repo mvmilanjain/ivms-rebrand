@@ -19,7 +19,7 @@ import {getSortText} from 'Shared/Utilities/common.util';
 import {ROUTE_SCHEMA} from 'Shared/Utilities/tableSchema';
 import Filters from './Filters';
 
-const Route = ({history}) => {
+const TripRoutes = ({history}) => {
     const {requestHandler} = useHttp();
     const modals = useModals();
     const notifications = useNotifications();
@@ -58,9 +58,9 @@ const Route = ({history}) => {
         );
     };
 
-    const handleCreate = () => history.push(`/Route/New`);
+    const handleCreate = () => history.push('/TripRoutes/Route');
 
-    const handleEdit = (id) => history.push(`/Route/Edit/${id}`);
+    const handleEdit = (id) => history.push(`/TripRoutes/Route/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({
@@ -72,7 +72,7 @@ const Route = ({history}) => {
                 requestHandler(deleteRoute(id)).then(() => {
                     notifications.showNotification({
                         title: "Success", color: "green",
-                        message: "Route has been deleted successfully."
+                        message: "TripRoutes has been deleted successfully."
                     });
                     setState({reload: true});
                 }).catch(e => {
@@ -107,10 +107,7 @@ const Route = ({history}) => {
             <div style={{height: 'calc(100% - 60px)'}}>
                 <ReactTable
                     columns={[
-                        {
-                            accessor: 'id', Header: '', disableFilters: true,
-                            disableSortBy: true, Cell: renderActions
-                        },
+                        {accessor: 'id', Header: '', disableSortBy: true, Cell: renderActions},
                         ...ROUTE_SCHEMA
                     ]}
                     data={state.data}
@@ -134,4 +131,4 @@ const Route = ({history}) => {
     );
 };
 
-export default Route;
+export default TripRoutes;

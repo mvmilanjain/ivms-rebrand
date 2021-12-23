@@ -1,9 +1,6 @@
 import {useEffect, useState} from 'react';
-import get from 'lodash/get';
 import {useFormik} from 'formik';
 import {Button, Col, Divider, Grid, Group, Radio, RadioGroup, Textarea, TextInput, Title} from '@mantine/core';
-import {useSetState} from '@mantine/hooks';
-import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
 import {MdOutlineSave as SaveIcon} from 'react-icons/md';
 
@@ -11,28 +8,19 @@ import {ContentArea, VehicleSelect} from 'Components';
 import {useHttp} from 'Hooks';
 import {Fault} from 'Shared/Models';
 import {getFault, postFault, putFault} from 'Shared/Services';
-import {errorMessage} from 'Shared/Utilities/common.util';
+import {errorMessage, registerField} from 'Shared/Utilities/common.util';
 import {FAULT} from 'Shared/Utilities/validationSchema.util';
 
-const NewOrEditFault = ({history, location, match, ...rest}) => {
-    const action = location.state.action;
+const FaultForm = ({history, location, match, ...rest}) => {
+    const action = (match.params && match.params.id) ? 'Update' : 'Save';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
-    const modals = useModals();
     const [initialValue, setInitialValue] = useState({});
-    const [routeMapState, setRouteMapState] = useSetState({
-        route: null, activeStoppages: [], initialLoad: false
-    });
 
-    const register = (fieldName) => ({
-        id: fieldName,
-        value: get(values, fieldName),
-        onChange: handleChange,
-        error: errorMessage(fieldName, touched, errors)
-    });
+    const register = (fieldName) => registerField(fieldName, {values, handleChange, touched, errors});
 
     useEffect(() => {
-        if (action === 'New') {
+        if (action === 'Save') {
             const fault = new Fault();
             setInitialValue({...fault});
         } else {
@@ -55,14 +43,13 @@ const NewOrEditFault = ({history, location, match, ...rest}) => {
     };
 
     const onSubmit = () => {
-        // const payload = {fault: {...values, vehicle_id: values.vehicle.id}};
         const payload = {fault: values};
-        const requestConfig = (action === 'New') ? postFault(payload) : putFault(match.params.id, payload);
+        const requestConfig = (action === 'Save') ? postFault(payload) : putFault(match.params.id, payload);
         requestHandler(requestConfig, {loader: true}).then(res => {
             notifications.showNotification({
-                title: 'Success', color: 'green', message: 'Fault has been saved successfully.'
+                title: 'Success', color: 'green', message: 'Faults has been saved successfully.'
             });
-            history.push('/Fault');
+            history.push('/Faults');
         }).catch(e => {
             notifications.showNotification({
                 title: 'Error', color: 'red', message: 'Not able to save fault details. Something went wrong!!'
@@ -83,12 +70,8 @@ const NewOrEditFault = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Fault</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/Fault')}>
-                            Cancel
-                        </Button>
-                        <Button leftIcon={<SaveIcon/>} type="submit">
-                            {action === 'New' ? 'Save' : 'Update'}
-                        </Button>
+                        <Button variant="default" onClick={() => history.push('/Faults')}>Cancel</Button>
+                        <Button leftIcon={<SaveIcon/>} type="submit">{action}</Button>
                     </Group>
                 </Group>
                 <Divider mb="md" variant="dotted"/>
@@ -134,4 +117,4 @@ const NewOrEditFault = ({history, location, match, ...rest}) => {
     );
 };
 
-export default NewOrEditFault;
+export default FaultForm;

@@ -26,7 +26,7 @@ export const RECOMMENDATION = {
         message: 'If load can be completed efficiently, without impacting overall performance'
     },
     NO: {type: 'error', title: 'NO', message: 'Not recommended'},
-    ERROR: {type: 'error', title: 'ERROR', message: 'Check Product selection OR Check Master Data'}
+    ERROR: {type: 'error', title: 'ERROR', message: 'Check Products selection OR Check Master Data'}
 };
 
 export const REPORT_TYPE = {

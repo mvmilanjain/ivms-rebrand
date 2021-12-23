@@ -65,8 +65,8 @@ export const CONGESTION_SEVERITY = ['average', 'bad', 'excessive'];
 export const MEMBER_ROLE = [
     {value: 'admin', label: 'Admin'},
     {value: 'driver', label: 'Driver'},
-    {value: 'route_planner', label: 'Route Planner'},
-    {value: 'route_operations', label: 'Route Operation'}
+    {value: 'route_planner', label: 'TripRoutes Planner'},
+    {value: 'route_operations', label: 'TripRoutes Operation'}
 ];
 export const ADDRESS_TYPE = [
     {value: 'stoppage', label: 'Truck Stop'},
