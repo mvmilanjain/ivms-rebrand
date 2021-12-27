@@ -5,7 +5,7 @@ import {TRIP_STATUS} from './constant';
 import {capitalizeStr, formatDate, formatDateTime, getAddressLabel, getFullName, getOptionLabel} from './common.util';
 import {POD_STATUS, TRIP_STATUS as TRIP_STATUS_LIST, VEHICLE_STATUS} from './referenceData.util';
 
-const renderBoolean = ({value}) => {
+export const renderBoolean = ({value}) => {
     let result = '';
     if (typeof value === 'boolean') {
         result = value ?
@@ -15,7 +15,9 @@ const renderBoolean = ({value}) => {
     return result;
 };
 
-const renderDate = (val) => {
+export const renderDistance = (val) => val ? <Badge radius="sm">{val} KM</Badge> : ''
+
+export const renderDate = (val) => {
     let result = '';
     if (val) {
         result = <Badge radius="sm" color="cyan" leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}>
@@ -25,7 +27,7 @@ const renderDate = (val) => {
     return result;
 };
 
-const renderDateTime = (val) => {
+export const renderDateTime = (val) => {
     let result = '';
     if (val) {
         result = <Badge radius="sm" color="cyan" leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}>
@@ -35,11 +37,11 @@ const renderDateTime = (val) => {
     return result;
 };
 
-const renderTextWithTooltip = (val) => <Tooltip label={val} withArrow>
+export const renderTextWithTooltip = (val) => <Tooltip label={val} withArrow>
     <Text size="sm" lineClamp={1}>{val}</Text>
 </Tooltip>;
 
-const renderVehicleStatus = ({value}) => {
+export const renderVehicleStatus = ({value}) => {
     let result = '';
     const label = getOptionLabel(VEHICLE_STATUS, value);
     if (value === 'initial') {
@@ -58,7 +60,7 @@ const renderVehicleStatus = ({value}) => {
     return result;
 };
 
-const renderTripStatus = ({value}) => {
+export const renderTripStatus = ({value}) => {
     let result = '';
     const label = getOptionLabel(TRIP_STATUS_LIST, value);
     if (value === TRIP_STATUS.NOT_STARTED) {
@@ -73,7 +75,7 @@ const renderTripStatus = ({value}) => {
     return result;
 };
 
-const renderPodStatus = ({value}) => {
+export const renderPodStatus = ({value}) => {
     let result = '';
     const label = getOptionLabel(POD_STATUS, value);
     if (value === 'awaited') {

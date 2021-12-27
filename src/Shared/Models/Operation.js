@@ -1,5 +1,5 @@
-import {Address} from "./Address";
-import {addMinutesToDate} from "../Utilities/common.util";
+import {Address} from './Address';
+import {addMinutesToDate} from '../Utilities/common.util';
 
 class Operation {
     constructor(props) {
@@ -14,7 +14,10 @@ class Operation {
             planned_eta_destination = null,
             loading_odo_km = 0,
             offloading_odo_km = 0,
-            route_order_actual_info = {},
+            is_empty_leg = false,
+            vehicle = null,
+            member = null,
+            route_order_actual_info = {}
         } = props || {};
 
         this.id = id;
@@ -28,23 +31,29 @@ class Operation {
         this.planned_eta_destination = planned_eta_destination;
         this.loading_odo_km = loading_odo_km;
         this.offloading_odo_km = offloading_odo_km;
+        this.is_empty_leg = is_empty_leg;
+        this.vehicle = vehicle;
+        this.member = member;
         this.route_order_actual_info = new RouteOrderActualInfo(route_order_actual_info);
     }
 
     setOrder(order) {
         const {
             id = '',
+            rate_per_tone = 0,
+            status = '',
+            pod_status = '',
+            vehicle = null,
+            member = null,
             planned_origin_departure_time = null,
             planned_eta_destination = null,
-            rate_per_tone = 0,
+            estimated_fuel_location_id = '',
+            estimated_fuel_location = null,
             fuel_required_for_trip = 0,
             planned_cycle_time = 0,
             planned_distance = 0,
             planned_tonnage = 0,
-            status = null,
-            pod_status = null,
-            estimated_fuel_location_id = '',
-            estimated_fuel_location = null,
+            is_empty_leg = false,
             route_order_stoppages = []
         } = order || {};
         this.route_order_actual_info.route_order_id = id;
@@ -56,6 +65,9 @@ class Operation {
         this.route_order_actual_info.tonnage_loaded = planned_tonnage;
         this.status = status;
         this.pod_status = pod_status;
+        this.is_empty_leg = is_empty_leg;
+        this.vehicle = vehicle;
+        this.member = member;
         this.route_order_actual_info.fuel_point_id = estimated_fuel_location_id;
         this.route_order_actual_info.fuel_point = estimated_fuel_location;
         this.route_order_actual_info.route_order_actual_stop_infos = route_order_stoppages
@@ -63,12 +75,12 @@ class Operation {
             .map(stop => new RouteOrderActualStopInfo({
                 ...stop, id: '', route_order_stoppage_id: stop.id
             }));
-            
+
         this.planned_origin_departure_time = planned_origin_departure_time;
         this.planned_eta_destination = planned_eta_destination;
         this.setRatePerTone(rate_per_tone);
         this.setRouteStops(route_order_stoppages);
-       
+
     }
 
     setRatePerTone(ratePerTone) {
@@ -111,11 +123,15 @@ class RouteOrderActualInfo {
             pod_number = '',
             delivery_note_number = '',
             document_recieved = false,
-            loading_slip = null,
-            offloading_slip = null,
-            fuel_slip = null,
-            toll_slip = null,
-            truck_wash_slip = null,
+
+            loading_slips = [],
+            offloading_slips = [],
+            fuel_slips = [],
+            toll_slips = [],
+            truck_wash_slips = [],
+            pod_slips = [],
+            truck_stop_slips = [],
+
             route_order_actual_stop_infos = []
         } = props || {};
         this.id = id;
@@ -131,11 +147,15 @@ class RouteOrderActualInfo {
         this.pod_number = pod_number;
         this.delivery_note_number = delivery_note_number;
         this.document_recieved = document_recieved;
-        this.loading_slip = loading_slip;
-        this.offloading_slip = offloading_slip;
-        this.fuel_slip = fuel_slip;
-        this.toll_slip = toll_slip;
-        this.truck_wash_slip = truck_wash_slip;
+
+        this.loading_slips = loading_slips;
+        this.offloading_slips = offloading_slips;
+        this.fuel_slips = fuel_slips;
+        this.toll_slips = toll_slips;
+        this.truck_wash_slips = truck_wash_slips;
+        this.pod_slips = pod_slips;
+        this.truck_stop_slips = truck_stop_slips;
+
         this.route_order_actual_stop_infos = this.setStoppages(route_order_actual_stop_infos);
     }
 

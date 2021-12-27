@@ -25,7 +25,7 @@ const App = () => {
     }, [dispatch]);
 
     return (
-        <MantineProvider withNormalizeCSS theme={{dateFormat: 'YYYY-MM-DD'}}>
+        <MantineProvider withNormalizeCSS theme={{dateFormat: 'YYYY-MM-DD', other: {dateTimeFormat: 'YYYY-MM-DD HH:mm'}}}>
             <GlobalStyles/>
             <ModalsProvider modalProps={{centered: true}}>
                 <NotificationsProvider position="top-center">

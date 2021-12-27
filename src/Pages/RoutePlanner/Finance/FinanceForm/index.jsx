@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useFormik} from 'formik';
-import {Badge, Button, Checkbox, Divider, Group, Text, Title} from '@mantine/core';
+import {Badge, Button, Checkbox, Divider, Group, Text, Title, Tooltip} from '@mantine/core';
 import {useNotifications} from '@mantine/notifications';
 import {MdOutlineSave as SaveIcon} from 'react-icons/md';
 
@@ -63,7 +63,9 @@ const FinanceForm = ({history, location, match, ...rest}) => {
                     <Text size="lg" weight={600} mb={0}>
                         Order #: <Text color="blue" inherit component="span">{values.order_number}</Text>
                     </Text>
-                    <Badge variant="filled" radius="lg" color="green">{values.status}</Badge>
+                    <Tooltip label="Status" withArrow>
+                        <Badge variant="filled" radius="lg" color="green">{values.status}</Badge>
+                    </Tooltip>
                 </Group>
 
                 <Group direction="column" spacing="xl">

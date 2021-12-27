@@ -278,7 +278,6 @@ const TripRouteForm = ({history, location, match, ...rest}) => {
                             />
                         </SimpleGrid>
                     </Col>
-
                     <Col span={5}>
                         <Text size="lg" weight={500}>Route Map</Text>
                         <div style={{height: 'calc(100% - 30px)'}}>
@@ -286,48 +285,49 @@ const TripRouteForm = ({history, location, match, ...rest}) => {
                         </div>
                     </Col>
                 </Grid>
-
                 <Divider mb="md" variant="dotted"/>
 
-                <Group mb="md" position="apart">
-                    <Title order={4}>Route Stoppages</Title>
-                    <Button variant="outline" leftIcon={<AddStopIcon/>} onClick={handleAddStoppage}>
-                        Add Stoppage
-                    </Button>
+                <Group direction="column" grow spacing="sm">
+                    <Group position="apart">
+                        <Text size="lg" weight={500}>Route Stoppages</Text>
+                        <Button variant="outline" leftIcon={<AddStopIcon/>} onClick={handleAddStoppage}>
+                            Add Stoppage
+                        </Button>
+                    </Group>
+                    <ReactTable
+                        columns={[
+                            {accessor: 'position', Header: '#', cellWidth: 40},
+                            {
+                                accessor: 'address_id', Header: 'Address',
+                                Cell: ({row}) => <AddressSelect
+                                    {...register(`route_planner.route_stops[${row.index}].address`)}
+                                    withIcon required disabled={isRouteStopAddressDisabled(row.index, row.original)}
+                                    onChange={(val) => handleRouteStopAddressChange(val, row.index)}
+                                    error={errorMessage(`route_planner.route_stops[${row.index}].address_id`, touched, errors)}
+                                />
+                            },
+                            {
+                                accessor: 'distance', Header: 'Distance', cellWidth: 200,
+                                Cell: ({row}) => <NumberInput
+                                    {...register(`route_planner.route_stops[${row.index}].distance`)}
+                                    placeholder="Enter distance" min={0}
+                                    disabled={isRouteStopDistanceDisabled(row.index, row.original)}
+                                    onChange={val => handleRouteStopChange(val, row.index, 'distance')}
+                                />
+                            },
+                            {
+                                accessor: 'stop_duration', Header: 'Stop duration', cellWidth: 200,
+                                Cell: ({row}) => <NumberInput
+                                    {...register(`route_planner.route_stops[${row.index}].stop_duration`)}
+                                    placeholder="Enter stop duration" min={0}
+                                    onChange={val => handleRouteStopChange(val, row.index, 'stop_duration')}
+                                />
+                            },
+                            {accessor: 'id', Header: 'Actions', cellWidth: 120, Cell: renderStoppageRowAction}
+                        ]}
+                        data={get(values, 'route_planner.route_stops', []).filter(stop => !stop._destroy)}
+                    />
                 </Group>
-                <ReactTable
-                    columns={[
-                        {accessor: 'position', Header: '#', cellWidth: 40},
-                        {
-                            accessor: 'address_id', Header: 'Address',
-                            Cell: ({row}) => <AddressSelect
-                                {...register(`route_planner.route_stops[${row.index}].address`)}
-                                withIcon required disabled={isRouteStopAddressDisabled(row.index, row.original)}
-                                onChange={(val) => handleRouteStopAddressChange(val, row.index)}
-                                error={errorMessage(`route_planner.route_stops[${row.index}].address_id`, touched, errors)}
-                            />
-                        },
-                        {
-                            accessor: 'distance', Header: 'Distance', cellWidth: 200,
-                            Cell: ({row}) => <NumberInput
-                                {...register(`route_planner.route_stops[${row.index}].distance`)}
-                                placeholder="Enter distance" min={0}
-                                disabled={isRouteStopDistanceDisabled(row.index, row.original)}
-                                onChange={val => handleRouteStopChange(val, row.index, 'distance')}
-                            />
-                        },
-                        {
-                            accessor: 'stop_duration', Header: 'Stop duration', cellWidth: 200,
-                            Cell: ({row}) => <NumberInput
-                                {...register(`route_planner.route_stops[${row.index}].stop_duration`)}
-                                placeholder="Enter stop duration" min={0}
-                                onChange={val => handleRouteStopChange(val, row.index, 'stop_duration')}
-                            />
-                        },
-                        {accessor: 'id', Header: 'Actions', cellWidth: 120, Cell: renderStoppageRowAction}
-                    ]}
-                    data={get(values, 'route_planner.route_stops', []).filter(stop => !stop._destroy)}
-                />
             </form>
         </ContentArea>
     );

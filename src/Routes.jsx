@@ -11,6 +11,8 @@ const TripRoute = {
 };
 const RoutePlanner = loadable(() => import('Pages/RoutePlanner'));
 const Finance = loadable(() => import('Pages/RoutePlanner/Finance/FinanceForm'));
+const Operation = loadable(() => import('Pages/RoutePlanner/Operation/OperationForm'));
+
 const Laborcode = loadable(() => import('Pages/Maintenance/Laborcode'));
 const Request = loadable(() => import('Pages/Maintenance/Request'));
 const Scheduler = loadable(() => import('Pages/Maintenance/Scheduler'));
@@ -48,7 +50,8 @@ const pagesWithAuthentication = [
     {id: "editTripRoute", path: "/TripRoutes/Route/:id", component: TripRoute.NewOrEdit},
 
     {id: "routePlanner", path: "/RoutePlanner/:tabIndex", component: RoutePlanner},
-    {id: "routePlannerFinance", path: "/Finance/:id", component: Finance},
+    {id: "finance", path: "/Finance/:id", component: Finance},
+    {id: "operation", path: "/Operation/:id", component: Operation},
 
     {id: "laborcode", path: "/Maintenance/Laborcode", component: Laborcode},
     {id: "request", path: "/Maintenance/Request", component: Request},

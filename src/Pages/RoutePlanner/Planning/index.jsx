@@ -63,11 +63,15 @@ const Planning = ({history, ...rest}) => {
                     <Menu.Label>Operation</Menu.Label>
                 )}
                 {(status === TRIP_STATUS.IN_PROGRESS || status === TRIP_STATUS.COMPLETED) && (
-                    <Menu.Item icon={<EditIcon/>}>Edit Operation</Menu.Item>
+                    <Menu.Item icon={<EditIcon/>} onClick={() => handleOperationUpdate(value)}>
+                        Edit Operation
+                    </Menu.Item>
                 )}
 
                 {status === TRIP_STATUS.COMPLETED && <Menu.Label>Finance</Menu.Label>}
-                {status === TRIP_STATUS.COMPLETED && <Menu.Item icon={<EditIcon/>}>Edit Finance</Menu.Item>}
+                {status === TRIP_STATUS.COMPLETED && <Menu.Item icon={<EditIcon/>} onClick={() => handleFinanceUpdate(value)}>
+                    Edit Finance
+                </Menu.Item>}
 
                 {(status === TRIP_STATUS.NOT_STARTED || status === TRIP_STATUS.IN_PROGRESS) && (
                     <Menu.Label>Event</Menu.Label>
@@ -89,6 +93,10 @@ const Planning = ({history, ...rest}) => {
         toggleFilterDrawer(false);
         setState({outerFilter: {...data}});
     };
+
+    const handleOperationUpdate = (id) => history.push(`/Operation/${id}`);
+
+    const handleFinanceUpdate = (id) => history.push(`/Finance/${id}`);
 
     return (
         <ContentArea withPaper limitToViewPort heightToReduce={184} withPadding={false}>

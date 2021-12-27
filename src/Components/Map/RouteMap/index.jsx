@@ -5,28 +5,28 @@ import {useNotifications} from '@mantine/notifications';
 import {LATLNG} from 'Shared/Utilities/constant';
 import {getAddressLabel} from 'Shared/Utilities/common.util';
 
-let map = null;
-let directionsService = null;
-let directionsRenderer = null;
+const RouteMap = ({id = "route-map", route, activeStoppages, initialLoad, onChange}) => {
+    let map = null;
+    let directionsService = null;
+    let directionsRenderer = null;
 
-const initMap = () => {
-    const mapOptions = {center: {lat: LATLNG.lat, lng: LATLNG.lng}, zoom: 10};
-    map = new window.google.maps.Map(document.getElementById("route-map"), mapOptions);
-    directionsService = new window.google.maps.DirectionsService();
-    directionsRenderer = new window.google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(map);
-};
-
-const RouteMap = ({route, activeStoppages, initialLoad, onChange}) => {
     const notifications = useNotifications();
 
     useEffect(() => {
-        initMap();
+        initMap(id);
     }, []);
 
     useEffect(() => {
         activeStoppages && (activeStoppages.length > 1) && calculateAndDisplayRoute();
     }, [activeStoppages]);
+
+    const initMap = (id) => {
+        const mapOptions = {center: {lat: LATLNG.lat, lng: LATLNG.lng}, zoom: 10};
+        map = new window.google.maps.Map(document.getElementById(id), mapOptions);
+        directionsService = new window.google.maps.DirectionsService();
+        directionsRenderer = new window.google.maps.DirectionsRenderer();
+        directionsRenderer.setMap(map);
+    };
 
     const calculateAndDisplayRoute = () => {
         const originAddress = activeStoppages[0].address;
@@ -50,18 +50,18 @@ const RouteMap = ({route, activeStoppages, initialLoad, onChange}) => {
                 leg.end_address = getAddressLabel(activeStoppages[i + 1].address);
             });
             directionsRenderer.setDirections(res);
-            onChange('success', res.routes[0], route, initialLoad);
+            typeof onChange === 'function' && onChange('success', res.routes[0], route, initialLoad);
         }).catch(error => {
             console.error(error);
             notifications.showNotification({
                 title: "Error", color: 'red',
                 message: error.message
             });
-            onChange('fail', [], route, initialLoad);
+            typeof onChange === 'function' && onChange('fail', [], route, initialLoad);
         });
     };
 
-    return <Paper withBorder radius="md" style={{height: '100%'}} id="route-map"/>
+    return <Paper withBorder radius="md" style={{height: '100%'}} id={id}/>
 };
 
 export default RouteMap;

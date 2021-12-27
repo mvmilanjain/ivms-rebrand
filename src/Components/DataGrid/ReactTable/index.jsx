@@ -20,7 +20,7 @@ import {AiOutlineInbox} from 'react-icons/ai';
 import filterTypes from './filterTypes';
 import {StringFilter} from './Filters';
 
-const pageSizeOptions = ['25', '50', '100'];
+const pageSizeOptions = ['10', '25', '50', '100'];
 
 const useStyles = createStyles((t) => ({
     root: {height: '100%', display: 'block'},
