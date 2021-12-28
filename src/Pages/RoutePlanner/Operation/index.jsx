@@ -5,12 +5,10 @@ import {useModals} from '@mantine/modals';
 import {useNotifications} from '@mantine/notifications';
 import {DotsVerticalIcon} from '@modulz/radix-icons';
 import {
-    MdOutlineCancelPresentation as CancelTripIcon,
     MdOutlineCheckCircle as CompleteTripIcon,
     MdOutlineEdit as EditIcon,
     MdOutlineFilterList as FilterIcon,
-    MdOutlineVisibility as ViewIcon,
-    MdPlayCircleOutline as StartTripIcon
+    MdOutlineVisibility as ViewIcon
 } from 'react-icons/md';
 import {AiOutlineExport as ExportIcon} from 'react-icons/ai';
 
