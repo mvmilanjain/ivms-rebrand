@@ -26,7 +26,7 @@ const TripRouteForm = ({history, location, match, ...rest}) => {
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
     const modals = useModals();
-    const [initialValue, setInitialValue] = useState({});
+    const [initialValue, setInitialValue] = useState(null);
     const [routeMapState, setRouteMapState] = useSetState({
         route: null, activeStoppages: [], initialLoad: false
     });
@@ -204,7 +204,7 @@ const TripRouteForm = ({history, location, match, ...rest}) => {
 
     return (
         <ContentArea withPaper>
-            <form onSubmit={handleSubmit}>
+            {initialValue && <form onSubmit={handleSubmit}>
                 <Group position="apart" mb="md">
                     <Title order={3}>Route</Title>
                     <Group position="apart">
@@ -328,7 +328,7 @@ const TripRouteForm = ({history, location, match, ...rest}) => {
                         data={get(values, 'route_planner.route_stops', []).filter(stop => !stop._destroy)}
                     />
                 </Group>
-            </form>
+            </form>}
         </ContentArea>
     );
 };
