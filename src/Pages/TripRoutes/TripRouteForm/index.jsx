@@ -310,7 +310,7 @@ const TripRouteForm = ({history, location, match, ...rest}) => {
                                 accessor: 'distance', Header: 'Distance', cellWidth: 200,
                                 Cell: ({row}) => <NumberInput
                                     {...register(`route_planner.route_stops[${row.index}].distance`)}
-                                    placeholder="Enter distance" min={0}
+                                    min={0}
                                     disabled={isRouteStopDistanceDisabled(row.index, row.original)}
                                     onChange={val => handleRouteStopChange(val, row.index, 'distance')}
                                 />
@@ -319,7 +319,7 @@ const TripRouteForm = ({history, location, match, ...rest}) => {
                                 accessor: 'stop_duration', Header: 'Stop duration', cellWidth: 200,
                                 Cell: ({row}) => <NumberInput
                                     {...register(`route_planner.route_stops[${row.index}].stop_duration`)}
-                                    placeholder="Enter stop duration" min={0}
+                                    min={0} precision={1} step={0.5}
                                     onChange={val => handleRouteStopChange(val, row.index, 'stop_duration')}
                                 />
                             },

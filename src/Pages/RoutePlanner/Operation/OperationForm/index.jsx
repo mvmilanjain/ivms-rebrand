@@ -1,74 +1,45 @@
 import {useEffect, useState} from 'react';
-import get from 'lodash/get';
 import {useFormik} from 'formik';
 import {
-    ActionIcon,
-    Anchor,
-    Badge,
     Box,
     Button,
     Checkbox,
     Divider,
     Group,
-    List,
     NumberInput,
-    Radio,
-    RadioGroup,
-    ScrollArea,
     Select,
     SimpleGrid,
     Text,
     TextInput,
-    Title,
-    Tooltip
+    Title
 } from '@mantine/core';
+import {useSetState} from '@mantine/hooks';
 import {useNotifications} from '@mantine/notifications';
-import {Dropzone} from '@mantine/dropzone';
 import {CalendarIcon} from '@modulz/radix-icons';
-import {
-    MdCloudUpload as UploadIcon,
-    MdOutlineAddLocationAlt as AddStopIcon,
-    MdOutlineDelete as DeleteIcon,
-    MdOutlineLink as AttachmentIcon,
-    MdOutlineSave as SaveIcon,
-    MdPerson as DriverIcon
-} from 'react-icons/md';
-import {FaTruck as TruckIcon} from 'react-icons/fa';
+import {MdOutlineSave as SaveIcon} from 'react-icons/md';
 
-import {AddressSelect, ContentArea, DateTimePicker, ReactTable, RouteMap} from 'Components';
+import {AddressSelect, ContentArea, DateTimePicker, RouteMap} from 'Components';
 import {useHttp} from 'Hooks';
-import {deleteAttachment, getRouteOrder, postAttachment, putRouteOrder, s3Uploader} from 'Shared/Services';
+import {getRouteOrder, putRouteOrder} from 'Shared/Services';
 import {Operation} from 'Shared/Models';
 import {ROUTE_PLANNER} from 'Shared/Utilities/validationSchema.util';
-import {
-    errorMessage,
-    formatDateTime,
-    getAddressLabel,
-    getFullName,
-    getNumberRoundToOneDecimal,
-    registerField
-} from 'Shared/Utilities/common.util';
+import {errorMessage, getNumberRoundToOneDecimal, registerField} from 'Shared/Utilities/common.util';
 import {POD_STATUS, POD_STATUS_EMPTY_LEG} from 'Shared/Utilities/referenceData.util';
-import {renderDateTime, renderDistance, renderTextWithTooltip} from 'Shared/Utilities/tableSchema';
+import UploadOperationSlips from './UploadOperationSlips';
+import PlannedStoppagesTable from './PlannedStoppagesTable';
+import RouteOrderDetails from './RouteOrderDetails';
+import ActualStoppagesTable from "./ActualStoppagesTable";
 
 const podStatusList = (isEmptyLeg) => isEmptyLeg ? POD_STATUS_EMPTY_LEG : POD_STATUS;
-
-const slipTypeList = [
-    {value: 'loading_slips', label: 'Loading Slips'},
-    {value: 'offloading_slips', label: 'Off Loading Slips'},
-    {value: 'fuel_slips', label: 'Fuel Slips'},
-    {value: 'toll_slips', label: 'Toll Slips'},
-    {value: 'truck_wash_slips', label: 'Truck Wash Slips'},
-    {value: 'pod_slips', label: 'POD Slips'},
-    {value: 'truck_stop_slips', label: 'Truck Stop Slips'}
-];
 
 const OperationForm = ({history, match, ...rest}) => {
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
     const [initialValue, setInitialValue] = useState(null);
     const [plannedStoppages, setPlannedStoppages] = useState([]);
-    const [slipType, setSlipType] = useState('loading_slips');
+    const [actualStoppageMapState, setActualStoppageMapState] = useSetState({
+        route: null, activeStoppages: [], initialLoad: false
+    });
 
     const register = (fieldName) => registerField(fieldName, {values, handleChange, touched, errors});
 
@@ -87,6 +58,7 @@ const OperationForm = ({history, match, ...rest}) => {
             const initialData = new Operation(res.data);
             setInitialValue(initialData);
             renderPlannedStoppagesOnMap(res.data.route_order_stoppages);
+            renderActualStoppagesOnMap(initialData, true);
         }).catch(e => {
             notifications.showNotification({
                 title: 'Error', color: 'red', message: 'Not able to fetch route order details. Something went wrong!!'
@@ -98,6 +70,40 @@ const OperationForm = ({history, match, ...rest}) => {
         const activeStoppages = stoppages.filter(stop => !stop._destroy);
         if (activeStoppages.length && activeStoppages.length > 1) {
             setPlannedStoppages(activeStoppages);
+        }
+    };
+
+    const renderActualStoppagesOnMap = (operation, initialLoad) => {
+        const actualInfo = operation ? operation.route_order_actual_info : null;
+        const activeStoppages = actualInfo ? actualInfo.getActiveStoppages() : [];
+
+        if (activeStoppages.length && activeStoppages.length > 1) {
+            setActualStoppageMapState({route: operation, activeStoppages, initialLoad});
+        } else {
+            !initialLoad && operation.route_order_actual_info.updateDistanceAndTime();
+            setValues(operation);
+        }
+    };
+
+    const calculateTimeAndDistanceForActualStoppages = (status, activeStoppages, operation, initialLoad) => {
+        if (status === 'success') {
+            if (!initialLoad) {
+                let legCounter = 0, stoppageCounter = 0;
+                operation.route_order_actual_info.route_order_actual_stop_infos.forEach(stop => {
+                    if (stoppageCounter === 0 && stop.address && !stop._destroy) {
+                        stop.distance = 0;
+                        stoppageCounter++;
+                    } else if (stoppageCounter !== 0 && stop.address && !stop._destroy) {
+                        stop.distance = getNumberRoundToOneDecimal(activeStoppages.legs[legCounter].distance.value / 1000);
+                        legCounter++;
+                    }
+                });
+                operation.route_order_actual_info.updateDistanceAndTime();
+            }
+            setValues(operation);
+        } else {
+            !initialLoad && operation.route_order_actual_info.updateDistanceAndTime();
+            setValues(operation);
         }
     };
 
@@ -117,66 +123,6 @@ const OperationForm = ({history, match, ...rest}) => {
         const operation = new Operation(values);
         operation.setRatePerTone(ratePerTone);
         setValues(operation);
-    };
-
-    const renderUploadedFileList = () => <List listStyleType="none">
-        {slipTypeList.map(slip => {
-            const files = values.route_order_actual_info[slip.value];
-            if (files && files.length) {
-                return <List.Item key={slip.value}>
-                    {slip.label}
-                    <List withPadding icon={<AttachmentIcon/>} center>
-                        {files.map(file => <List.Item key={file.id}>
-                            <Group position="apart">
-                                <Anchor href={file.signed_url}>{file.name} - {file.file_size} bytes</Anchor>
-                                <ActionIcon
-                                    color="red"
-                                    onClick={() => handleFileDelete(slip.value, file.id)}
-                                >
-                                    <DeleteIcon/>
-                                </ActionIcon>
-                            </Group>
-                        </List.Item>)}
-                    </List>
-                </List.Item>;
-            }
-        })}
-    </List>;
-
-    const handleDrop = (files) => {
-        if (files && files.length) {
-            const fileDataPromisesList = [];
-            files.forEach(file => {
-                const {name, size: file_size, type: content_type} = file;
-                const payload = {attachment: {name, content_type, file_size}};
-                fileDataPromisesList.push(new Promise((resolve, reject) => {
-                    postAttachment(payload).then(res => {
-                        const {post_fields} = res.data;
-                        let formData = new FormData();
-                        Object.keys(post_fields).forEach(key => formData.append(key, post_fields[key]));
-                        formData.append('file', files[0]);
-                        s3Uploader(formData);
-                        resolve(res.data);
-                    }).catch(e => reject(payload));
-                }));
-            });
-
-            Promise.allSettled(fileDataPromisesList).then(results => {
-                const fileList = [];
-                results.forEach(result => result.status === 'fulfilled' && fileList.push(result.value));
-                const o = new Operation(values);
-                o.route_order_actual_info[slipType] = [...o.route_order_actual_info[slipType], ...fileList];
-                setValues(o);
-            });
-        }
-    };
-
-    const handleFileDelete = (type, id) => {
-        deleteAttachment(id).then(res => {
-            const o = new Operation(values);
-            o.route_order_actual_info[type] = o.route_order_actual_info[type].filter(file => file.id !== id);
-            setValues(o);
-        }).catch(e => console.error(e));
     };
 
     const onSubmit = () => {
@@ -200,7 +146,7 @@ const OperationForm = ({history, match, ...rest}) => {
     });
 
     return (
-        <ContentArea withPaper>
+        <ContentArea withPaper={!!values}>
             {values && <form onSubmit={handleSubmit}>
                 <Group position="apart" mb="md">
                     <Title order={3}>Operation</Title>
@@ -211,47 +157,7 @@ const OperationForm = ({history, match, ...rest}) => {
                 </Group>
                 <Divider mb="md" variant="dotted"/>
 
-                <Group mb="md" direction="column">
-                    <Group>
-                        <Text size="lg" weight={600} mb={0}>
-                            Order #: <Text color="blue" inherit component="span">{values.order_number}</Text>
-                        </Text>
-                        <Tooltip label="Status" withArrow>
-                            <Badge variant="filled" radius="lg" color="green">{values.status}</Badge>
-                        </Tooltip>
-
-                        <Tooltip label="Truck" withArrow>
-                            <Badge variant="filled" radius="lg" color="orange" leftSection={<TruckIcon size={10}/>}>
-                                {values.vehicle.name}
-                            </Badge>
-                        </Tooltip>
-                        <Tooltip label="Driver" withArrow>
-                            <Badge variant="filled" radius="lg" color="grape" leftSection={<DriverIcon size={10}/>}>
-                                {getFullName(values.member.first_name, values.member.last_name)}
-                            </Badge>
-                        </Tooltip>
-                    </Group>
-                    <Group>
-                        <Group>
-                            <Text size="sm" weight={600}>Planned start time:</Text>
-                            <Badge
-                                radius="sm" color="cyan"
-                                leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}
-                            >
-                                {formatDateTime(values.planned_origin_departure_time)}
-                            </Badge>
-                        </Group>
-                        <Group>
-                            <Text size="sm" weight={600}>Planned end time:</Text>
-                            <Badge
-                                radius="sm" color="red"
-                                leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}
-                            >
-                                {formatDateTime(values.planned_eta_destination)}
-                            </Badge>
-                        </Group>
-                    </Group>
-                </Group>
+                <RouteOrderDetails data={values}/>
                 <Divider mb="md" variant="dotted"/>
 
                 <Box mb="md">
@@ -307,6 +213,7 @@ const OperationForm = ({history, match, ...rest}) => {
                         <AddressSelect
                             {...register("route_order_actual_info.fuel_point_id")}
                             label="Actual fuel point" withIcon required
+                            value={values.route_order_actual_info.fuel_point}
                             onChange={handleFuelPointChange}
                             error={errorMessage("route_order_actual_info.fuel_point_id", touched, errors)}
                         />
@@ -365,58 +272,10 @@ const OperationForm = ({history, match, ...rest}) => {
                 </Box>
                 <Divider mb="md" variant="dotted"/>
 
-                <Group direction="column" grow spacing="sm" mb="md">
-                    <Text size="lg" weight={500}>Slip type</Text>
-                    <RadioGroup value={slipType} onChange={setSlipType}>
-                        {slipTypeList.map(slip => <Radio key={slip.value} value={slip.value}>
-                            {slip.label}
-                        </Radio>)}
-                    </RadioGroup>
-                    <Dropzone radius="md" onDrop={handleDrop}>
-                        {(status) => (
-                            <div style={{pointerEvents: 'none'}}>
-                                <Group position="center"><UploadIcon size={50}/></Group>
-                                <Text align="center" weight={700} size="lg">
-                                    {status.accepted ? 'Drop slips here' : 'Upload slips'}
-                                </Text>
-                                <Text align="center" size="sm" mt="xs" color="dimmed">
-                                    Drag&apos;n&apos;drop slips here to upload.
-                                </Text>
-                            </div>
-                        )}
-                    </Dropzone>
-                    {renderUploadedFileList()}
-                </Group>
+                <UploadOperationSlips data={values} onChange={setValues}/>
                 <Divider mb="md" variant="dotted"/>
 
-                <Group direction="column" grow spacing="sm" mb="md">
-                    <Text size="lg" weight={500}>Planned Stoppages</Text>
-                    <ScrollArea scrollHideDelay={0} style={{maxHeight: 300}}>
-                        <ReactTable
-                            columns={[
-                                {accessor: 'position', Header: '#', cellWidth: 40},
-                                {
-                                    accessor: 'address', Header: 'Address',
-                                    Cell: ({value}) => renderTextWithTooltip(getAddressLabel(value))
-                                },
-                                {
-                                    accessor: 'distance', Header: 'Distance', align: 'center',
-                                    Cell: ({value}) => renderDistance(value)
-                                },
-                                {
-                                    accessor: 'estimated_arrival_time', Header: 'Estimated Arrival',
-                                    align: 'center', Cell: ({value}) => renderDateTime(value)
-                                },
-                                {
-                                    accessor: 'estimated_departure_time', Header: 'Estimated Departure',
-                                    align: 'center', cellMinWidth: 168, Cell: ({value}) => renderDateTime(value)
-                                },
-                                {accessor: 'stop_duration', Header: 'Stop duration', align: 'center', cellWidth: 128}
-                            ]}
-                            data={plannedStoppages}
-                        />
-                    </ScrollArea>
-                </Group>
+                <PlannedStoppagesTable data={plannedStoppages}/>
                 <Divider mb="md" variant="dotted"/>
 
                 <SimpleGrid cols={2} mb="md">
@@ -429,48 +288,22 @@ const OperationForm = ({history, match, ...rest}) => {
                     <Group direction="column" grow spacing="sm">
                         <Text size="lg" weight={500}>Actual Stoppage Map</Text>
                         <Box style={{height: 350}}>
-                            <RouteMap id="actual-stoppage-map" activeStoppages={plannedStoppages}/>
+                            <RouteMap
+                                id="actual-stoppage-map"
+                                {...actualStoppageMapState}
+                                onChange={calculateTimeAndDistanceForActualStoppages}
+                            />
                         </Box>
                     </Group>
                 </SimpleGrid>
                 <Divider mb="md" variant="dotted"/>
 
-                <Group direction="column" grow spacing="sm">
-                    <Group position="apart">
-                        <Text size="lg" weight={500}>Actual Stoppages</Text>
-                        <Button variant="outline" leftIcon={<AddStopIcon/>}>
-                            Add Stoppage
-                        </Button>
-                    </Group>
-                    <ReactTable
-                        columns={[
-                            {accessor: 'position', Header: '#', cellWidth: 40},
-                            {
-                                accessor: 'address', Header: 'Address',
-                                Cell: ({value}) => renderTextWithTooltip(getAddressLabel(value))
-                            },
-                            {
-                                accessor: 'distance', Header: 'Distance', align: 'center',
-                                Cell: ({value}) => renderDistance(getNumberRoundToOneDecimal(value))
-                            },
-                            {
-                                accessor: 'estimated_arrival_time', Header: 'Estimated Arrival',
-                                align: 'center', Cell: ({value}) => renderDateTime(value)
-                            },
-                            {
-                                accessor: 'actual_arrival_time', Header: 'Actual Arrival',
-                                align: 'center', Cell: ({value}) => renderDateTime(value)
-                            },
-                            {accessor: 'stop_duration', Header: 'Stop duration', align: 'center', cellWidth: 128},
-                            {accessor: 'note', Header: 'Reason for late', align: 'center'}
-                        ]}
-                        data={
-                            get(values, 'route_order_actual_info.route_order_actual_stop_infos', [])
-                                .filter(stop => !stop._destroy)
-                        }
-                        pagination={get(values, 'route_order_actual_info.route_order_actual_stop_infos', []).length > 10}
-                    />
-                </Group>
+                <ActualStoppagesTable
+                    data={values}
+                    register={register}
+                    onFieldChange={setValues}
+                    onStoppageChange={renderActualStoppagesOnMap}
+                />
             </form>}
         </ContentArea>
     );

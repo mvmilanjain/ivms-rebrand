@@ -202,4 +202,4 @@ export const hasError = (key, touched, errors) => get(touched, key, false) && Bo
 
 export const errorMessage = (key, touched, errors) => get(touched, key, false) && get(errors, key);
 
-export const getNumberRoundToOneDecimal = (num) => (Math.round(((num) + Number.EPSILON) * 10) / 10);
+export const getNumberRoundToOneDecimal = (num) => (Math.round(((num || 0) + Number.EPSILON) * 10) / 10);

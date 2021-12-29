@@ -2,7 +2,15 @@ import {Badge, Text, ThemeIcon, Tooltip} from '@mantine/core';
 import {CalendarIcon, CheckIcon, Cross2Icon} from '@modulz/radix-icons';
 
 import {TRIP_STATUS} from './constant';
-import {capitalizeStr, formatDate, formatDateTime, getAddressLabel, getFullName, getOptionLabel} from './common.util';
+import {
+    capitalizeStr,
+    formatDate,
+    formatDateTime,
+    getAddressLabel,
+    getFullName,
+    getNumberRoundToOneDecimal,
+    getOptionLabel
+} from './common.util';
 import {POD_STATUS, TRIP_STATUS as TRIP_STATUS_LIST, VEHICLE_STATUS} from './referenceData.util';
 
 export const renderBoolean = ({value}) => {
@@ -15,7 +23,7 @@ export const renderBoolean = ({value}) => {
     return result;
 };
 
-export const renderDistance = (val) => val ? <Badge radius="sm">{val} KM</Badge> : ''
+export const renderDistance = (val) => <Badge radius="sm">{getNumberRoundToOneDecimal(val)} KM</Badge>;
 
 export const renderDate = (val) => {
     let result = '';
@@ -107,7 +115,7 @@ export const ROUTE_SCHEMA = [
     },
     {
         accessor: 'std_distance_cycle', Header: 'Distance', align: 'center',
-        Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
+        Cell: ({value}) => renderDistance(value)
     },
     {
         accessor: 'std_cycle_hours', Header: 'Cycle Hours', align: 'center',
@@ -141,7 +149,7 @@ export const ROUTE_PLANNER_SCHEMA = {
         {accessor: 'product.name', Header: 'Product', cellMinWidth: 150},
         {
             accessor: 'planned_distance', Header: 'Distance', align: 'center',
-            Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
+            Cell: ({value}) => renderDistance(value)
         },
         {accessor: 'planned_cycle_time', Header: 'Cycle Time', cellMinWidth: 140, align: 'center'},
         // {accessor: 'rate_per_tone', Header: 'Current Rate'},
@@ -177,8 +185,8 @@ export const ROUTE_PLANNER_SCHEMA = {
             cellMinWidth: 140, Cell: ({value}) => value ? <Badge radius="sm">{value} ltr</Badge> : ''
         },
         {
-            accessor: 'route_order_actual_info.distance', Header: 'Distance', align: 'center',
-            Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
+            accessor: 'route_order_actual_info.distance', Header: 'Distance',
+            align: 'center', Cell: ({value}) => renderDistance(value)
         },
         {
             accessor: 'route_order_actual_info.tonnage_loaded',
@@ -247,8 +255,14 @@ export const DASHBOARD = {
             {accessor: 'delivery_note_number', Header: 'Delivery note #', cellMinWidth: 130},
             {accessor: 'tonnage_loaded', Header: 'Load Weight', cellMinWidth: 110},
             {accessor: 'rate_per_ton', Header: 'Rate'},
-            {accessor: 'loading_distance', Header: 'Planned Distance', cellMinWidth: 144},
-            {accessor: 'actual_distance', Header: 'Actual Distance', cellMinWidth: 134},
+            {
+                accessor: 'loading_distance', Header: 'Planned Distance', cellMinWidth: 144,
+                Cell: ({value}) => renderDistance(value)
+            },
+            {
+                accessor: 'actual_distance', Header: 'Actual Distance', cellMinWidth: 134,
+                Cell: ({value}) => renderDistance(value)
+            },
             {accessor: 'planned_cost', Header: 'Planned Cost', cellMinWidth: 120},
             {accessor: 'actual_cost', Header: 'Actual Cost', cellMinWidth: 110},
             {accessor: 'pod_collected', Header: 'POD Collected', cellMinWidth: 124, Cell: renderBoolean},
@@ -366,10 +380,7 @@ export const VEHICLE = {
         {accessor: 'name', Header: 'Name'},
         {accessor: 'vehicle_category.name', Header: 'Category'},
         {accessor: 'model', Header: 'Model'},
-        {
-            accessor: 'meter_reading', Header: 'Meter Reading',
-            Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
-        },
+        {accessor: 'meter_reading', Header: 'Meter Reading', Cell: ({value}) => renderDistance(value)},
         {accessor: 'status', Header: 'Status', align: 'center', Cell: renderVehicleStatus}
     ],
     TRAILER_SCHEMA: [
@@ -377,10 +388,7 @@ export const VEHICLE = {
         {accessor: 'trailer_category.name', Header: 'Category'},
         {accessor: 'vin_number', Header: 'VIN No.'},
         {accessor: 'model', Header: 'Model'},
-        {
-            accessor: 'meter_reading', Header: 'Meter', align: 'center',
-            Cell: ({value}) => value ? <Badge radius="sm">{value} KM</Badge> : ''
-        },
+        {accessor: 'meter_reading', Header: 'Meter', align: 'center', Cell: ({value}) => renderDistance(value)},
         {accessor: 'status', Header: 'Status', align: 'center', Cell: renderVehicleStatus},
         {accessor: 'license_expiry', Header: 'License Expiry', Cell: ({value}) => renderDate(value)}
     ]
