@@ -18,11 +18,14 @@ import {AiOutlineExport as ExportIcon} from 'react-icons/ai';
 
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
-import {getRouteOrders} from 'Shared/Services';
-import {TRIP_STATUS} from 'Shared/Utilities/constant';
+import {getRouteOrders, postUpdateState} from 'Shared/Services';
+import {TRIP_EVENT, TRIP_STATUS} from 'Shared/Utilities/constant';
 import {ROUTE_PLANNER_SCHEMA} from 'Shared/Utilities/tableSchema';
 import {exportCSV, getSortText} from 'Shared/Utilities/common.util';
 import Filters from './Filters';
+import CompleteTripEventForm from '../EventForm/CompleteTripEventForm';
+import StartTripEventForm from '../EventForm/StartTripEventForm';
+import CancelTripEventForm from '../EventForm/CancelTripEventForm';
 
 const Planning = ({history, ...rest}) => {
     const {requestHandler} = useHttp();
@@ -69,16 +72,32 @@ const Planning = ({history, ...rest}) => {
                 )}
 
                 {status === TRIP_STATUS.COMPLETED && <Menu.Label>Finance</Menu.Label>}
-                {status === TRIP_STATUS.COMPLETED && <Menu.Item icon={<EditIcon/>} onClick={() => handleFinanceUpdate(value)}>
-                    Edit Finance
-                </Menu.Item>}
+                {status === TRIP_STATUS.COMPLETED &&
+                    <Menu.Item icon={<EditIcon/>} onClick={() => handleFinanceUpdate(value)}>
+                        Edit Finance
+                    </Menu.Item>}
 
                 {(status === TRIP_STATUS.NOT_STARTED || status === TRIP_STATUS.IN_PROGRESS) && (
                     <Menu.Label>Event</Menu.Label>
                 )}
-                {status === TRIP_STATUS.NOT_STARTED && <Menu.Item icon={<StartTripIcon/>}>Start Trip</Menu.Item>}
-                {status === TRIP_STATUS.IN_PROGRESS && <Menu.Item icon={<CompleteTripIcon/>}>Complete Trip</Menu.Item>}
-                {status === TRIP_STATUS.NOT_STARTED && <Menu.Item icon={<CancelTripIcon/>}>Cancel Trip</Menu.Item>}
+                {status === TRIP_STATUS.NOT_STARTED && <Menu.Item
+                    icon={<StartTripIcon/>}
+                    onClick={() => handleTripEvent(value, TRIP_EVENT.START)}
+                >
+                    Start Trip
+                </Menu.Item>}
+                {status === TRIP_STATUS.IN_PROGRESS && <Menu.Item
+                    icon={<CompleteTripIcon/>}
+                    onClick={() => handleTripEvent(value, TRIP_EVENT.COMPLETE)}
+                >
+                    Complete Trip
+                </Menu.Item>}
+                {status === TRIP_STATUS.NOT_STARTED && <Menu.Item
+                    icon={<CancelTripIcon/>}
+                    onClick={() => handleTripEvent(value, TRIP_EVENT.CANCEL)}
+                >
+                    Cancel Trip
+                </Menu.Item>}
             </Menu>
         );
     };
@@ -97,6 +116,38 @@ const Planning = ({history, ...rest}) => {
     const handleOperationUpdate = (id) => history.push(`/Operation/${id}`);
 
     const handleFinanceUpdate = (id) => history.push(`/Finance/${id}`);
+
+    const handleTripEvent = (id, action) => {
+        let EventFrom = null, status = '';
+        if (action === TRIP_EVENT.START) {
+            EventFrom = StartTripEventForm;
+            status = 'started';
+        } else if (action === TRIP_EVENT.COMPLETE) {
+            EventFrom = CompleteTripEventForm;
+            status = 'completed';
+        } else if (action === TRIP_EVENT.CANCEL) {
+            EventFrom = CancelTripEventForm;
+            status = 'cancelled';
+        }
+        const modalId = modals.openModal({
+            title: 'Manage Trip Event',
+            centered: false,
+            children: <EventFrom onConfirm={(data) => {
+                modals.closeModal(modalId);
+                requestHandler(postUpdateState(id, action, data), {loader: true}).then(res => {
+                    notifications.showNotification({
+                        title: 'Success', color: 'green', message: `Trip has been ${status} successfully`
+                    });
+                    setState({reload: true});
+                }).catch(e => {
+                    notifications.showNotification({
+                        title: 'Error', color: 'red',
+                        message: 'Not able to perform event. Something went wrong!!'
+                    });
+                });
+            }}/>
+        });
+    };
 
     return (
         <ContentArea withPaper limitToViewPort heightToReduce={184} withPadding={false}>

@@ -1,15 +1,7 @@
 import {Button, Divider, Drawer, Group, ScrollArea, Select, TextInput} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 
-const TRIP_STATUS = [
-    {label: 'Not Started', value: '0'},
-    {label: 'In-Progress', value: '1'},
-    {label: 'Completed', value: '2'},
-    {label: 'Cancelled', value: '3'}
-];
-
 const Filters = ({opened, onClose, data, onConfirm}) => {
-
     const [state, setState] = useSetState(data || {});
 
     return (
@@ -27,7 +19,10 @@ const Filters = ({opened, onClose, data, onConfirm}) => {
                     label="Status"
                     placeholder="Select status"
                     mb="lg" clearable
-                    data={TRIP_STATUS}
+                    data={[
+                        {label: 'In-Progress', value: '1'},
+                        {label: 'Completed', value: '2'}
+                    ]}
                     value={state?.status_eq}
                     onChange={val => setState({status_eq: val})}
                 />

@@ -20,18 +20,20 @@ const ActualStoppagesTable = ({data, register, onFieldChange, onStoppageChange})
         const {index} = row;
         const activeStoppages = data.route_order_actual_info.route_order_actual_stop_infos;
 
-        return <Group spacing={0}>
-            <ActionIcon color="red" onClick={() => handleDeleteStoppage(index)}><DeleteIcon size={20}/></ActionIcon>
-            <ActionIcon onClick={() => handleMoveStoppage(index, 'UP')} disabled={index === 0}>
-                <MoveUpIcon size={20}/>
-            </ActionIcon>
-            <ActionIcon
-                disabled={index === activeStoppages.length - 1}
-                onClick={() => handleMoveStoppage(index, 'DOWN')}
-            >
-                <MoveDownIcon size={20}/>
-            </ActionIcon>
-        </Group>;
+        return (
+            <Group spacing={0}>
+                <ActionIcon color="red" onClick={() => handleDeleteStoppage(index)}><DeleteIcon size={20}/></ActionIcon>
+                <ActionIcon onClick={() => handleMoveStoppage(index, 'UP')} disabled={index === 0}>
+                    <MoveUpIcon size={20}/>
+                </ActionIcon>
+                <ActionIcon
+                    disabled={index === activeStoppages.length - 1}
+                    onClick={() => handleMoveStoppage(index, 'DOWN')}
+                >
+                    <MoveDownIcon size={20}/>
+                </ActionIcon>
+            </Group>
+        );
     };
 
     const handleAddStoppage = () => {

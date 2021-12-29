@@ -14,11 +14,12 @@ import {AiOutlineExport as ExportIcon} from 'react-icons/ai';
 
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
-import {getRouteOrders} from 'Shared/Services';
-import {TRIP_STATUS} from 'Shared/Utilities/constant';
+import {getRouteOrders, postUpdateState} from 'Shared/Services';
+import {TRIP_EVENT, TRIP_STATUS} from 'Shared/Utilities/constant';
 import {ROUTE_PLANNER_SCHEMA} from 'Shared/Utilities/tableSchema';
 import {exportCSV, getSortText} from 'Shared/Utilities/common.util';
 import Filters from './Filters';
+import CompleteTripEventForm from '../EventForm/CompleteTripEventForm';
 
 const Operation = ({history, ...rest}) => {
     const {requestHandler} = useHttp();
@@ -68,7 +69,11 @@ const Operation = ({history, ...rest}) => {
                 )}
 
                 {status === TRIP_STATUS.IN_PROGRESS && <Menu.Label>Event</Menu.Label>}
-                {status === TRIP_STATUS.IN_PROGRESS && <Menu.Item icon={<CompleteTripIcon/>}>Complete Trip</Menu.Item>}
+                {status === TRIP_STATUS.IN_PROGRESS && (
+                    <Menu.Item icon={<CompleteTripIcon/>} onClick={() => handleTripEvent(value)}>
+                        Complete Trip
+                    </Menu.Item>
+                )}
             </Menu>
         );
     };
@@ -76,6 +81,27 @@ const Operation = ({history, ...rest}) => {
     const handleOperationUpdate = (id) => history.push(`/Operation/${id}`);
 
     const handleFinanceUpdate = (id) => history.push(`/Finance/${id}`);
+
+    const handleTripEvent = (id) => {
+        const modalId = modals.openModal({
+            title: 'Manage Trip Event',
+            centered: false,
+            children: <CompleteTripEventForm onConfirm={(data) => {
+                modals.closeModal(modalId);
+                requestHandler(postUpdateState(id, TRIP_EVENT.COMPLETE, data), {loader: true}).then(res => {
+                    notifications.showNotification({
+                        title: 'Success', color: 'green', message: `Trip has been completed successfully`
+                    });
+                    setState({reload: true});
+                }).catch(e => {
+                    notifications.showNotification({
+                        title: 'Error', color: 'red',
+                        message: 'Not able to perform event. Something went wrong!!'
+                    });
+                });
+            }}/>
+        });
+    };
 
     const handleExport = () => exportCSV('route_planner_operation', ROUTE_PLANNER_SCHEMA.OPERATIONS, state.data);
 
