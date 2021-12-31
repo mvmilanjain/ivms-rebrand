@@ -1,4 +1,5 @@
 import {useCallback, useState} from 'react';
+import last from 'lodash/last';
 import {ActionIcon, Button, Group, Menu} from '@mantine/core';
 import {useSetState} from '@mantine/hooks';
 import {useModals} from '@mantine/modals';
@@ -18,7 +19,8 @@ import {AiOutlineExport as ExportIcon} from 'react-icons/ai';
 
 import {ContentArea, ReactTable} from 'Components';
 import {useHttp} from 'Hooks';
-import {getRouteOrders, postUpdateState} from 'Shared/Services';
+import {Plan} from 'Shared/Models';
+import {getRouteOrder, getRouteOrders, postUpdateState} from 'Shared/Services';
 import {TRIP_EVENT, TRIP_STATUS} from 'Shared/Utilities/constant';
 import {ROUTE_PLANNER_SCHEMA} from 'Shared/Utilities/tableSchema';
 import {exportCSV, getSortText} from 'Shared/Utilities/common.util';
@@ -59,7 +61,7 @@ const Planning = ({history, ...rest}) => {
             <Menu withArrow control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
                 <Menu.Label>Planning</Menu.Label>
                 <Menu.Item icon={<EditIcon/>} onClick={() => handleEdit(value)}>Edit Plan</Menu.Item>
-                <Menu.Item icon={<CopyIcon/>}>Copy Plan</Menu.Item>
+                <Menu.Item icon={<CopyIcon/>} onClick={() => handleCopyPlan(value)}>Copy Plan</Menu.Item>
                 <Menu.Item icon={<ViewIcon/>}>View Plan</Menu.Item>
 
                 {(status === TRIP_STATUS.IN_PROGRESS || status === TRIP_STATUS.COMPLETED) && (
@@ -105,6 +107,32 @@ const Planning = ({history, ...rest}) => {
     const handleCreate = () => history.push('/Planning');
 
     const handleEdit = (id) => history.push(`/Planning/${id}`);
+
+    const handleCopyPlan = async (id) => {
+        try {
+            // Get Plan details
+            const paramsForPlan = {
+                include: 'vehicle,member,route,product,contractor,source_address,destination_address,' +
+                    'estimated_fuel_location,route_order_stoppages,route_order_stoppages.address,' +
+                    'driver_current_route'
+            };
+            const planRes = await requestHandler(getRouteOrder(id, paramsForPlan), {loader: true});
+            // Get Not started Plan list
+            const paramsForPlanList = {
+                per_page: 100, page_no: 1, sort: 'planned_load_start_time.asc', include: 'vehicle,route',
+                filter: {vehicle_id_eq: planRes.data.vehicle_id, status_eq: 'not_started'}
+            };
+            const notStatedPlanList = await requestHandler(getRouteOrders(paramsForPlanList), {loader: true});
+            const lastPlanEta = notStatedPlanList.data.length > 0 ? last(notStatedPlanList.data).planned_eta_destination : null;
+
+            history.push('/Planning', {data: Plan.copyPlan(planRes.data, lastPlanEta)});
+        } catch (e) {
+            notifications.showNotification({
+                title: 'Error', color: 'red',
+                message: 'Not able to copy selected route order details. Something went wrong!!'
+            });
+        }
+    };
 
     const handleExport = () => exportCSV('route_planner_plan', ROUTE_PLANNER_SCHEMA.PLANNING, state.data);
 

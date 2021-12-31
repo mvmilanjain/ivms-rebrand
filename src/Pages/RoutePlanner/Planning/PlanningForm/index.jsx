@@ -39,7 +39,7 @@ import {ROUTE_PLANNER} from 'Shared/Utilities/validationSchema.util';
 import VehiclePlanList from './VehiclePlanList';
 import PlannedStoppagesTable from "./PlannedStoppagesTable";
 
-const PlanningForm = ({history, match, ...rest}) => {
+const PlanningForm = ({history, location, match, ...rest}) => {
     const action = (match.params && match.params.id) ? 'Update' : 'Save';
     const {requestHandler} = useHttp();
     const notifications = useNotifications();
@@ -52,7 +52,18 @@ const PlanningForm = ({history, match, ...rest}) => {
 
     useEffect(() => {
         if (action === 'Save') {
-            const initialData = new Plan();
+            let initialData = null;
+            if(location.state && location.state.data) {
+                initialData = new Plan(location.state.data);
+                renderPlannedStoppagesOnMap(initialData);
+                if (!initialData.vehicle_id) {
+                    setVehiclePlanState({data: []});
+                } else {
+                    getPlanListForVehicle(initialData.vehicle_id).then().catch();
+                }
+            } else {
+                initialData = new Plan();
+            }
             setInitialValue({...initialData});
         } else {
             const {params: {id}} = match;
@@ -69,15 +80,7 @@ const PlanningForm = ({history, match, ...rest}) => {
                 if (!initialData.vehicle_id) {
                     setVehiclePlanState({data: []})
                 } else {
-                    getPlanListForVehicle(initialData.vehicle_id)
-                        .then(res => setVehiclePlanState({data: res}))
-                        .catch(e => {
-                            setVehiclePlanState({data: []});
-                            notifications.showNotification({
-                                title: 'Error', color: 'red',
-                                message: 'Not able to fetch plans associated with selected vehicle which are not yet started.'
-                            });
-                        });
+                    getPlanListForVehicle(initialData.vehicle_id).then().catch();
                 }
             }).catch(e => {
                 notifications.showNotification({
@@ -127,9 +130,17 @@ const PlanningForm = ({history, match, ...rest}) => {
             filter: {vehicle_id_eq: vehicleId, status_eq: 'not_started'}
         };
         match.params.id && (params.filter['id_not_eq'] = match.params.id);
-        requestHandler(getRouteOrders(params), {loader: true})
-            .then(res => resolve(res.data))
-            .catch(error => reject(error));
+        requestHandler(getRouteOrders(params), {loader: true}).then(res => {
+            setVehiclePlanState({data: res.data});
+            resolve(res.data);
+        }).catch(error => {
+            setVehiclePlanState({data: []});
+            notifications.showNotification({
+                title: 'Error', color: 'red',
+                message: 'Not able to fetch plans associated with selected vehicle which are not yet started.'
+            });
+            reject(error);
+        });
     }));
 
     const getProductRouteList = () => {
@@ -150,20 +161,14 @@ const PlanningForm = ({history, match, ...rest}) => {
             setValues(plan);
         } else {
             getPlanListForVehicle(vehicle.id).then(res => {
-                setVehiclePlanState({data: res});
                 if (initialStartLoadTime) {
                     const lastPlanEta = res.length > 0 ? last(res).planned_eta_destination : null;
                     plan.calculatePlannedTiming(lastPlanEta);
                 }
                 setValues(plan);
             }).catch(e => {
-                setVehiclePlanState({data: []});
                 initialStartLoadTime && plan.calculatePlannedTiming(null);
                 setValues(plan);
-                notifications.showNotification({
-                    title: 'Error', color: 'red',
-                    message: 'Not able to fetch plans associated with selected vehicle which are not yet started.'
-                });
             });
         }
     };
