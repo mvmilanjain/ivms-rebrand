@@ -8,6 +8,7 @@ import {ContentArea} from 'Components';
 import {useHttp} from 'Hooks';
 import {getRouteOrder, putRouteOrder} from 'Shared/Services';
 import {Finance} from 'Shared/Models';
+import {renderTripStatus} from 'Shared/Utilities/tableSchema';
 
 const FinanceForm = ({history, location, match, ...rest}) => {
     const {requestHandler} = useHttp();
@@ -63,9 +64,7 @@ const FinanceForm = ({history, location, match, ...rest}) => {
                     <Text size="lg" weight={600} mb={0}>
                         Order #: <Text color="blue" inherit component="span">{values.order_number}</Text>
                     </Text>
-                    <Tooltip label="Status" withArrow>
-                        <Badge variant="filled" radius="lg" color="green">{values.status}</Badge>
-                    </Tooltip>
+                    <Tooltip label="Status" withArrow>{renderTripStatus(values.status)}</Tooltip>
                 </Group>
 
                 <Group direction="column" spacing="xl">

@@ -58,7 +58,7 @@ const Planning = ({history, ...rest}) => {
         return (
             <Menu withArrow control={<ActionIcon variant="transparent"><DotsVerticalIcon/></ActionIcon>}>
                 <Menu.Label>Planning</Menu.Label>
-                <Menu.Item icon={<EditIcon/>}>Edit Plan</Menu.Item>
+                <Menu.Item icon={<EditIcon/>} onClick={() => handleEdit(value)}>Edit Plan</Menu.Item>
                 <Menu.Item icon={<CopyIcon/>}>Copy Plan</Menu.Item>
                 <Menu.Item icon={<ViewIcon/>}>View Plan</Menu.Item>
 
@@ -102,11 +102,11 @@ const Planning = ({history, ...rest}) => {
         );
     };
 
-    const handleCreate = () => history.push(`/RoutePlanner/Plan/New`, {action: 'New'});
+    const handleCreate = () => history.push('/Planning');
 
-    const handleExport = () => {
-        exportCSV('route_planner_plan', ROUTE_PLANNER_SCHEMA.PLANNING, state.data);
-    };
+    const handleEdit = (id) => history.push(`/Planning/${id}`);
+
+    const handleExport = () => exportCSV('route_planner_plan', ROUTE_PLANNER_SCHEMA.PLANNING, state.data);
 
     const handleFilterApply = (data) => {
         toggleFilterDrawer(false);

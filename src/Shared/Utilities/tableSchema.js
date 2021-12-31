@@ -25,20 +25,22 @@ export const renderBoolean = ({value}) => {
 
 export const renderDistance = (val) => <Badge radius="sm">{getNumberRoundToOneDecimal(val)} KM</Badge>;
 
-export const renderDate = (val) => {
+export const renderDate = (val, options) => {
     let result = '';
+    options = {color: 'cyan', radius: 'sm', ...options};
     if (val) {
-        result = <Badge radius="sm" color="cyan" leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}>
+        result = <Badge leftSection={<CalendarIcon style={{width: 10, height: 10}}/>} {...options}>
             {formatDate(val)}
         </Badge>
     }
     return result;
 };
 
-export const renderDateTime = (val) => {
+export const renderDateTime = (val, options) => {
     let result = '';
+    options = {color: 'cyan', radius: 'sm', ...options};
     if (val) {
-        result = <Badge radius="sm" color="cyan" leftSection={<CalendarIcon style={{width: 10, height: 10}}/>}>
+        result = <Badge leftSection={<CalendarIcon style={{width: 10, height: 10}}/>} {...options}>
             {formatDateTime(val)}
         </Badge>
     }
@@ -49,7 +51,7 @@ export const renderTextWithTooltip = (val) => <Tooltip label={val} withArrow>
     <Text size="sm" lineClamp={1}>{val}</Text>
 </Tooltip>;
 
-export const renderVehicleStatus = ({value}) => {
+export const renderVehicleStatus = (value) => {
     let result = '';
     const label = getOptionLabel(VEHICLE_STATUS, value);
     if (value === 'initial') {
@@ -68,17 +70,18 @@ export const renderVehicleStatus = ({value}) => {
     return result;
 };
 
-export const renderTripStatus = ({value}) => {
+export const renderTripStatus = (value, options) => {
     let result = '';
+    options = {variant: 'filled', radius: 'sm', ...options};
     const label = getOptionLabel(TRIP_STATUS_LIST, value);
     if (value === TRIP_STATUS.NOT_STARTED) {
-        result = <Badge variant="filled" radius="sm">{label}</Badge>;
+        result = <Badge {...options} color="gray">{label}</Badge>;
     } else if (value === TRIP_STATUS.COMPLETED) {
-        result = <Badge variant="filled" radius="sm" color="green">{label}</Badge>;
+        result = <Badge {...options} color="green">{label}</Badge>;
     } else if (value === TRIP_STATUS.IN_PROGRESS) {
-        result = <Badge variant="filled" radius="sm" color="orange">{label}</Badge>;
+        result = <Badge {...options} color="orange">{label}</Badge>;
     } else if (value === TRIP_STATUS.CANCELLED) {
-        result = <Badge variant="filled" radius="sm" color="red">{label}</Badge>;
+        result = <Badge {...options} color="red">{label}</Badge>;
     }
     return result;
 };
@@ -126,7 +129,7 @@ export const ROUTE_SCHEMA = [
 export const ROUTE_PLANNER_SCHEMA = {
     PLANNING: [
         {accessor: 'order_number', Header: 'Order #', cellMinWidth: 120},
-        {accessor: 'status', Header: 'Status', align: 'center', Cell: renderTripStatus},
+        {accessor: 'status', Header: 'Status', align: 'center', Cell: ({value}) => renderTripStatus(value)},
         {
             accessor: 'planned_load_start_time', Header: 'Planned Start Time',
             cellMinWidth: 200, Cell: ({value}) => renderDateTime(value)
@@ -160,7 +163,7 @@ export const ROUTE_PLANNER_SCHEMA = {
     ],
     OPERATIONS: [
         {accessor: 'order_number', Header: 'Order #', cellMinWidth: 120},
-        {accessor: 'status', Header: 'Status', align: 'center', Cell: renderTripStatus},
+        {accessor: 'status', Header: 'Status', align: 'center', Cell: ({value}) => renderTripStatus(value)},
         {
             accessor: 'route_order_actual_info.start_time', Header: 'Actual Start Time',
             cellMinWidth: 182, Cell: ({value}) => renderDateTime(value)
@@ -197,7 +200,7 @@ export const ROUTE_PLANNER_SCHEMA = {
     ],
     FINANCE: [
         {accessor: 'order_number', Header: 'Order #', cellMinWidth: 120},
-        {accessor: 'status', Header: 'Status', align: 'center', Cell: renderTripStatus},
+        {accessor: 'status', Header: 'Status', align: 'center', Cell: ({value}) => renderTripStatus(value)},
         {accessor: 'document_validated', Header: 'Document Validated', align: 'center', Cell: renderBoolean},
         {accessor: 'document_sent_to_client', Header: 'Document Send to Client', align: 'center', Cell: renderBoolean},
         {accessor: 'payment_recieved', Header: 'Payment Received', align: 'center', Cell: renderBoolean},
@@ -381,7 +384,7 @@ export const VEHICLE = {
         {accessor: 'vehicle_category.name', Header: 'Category'},
         {accessor: 'model', Header: 'Model'},
         {accessor: 'meter_reading', Header: 'Meter Reading', Cell: ({value}) => renderDistance(value)},
-        {accessor: 'status', Header: 'Status', align: 'center', Cell: renderVehicleStatus}
+        {accessor: 'status', Header: 'Status', align: 'center', Cell: ({value}) => renderVehicleStatus(value)}
     ],
     TRAILER_SCHEMA: [
         {accessor: 'name', Header: 'Name'},
@@ -389,7 +392,7 @@ export const VEHICLE = {
         {accessor: 'vin_number', Header: 'VIN No.'},
         {accessor: 'model', Header: 'Model'},
         {accessor: 'meter_reading', Header: 'Meter', align: 'center', Cell: ({value}) => renderDistance(value)},
-        {accessor: 'status', Header: 'Status', align: 'center', Cell: renderVehicleStatus},
+        {accessor: 'status', Header: 'Status', align: 'center', Cell: ({value}) => renderVehicleStatus(value)},
         {accessor: 'license_expiry', Header: 'License Expiry', Cell: ({value}) => renderDate(value)}
     ]
 };

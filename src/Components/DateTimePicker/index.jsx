@@ -56,7 +56,7 @@ const DateTimePicker = forwardRef((
     const [dropdownOpened, setDropdownOpened] = useState(initiallyOpened);
     const calendarSize = size === 'lg' || size === 'xl' ? 'md' : 'sm';
     const inputRef = useRef();
-    const [lastValidValue, setLastValidValue] = useState(defaultValue ?? null);
+    // const [lastValidValue, setLastValidValue] = useState(defaultValue ?? null);
     const [_value, setValue] = useState(value);
     const [calendarMonth, setCalendarMonth] = useState(_value || initialMonth || new Date());
 
@@ -98,7 +98,7 @@ const DateTimePicker = forwardRef((
 
     const handleClear = () => {
         setValue(null);
-        setLastValidValue(null);
+        // setLastValidValue(null);
         setInputState('');
         setDropdownOpened(true);
         inputRef.current?.focus();
@@ -123,7 +123,7 @@ const DateTimePicker = forwardRef((
         const date = parseDate(e.target.value);
         if (dayjs(date).isValid()) {
             setValue(date);
-            setLastValidValue(date);
+            // setLastValidValue(date);
             closeCalendarOnChange && setInputState(e.target.value);
             setCalendarMonth(date);
         } else {

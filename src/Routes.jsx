@@ -10,6 +10,7 @@ const TripRoute = {
     NewOrEdit: loadable(() => import('Pages/TripRoutes/TripRouteForm'))
 };
 const RoutePlanner = loadable(() => import('Pages/RoutePlanner'));
+const Planning = loadable(() => import('Pages/RoutePlanner/Planning/PlanningForm'));
 const Finance = loadable(() => import('Pages/RoutePlanner/Finance/FinanceForm'));
 const Operation = loadable(() => import('Pages/RoutePlanner/Operation/OperationForm'));
 
@@ -32,12 +33,8 @@ const Address = {
 const InspectionForm = loadable(() => import('Pages/Inspection/InspectionForm'));
 const InspectionReport = loadable(() => import('Pages/Inspection/InspectionReport'));
 const Vehicle = loadable(() => import('Pages/Vehicle'));
-const Truck = {
-    NewOrEdit: loadable(() => import('Pages/Vehicle/Truck/TruckForm'))
-};
-const Trailer = {
-    NewOrEdit: loadable(() => import('Pages/Vehicle/Trailer/TrailerForm'))
-};
+const Truck = loadable(() => import('Pages/Vehicle/Truck/TruckForm'));
+const Trailer = loadable(() => import('Pages/Vehicle/Trailer/TrailerForm'));
 const Setting = loadable(() => import('Pages/Setting'));
 
 const pagesWithoutAuthentication = [{id: "signin", path: "/SignIn", component: SignIn}];
@@ -50,8 +47,10 @@ const pagesWithAuthentication = [
     {id: "editTripRoute", path: "/TripRoutes/Route/:id", component: TripRoute.NewOrEdit},
 
     {id: "routePlanner", path: "/RoutePlanner/:tabIndex", component: RoutePlanner},
-    {id: "finance", path: "/Finance/:id", component: Finance},
-    {id: "operation", path: "/Operation/:id", component: Operation},
+    {id: "newPlanning", path: "/Planning", component: Planning},
+    {id: "editPlanning", path: "/Planning/:id", component: Planning},
+    {id: "editOperation", path: "/Operation/:id", component: Operation},
+    {id: "editFinance", path: "/Finance/:id", component: Finance},
 
     {id: "laborcode", path: "/Maintenance/Laborcode", component: Laborcode},
     {id: "request", path: "/Maintenance/Request", component: Request},
@@ -75,11 +74,11 @@ const pagesWithAuthentication = [
 
     {id: "vehicle", path: "/Vehicle/:tabIndex", component: Vehicle},
 
-    {id: "newTruck", path: "/Truck", component: Truck.NewOrEdit},
-    {id: "editTruck", path: "/Truck/:id", component: Truck.NewOrEdit},
+    {id: "newTruck", path: "/Truck", component: Truck},
+    {id: "editTruck", path: "/Truck/:id", component: Truck},
 
-    {id: "newTrailer", path: "/Trailer", component: Trailer.NewOrEdit},
-    {id: "editTrailer", path: "/Trailer/:id", component: Trailer.NewOrEdit},
+    {id: "newTrailer", path: "/Trailer", component: Trailer},
+    {id: "editTrailer", path: "/Trailer/:id", component: Trailer},
 
     {id: "setting", path: "/Setting", component: Setting}
 ];

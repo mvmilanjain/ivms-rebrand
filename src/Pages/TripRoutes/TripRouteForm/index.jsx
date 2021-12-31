@@ -77,13 +77,13 @@ const TripRouteForm = ({history, location, match, ...rest}) => {
     };
 
     const renderActiveRouteOnMap = (route, initialLoad) => {
-        const activeRouteStops = route.getActiveRouteStops();
-        if (activeRouteStops.length === 1) {
+        const activeStoppages = route.getActiveRouteStops();
+        if (activeStoppages.length === 1) {
             route.route_planner.route_stops.forEach(stop => !stop._destroy && (stop.distance = 0));
             !initialLoad && route.updateTotalDistanceAndCycleTime();
             setValues({...route});
-        } else if (activeRouteStops.length > 1) {
-            setRouteMapState({route, activeStoppages: activeRouteStops, initialLoad});
+        } else if (activeStoppages.length > 1) {
+            setRouteMapState({route, activeStoppages, initialLoad});
         } else {
             !initialLoad && route.updateTotalDistanceAndCycleTime();
             setValues({...route});

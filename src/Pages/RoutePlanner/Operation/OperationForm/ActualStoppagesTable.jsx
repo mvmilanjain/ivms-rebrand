@@ -16,7 +16,7 @@ import {useModals} from "@mantine/modals";
 const ActualStoppagesTable = ({data, register, onFieldChange, onStoppageChange}) => {
     const modals = useModals();
 
-    const renderStoppageRowAction = ({row}) => {
+    const renderStoppageActions = ({row}) => {
         const {index} = row;
         const activeStoppages = data.route_order_actual_info.route_order_actual_stop_infos;
 
@@ -118,7 +118,7 @@ const ActualStoppagesTable = ({data, register, onFieldChange, onStoppageChange})
                             onChange={e => handleActualStoppageValueChange(e.target.value, row.index, 'note')}
                         />
                     },
-                    {accessor: 'id', Header: 'Actions', cellWidth: 120, Cell: renderStoppageRowAction}
+                    {accessor: 'id', Header: 'Actions', cellWidth: 120, Cell: renderStoppageActions}
                 ]}
                 data={get(data, 'route_order_actual_info.route_order_actual_stop_infos', []).filter(stop => !stop._destroy)}
                 pagination={get(data, 'route_order_actual_info.route_order_actual_stop_infos', []).length > 10}

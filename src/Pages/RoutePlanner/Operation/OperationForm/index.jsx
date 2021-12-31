@@ -211,9 +211,8 @@ const OperationForm = ({history, match, ...rest}) => {
                         />
 
                         <AddressSelect
-                            {...register("route_order_actual_info.fuel_point_id")}
+                            {...register("route_order_actual_info.fuel_point")}
                             label="Actual fuel point" withIcon required
-                            value={values.route_order_actual_info.fuel_point}
                             onChange={handleFuelPointChange}
                             error={errorMessage("route_order_actual_info.fuel_point_id", touched, errors)}
                         />
