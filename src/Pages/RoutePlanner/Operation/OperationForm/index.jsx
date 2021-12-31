@@ -3,12 +3,12 @@ import {useFormik} from 'formik';
 import {
     Box,
     Button,
-    Checkbox,
     Divider,
     Group,
     NumberInput,
     Select,
     SimpleGrid,
+    Switch,
     Text,
     TextInput,
     Title
@@ -258,8 +258,8 @@ const OperationForm = ({history, match, ...rest}) => {
                             onChange={val => setFieldValue("actual_amount", val)}
                         />
                     </SimpleGrid>
-                    <Checkbox
-                        label="Is documents received physically from driver?"
+                    <Switch
+                        label={<Text>Is documents received physically from driver?</Text>}
                         checked={values.route_order_actual_info.document_recieved}
                         onChange={() => {
                             setFieldValue(

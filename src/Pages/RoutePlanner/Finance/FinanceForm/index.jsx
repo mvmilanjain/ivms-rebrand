@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useFormik} from 'formik';
-import {Badge, Button, Checkbox, Divider, Group, Text, Title, Tooltip} from '@mantine/core';
+import {Badge, Button, Checkbox, Divider, Group, Text, Title, Tooltip, Switch} from '@mantine/core';
 import {useNotifications} from '@mantine/notifications';
 import {MdOutlineSave as SaveIcon} from 'react-icons/md';
 
@@ -67,27 +67,27 @@ const FinanceForm = ({history, location, match, ...rest}) => {
                     <Tooltip label="Status" withArrow>{renderTripStatus(values.status)}</Tooltip>
                 </Group>
 
-                <Group direction="column" spacing="xl">
-                    <Checkbox
-                        label="Is document validated?"
+                <Group direction="column">
+                    <Switch
+                        label={<Text>Is document validated?</Text>}
                         checked={values.document_validated}
                         onChange={() => handleChange('document_validated')}
                     />
 
-                    <Checkbox
-                        label="Is document sent to client?"
+                    <Switch
+                        label={<Text>Is document sent to client?</Text>}
                         checked={values.document_sent_to_client}
                         onChange={() => handleChange('document_sent_to_client')}
                     />
 
-                    <Checkbox
-                        label="Is payment received?"
+                    <Switch
+                        label={<Text>Is payment received?</Text>}
                         checked={values.payment_recieved}
                         onChange={() => handleChange('payment_recieved')}
                     />
 
-                    <Checkbox
-                        label="Is invoice sent?"
+                    <Switch
+                        label={<Text>Is invoice sent?</Text>}
                         checked={values.invoice_recieved}
                         onChange={() => handleChange('invoice_recieved')}
                     />

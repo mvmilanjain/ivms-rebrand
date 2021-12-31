@@ -53,7 +53,7 @@ const PlanningForm = ({history, location, match, ...rest}) => {
     useEffect(() => {
         if (action === 'Save') {
             let initialData = null;
-            if(location.state && location.state.data) {
+            if (location.state && location.state.data) {
                 initialData = new Plan(location.state.data);
                 renderPlannedStoppagesOnMap(initialData);
                 if (!initialData.vehicle_id) {
@@ -450,10 +450,10 @@ const PlanningForm = ({history, location, match, ...rest}) => {
                                         {...register("planned_load_start_time")}
                                         icon={<CalendarIcon/>} disabled={!values.route_id}
                                         required rightSectionWidth={40} rightSection={
-                                            <ActionIcon disabled={!values.route_id} onClick={handleStartTimeReset}>
-                                                <ReloadIcon/>
-                                            </ActionIcon>
-                                        }
+                                        <ActionIcon disabled={!values.route_id} onClick={handleStartTimeReset}>
+                                            <ReloadIcon/>
+                                        </ActionIcon>
+                                    }
                                         label="Planned start time" placeholder="Select start time"
                                         value={
                                             values.planned_load_start_time ?
@@ -485,29 +485,30 @@ const PlanningForm = ({history, location, match, ...rest}) => {
                                     />
                                     <Switch
                                         id="fuel_stop_required"
-                                        label="Fuel stop required?"
+                                        label={<Text>Fuel stop required?</Text>}
                                         checked={values.fuel_stop_required}
                                         onChange={e => setFieldValue("fuel_stop_required", e.currentTarget.checked)}
                                     />
                                     <Switch
                                         id="truck_required_for_service"
-                                        label="Truck service required?"
+                                        label={<Text>Truck service required?</Text>}
                                         checked={values.truck_required_for_service}
                                         onChange={e => setFieldValue("truck_required_for_service", e.currentTarget.checked)}
                                     />
                                     <Switch
                                         id="enroute_to_hub"
-                                        label="En-route to HUB available?"
+                                        label={<Text>En-route to HUB available?</Text>}
                                         checked={values.enroute_to_hub}
                                         onChange={e => setFieldValue("enroute_to_hub", e.currentTarget.checked)}
                                     />
                                     <Switch
-                                        id="is_empty_leg" label="Is empty leg?" checked={values.is_empty_leg}
+                                        id="is_empty_leg" label={<Text>Is empty leg?</Text>}
+                                        checked={values.is_empty_leg}
                                         onChange={e => setFieldValue("is_empty_leg", e.currentTarget.checked)}
                                     />
                                     <Switch
                                         id="congestion_at_destination"
-                                        label="Congestion at destination?"
+                                        label={<Text>Congestion at destination?</Text>}
                                         checked={values.congestion_at_destination}
                                         onChange={e => handleCongestionAtDestChange(e.currentTarget.checked)}
                                     />
