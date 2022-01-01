@@ -15,7 +15,7 @@ const AppBar = ({toggleNavbar, expand}) => {
 
     const handleSignOut = () => {
         logout();
-        history.push("/SignIn");
+        history.push("/sign_in");
     };
 
     return (

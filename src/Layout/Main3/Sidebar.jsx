@@ -162,7 +162,7 @@ const Sidebar = () => {
 
     const handleSignOut = () => {
         logout();
-        history.push("/SignIn");
+        history.push("/sign_in");
     };
 
     const links = navList.map(l => (l.subNav) ? <NavWithSubLink key={l.id} {...l} /> : <MainLink key={l.id} {...l}/>);
