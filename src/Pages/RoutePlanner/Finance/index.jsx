@@ -40,7 +40,7 @@ const Finance = ({history, ...rest}) => {
         </ActionIcon>
     );
 
-    const handleEdit = (id) => history.push(`/Finance/${id}`);
+    const handleEdit = (id) => history.push(`/finance/${id}`);
 
     const handleFilterApply = (data) => {
         toggleFilterDrawer(false);

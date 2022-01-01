@@ -48,9 +48,9 @@ const Faults = ({history, ...rest}) => {
         );
     };
 
-    const handleCreate = () => history.push(`/Faults/Fault`);
+    const handleCreate = () => history.push(`/faults/fault`);
 
-    const handleEdit = (id) => history.push(`/Faults/Fault/${id}`);
+    const handleEdit = (id) => history.push(`/faults/fault/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({

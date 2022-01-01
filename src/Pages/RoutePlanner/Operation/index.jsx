@@ -78,9 +78,9 @@ const Operation = ({history, ...rest}) => {
         );
     };
 
-    const handleOperationUpdate = (id) => history.push(`/Operation/${id}`);
+    const handleOperationUpdate = (id) => history.push(`/operation/${id}`);
 
-    const handleFinanceUpdate = (id) => history.push(`/Finance/${id}`);
+    const handleFinanceUpdate = (id) => history.push(`/finance/${id}`);
 
     const handleTripEvent = (id) => {
         const modalId = modals.openModal({

@@ -57,9 +57,9 @@ const Truck = ({history}) => {
         );
     };
 
-    const handleCreate = () => history.push('/Truck');
+    const handleCreate = () => history.push('/truck');
 
-    const handleEdit = (id) => history.push(`/Truck/${id}`);
+    const handleEdit = (id) => history.push(`/truck/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({

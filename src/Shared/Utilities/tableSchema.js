@@ -321,8 +321,11 @@ export const DASHBOARD = {
 };
 
 export const INSPECTION = {
-    INSPECTION_FORM: [],
-    INSPECTION_REPORT: [
+    FORM: [
+        {accessor: 'name', Header: 'Name'},
+        {accessor: 'description', Header: 'Description', Cell: ({value}) => renderTextWithTooltip(value)}
+    ],
+    REPORT: [
         {accessor: 'report_number', Header: 'Report No.'},
         {accessor: 'created_at', Header: 'Date', Cell: ({value}) => formatDateTime(value)},
         {accessor: 'vehicle.vehicle_number', Header: 'Vehicle'},

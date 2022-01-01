@@ -68,9 +68,9 @@ const Addresses = ({history}) => {
         }).finally(() => toggleLoading(l => !l));
     };
 
-    const handleCreate = () => history.push(`/Addresses/Address`);
+    const handleCreate = () => history.push(`/addresses/address`);
 
-    const handleEdit = (id) => history.push(`/Addresses/Address/${id}`);
+    const handleEdit = (id) => history.push(`/addresses/address/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({

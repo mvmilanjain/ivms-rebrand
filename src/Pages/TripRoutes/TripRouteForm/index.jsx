@@ -186,7 +186,7 @@ const TripRouteForm = ({history, location, match, ...rest}) => {
                 notifications.showNotification({
                     title: "Success", color: 'green', message: 'TripRoutes has been saved successfully.'
                 });
-                history.push('/TripRoutes');
+                history.push('/routes');
             }).catch(e => {
                 notifications.showNotification({
                     title: "Error", color: 'red', message: 'Not able to save route details. Something went wrong!!'
@@ -208,7 +208,7 @@ const TripRouteForm = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Route</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/TripRoutes')}>Cancel</Button>
+                        <Button variant="default" onClick={() => history.push('/routes')}>Cancel</Button>
                         <Button leftIcon={<SaveIcon/>} type="submit">{action}</Button>
                     </Group>
                 </Group>

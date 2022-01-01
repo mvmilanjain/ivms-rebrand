@@ -49,7 +49,7 @@ const FaultForm = ({history, location, match, ...rest}) => {
             notifications.showNotification({
                 title: 'Success', color: 'green', message: 'Faults has been saved successfully.'
             });
-            history.push('/Faults');
+            history.push('/faults');
         }).catch(e => {
             notifications.showNotification({
                 title: 'Error', color: 'red', message: 'Not able to save fault details. Something went wrong!!'
@@ -70,7 +70,7 @@ const FaultForm = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Fault</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/Faults')}>Cancel</Button>
+                        <Button variant="default" onClick={() => history.push('/faults')}>Cancel</Button>
                         <Button leftIcon={<SaveIcon/>} type="submit">{action}</Button>
                     </Group>
                 </Group>

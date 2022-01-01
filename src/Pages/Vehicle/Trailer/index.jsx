@@ -56,9 +56,9 @@ const Trailer = ({history}) => {
         );
     };
 
-    const handleCreate = () => history.push('/Trailer');
+    const handleCreate = () => history.push('/trailer');
 
-    const handleEdit = (id) => history.push(`/Trailer/${id}`);
+    const handleEdit = (id) => history.push(`/trailer/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({

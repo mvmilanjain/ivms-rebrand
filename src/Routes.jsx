@@ -5,10 +5,9 @@ const SignIn = loadable(() => import('Pages/SignIn'));
 const PageNotFound = loadable(() => import('Pages/ErrorPage/PageNotFound'));
 
 const Dashboard = loadable(() => import('Pages/Dashboard'));
-const TripRoute = {
-    ViewAll: loadable(() => import('Pages/TripRoutes')),
-    NewOrEdit: loadable(() => import('Pages/TripRoutes/TripRouteForm'))
-};
+const TripRoutes = loadable(() => import('Pages/TripRoutes'));
+const TripRouteForm = loadable(() => import('Pages/TripRoutes/TripRouteForm'));
+
 const RoutePlanner = loadable(() => import('Pages/RoutePlanner'));
 const Planning = loadable(() => import('Pages/RoutePlanner/Planning/PlanningForm'));
 const Finance = loadable(() => import('Pages/RoutePlanner/Finance/FinanceForm'));
@@ -18,69 +17,68 @@ const Laborcode = loadable(() => import('Pages/Maintenance/Laborcode'));
 const Request = loadable(() => import('Pages/Maintenance/Request'));
 const Scheduler = loadable(() => import('Pages/Maintenance/Scheduler'));
 const Workorder = loadable(() => import('Pages/Maintenance/Workorder'));
-const Fault = {
-    ViewAll: loadable(() => import('Pages/Faults')),
-    NewOrEdit: loadable(() => import('Pages/Faults/FaultForm'))
-};
-const Product = {
-    ViewAll: loadable(() => import('Pages/Products')),
-    NewOrEdit: loadable(() => import('Pages/Products/ProductForm'))
-};
-const Address = {
-    ViewAll: loadable(() => import('Pages/Addresses')),
-    NewOrEdit: loadable(() => import('Pages/Addresses/AddressForm'))
-};
-const InspectionForm = loadable(() => import('Pages/Inspection/InspectionForm'));
+
+const Faults = loadable(() => import('Pages/Faults'));
+const FaultForm = loadable(() => import('Pages/Faults/FaultForm'));
+
+const Products = loadable(() => import('Pages/Products'));
+const ProductForm = loadable(() => import('Pages/Products/ProductForm'));
+
+const Addresses = loadable(() => import('Pages/Addresses'));
+const AddressForm = loadable(() => import('Pages/Addresses/AddressForm'));
+const Inspection = loadable(() => import('Pages/Inspection'));
+const InspectionFormSection = loadable(() => import('Pages/Inspection/InspectionForms/Sections'));
 const InspectionReport = loadable(() => import('Pages/Inspection/InspectionReport'));
+
 const Vehicle = loadable(() => import('Pages/Vehicle'));
 const Truck = loadable(() => import('Pages/Vehicle/Truck/TruckForm'));
 const Trailer = loadable(() => import('Pages/Vehicle/Trailer/TrailerForm'));
 const Setting = loadable(() => import('Pages/Setting'));
 
-const pagesWithoutAuthentication = [{id: "signin", path: "/SignIn", component: SignIn}];
+const pagesWithoutAuthentication = [{id: "signin", path: "/sign_in", component: SignIn}];
 
 const pagesWithAuthentication = [
-    {id: "dashboard", path: "/Dashboard", component: Dashboard},
+    {id: "dashboard", path: "/dashboard", component: Dashboard},
 
-    {id: "tripRoutes", path: "/TripRoutes", component: TripRoute.ViewAll},
-    {id: "newTripRoute", path: "/TripRoutes/Route", component: TripRoute.NewOrEdit},
-    {id: "editTripRoute", path: "/TripRoutes/Route/:id", component: TripRoute.NewOrEdit},
+    {id: "tripRoutes", path: "/routes", component: TripRoutes},
+    {id: "newTripRoute", path: "/routes/route", component: TripRouteForm},
+    {id: "editTripRoute", path: "/routes/route/:id", component: TripRouteForm},
 
-    {id: "routePlanner", path: "/RoutePlanner/:tabIndex", component: RoutePlanner},
-    {id: "newPlanning", path: "/Planning", component: Planning},
-    {id: "editPlanning", path: "/Planning/:id", component: Planning},
-    {id: "editOperation", path: "/Operation/:id", component: Operation},
-    {id: "editFinance", path: "/Finance/:id", component: Finance},
+    {id: "routePlanner", path: "/route_planner/:tabIndex", component: RoutePlanner},
+    {id: "newPlanning", path: "/planning", component: Planning},
+    {id: "editPlanning", path: "/planning/:id", component: Planning},
+    {id: "editOperation", path: "/operation/:id", component: Operation},
+    {id: "editFinance", path: "/finance/:id", component: Finance},
 
     {id: "laborcode", path: "/Maintenance/Laborcode", component: Laborcode},
     {id: "request", path: "/Maintenance/Request", component: Request},
     {id: "scheduler", path: "/Maintenance/Scheduler", component: Scheduler},
     {id: "workorder", path: "/Maintenance/Workorder", component: Workorder},
 
-    {id: "inspectionForm", path: "/Inspection/InspectionForm", component: InspectionForm},
-    {id: "inspectionReport", path: "/Inspection/InspectionReport", component: InspectionReport},
+    {id: "inspection", path: "/inspection/:tabIndex", component: Inspection},
+    {id: "inspectionFormSection", path: "/inspection_form/:id", component: InspectionFormSection},
+    {id: "newInspectionReport", path: "/inspection_report", component: InspectionReport},
+    {id: "editInspectionReport", path: "/inspection_report/:id", component: InspectionReport},
 
-    {id: "faults", path: "/Faults", component: Fault.ViewAll},
-    {id: "newFault", path: "/Faults/Fault", component: Fault.NewOrEdit},
-    {id: "editFault", path: "/Faults/Fault/:id", component: Fault.NewOrEdit},
+    {id: "faults", path: "/faults", component: Faults},
+    {id: "newFault", path: "/faults/fault", component: FaultForm},
+    {id: "editFault", path: "/faults/fault/:id", component: FaultForm},
 
-    {id: "products", path: "/Products", component: Product.ViewAll},
-    {id: "newProduct", path: "/Products/Product", component: Product.NewOrEdit},
-    {id: "editProduct", path: "/Products/Product/:id", component: Product.NewOrEdit},
+    {id: "products", path: "/products", component: Products},
+    {id: "newProduct", path: "/products/product", component: ProductForm},
+    {id: "editProduct", path: "/products/product/:id", component: ProductForm},
 
-    {id: "addresses", path: "/Addresses", component: Address.ViewAll},
-    {id: "newAddress", path: "/Addresses/Address", component: Address.NewOrEdit},
-    {id: "editAddress", path: "/Addresses/Address/:id", component: Address.NewOrEdit},
+    {id: "addresses", path: "/addresses", component: Addresses},
+    {id: "newAddress", path: "/addresses/address", component: AddressForm},
+    {id: "editAddress", path: "/addresses/address/:id", component: AddressForm},
 
-    {id: "vehicle", path: "/Vehicle/:tabIndex", component: Vehicle},
+    {id: "vehicle", path: "/vehicle/:tabIndex", component: Vehicle},
+    {id: "newTruck", path: "/truck", component: Truck},
+    {id: "editTruck", path: "/truck/:id", component: Truck},
+    {id: "newTrailer", path: "/trailer", component: Trailer},
+    {id: "editTrailer", path: "/trailer/:id", component: Trailer},
 
-    {id: "newTruck", path: "/Truck", component: Truck},
-    {id: "editTruck", path: "/Truck/:id", component: Truck},
-
-    {id: "newTrailer", path: "/Trailer", component: Trailer},
-    {id: "editTrailer", path: "/Trailer/:id", component: Trailer},
-
-    {id: "setting", path: "/Setting", component: Setting}
+    {id: "setting", path: "/setting", component: Setting}
 ];
 
 const Routes = ({isAuthenticated}) => {
@@ -93,7 +91,7 @@ const Routes = ({isAuthenticated}) => {
     return (
         <Switch>
             {getRoutes()}
-            <Redirect exact from="/" to={isAuthenticated ? "/Dashboard" : "/SignIn"}/>
+            <Redirect exact from="/" to={isAuthenticated ? "/dashboard" : "/sign_in"}/>
             <Route component={PageNotFound}/>
         </Switch>
     );

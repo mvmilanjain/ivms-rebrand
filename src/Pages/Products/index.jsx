@@ -48,9 +48,9 @@ const Products = ({history, ...rest}) => {
         );
     };
 
-    const handleCreate = () => history.push(`/Products/Product`);
+    const handleCreate = () => history.push(`/products/product`);
 
-    const handleEdit = (id) => history.push(`/Products/Product/${id}`);
+    const handleEdit = (id) => history.push(`/products/product/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({

@@ -21,8 +21,8 @@ import {getInitials} from 'Shared/Utilities/common.util';
 import {authLogout} from 'Store/actions/auth.actions';
 
 const navList = [
-    {id: 'dashboard', path: '/Dashboard', label: 'Dashboard', icon: DashboardIcon, color: 'blue'},
-    {id: 'route', path: '/TripRoutes', label: 'Route', icon: RouteIcon, color: 'teal'},
+    {id: 'dashboard', path: '/dashboard', label: 'Dashboard', icon: DashboardIcon, color: 'blue'},
+    {id: 'route', path: '/routes', label: 'Route', icon: RouteIcon, color: 'teal'},
     {
         id: 'routeOrder', label: 'TripRoutes Order', icon: RouteOrderIcon, color: 'lime', subNav: [
             {id: 'planning', path: '/RoutePlanner/Planning', label: 'Planning'},
@@ -33,7 +33,7 @@ const navList = [
     },
     {
         id: 'inspection', label: 'Inspection', icon: InspectionIcon, color: 'green', subNav: [
-            {id: 'inspectionForm', path: '/Inspection/InspectionForm', label: 'Form'},
+            {id: 'inspectionForm', path: '/Inspection/InspectionForms', label: 'Form'},
             {id: 'inspectionReport', path: '/Inspection/InspectionReport', label: 'Report'},
         ]
     },
@@ -45,16 +45,16 @@ const navList = [
             {id: 'laborcode', path: '/Maintenance/Laborcode', label: 'Labor Code'}
         ]
     },
-    {id: 'fault', path: '/Faults', label: 'Fault', icon: FaultIcon, color: 'red'},
-    {id: 'product', path: '/Products', label: 'Product', icon: ProductIcon, color: 'yellow'},
-    {id: 'address', path: '/Addresses', label: 'Address', icon: AddressIcon, color: 'grape'},
+    {id: 'fault', path: '/faults', label: 'Fault', icon: FaultIcon, color: 'red'},
+    {id: 'product', path: '/products', label: 'Product', icon: ProductIcon, color: 'yellow'},
+    {id: 'address', path: '/addresses', label: 'Address', icon: AddressIcon, color: 'grape'},
     {
         id: 'vehicle', label: 'Vehicle', icon: VehicleIcon, color: 'violet', subNav: [
-            {id: 'truck', path: '/Vehicle/Truck', label: 'Truck'},
-            {id: 'trailer', path: '/Vehicle/Trailer', label: 'Trailer'}
+            {id: 'truck', path: '/vehicle/truck', label: 'Truck'},
+            {id: 'trailer', path: '/vehicle/trailer', label: 'Trailer'}
         ]
     },
-    {id: 'setting', path: '/Setting', label: 'Setting', icon: SettingIcon, color: 'indigo'}
+    {id: 'setting', path: '/setting', label: 'Setting', icon: SettingIcon, color: 'indigo'}
 ];
 
 const useStyles = createStyles(t => ({

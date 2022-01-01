@@ -58,9 +58,9 @@ const TripRoutes = ({history}) => {
         );
     };
 
-    const handleCreate = () => history.push('/TripRoutes/Route');
+    const handleCreate = () => history.push('/routes/route');
 
-    const handleEdit = (id) => history.push(`/TripRoutes/Route/${id}`);
+    const handleEdit = (id) => history.push(`/routes/route/${id}`);
 
     const handleDelete = (id) => {
         modals.openConfirmModal({

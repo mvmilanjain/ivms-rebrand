@@ -87,7 +87,7 @@ const AddressForm = ({history, location, match, ...rest}) => {
             notifications.showNotification({
                 title: "Success", color: 'green', message: 'Addresses has been saved successfully.'
             });
-            history.push('/Addresses');
+            history.push('/addresses');
         }).catch(e => {
             notifications.showNotification({
                 title: "Error", color: 'red', message: 'Not able to save address. Something went wrong!!'
@@ -108,7 +108,7 @@ const AddressForm = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Address</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/Addresses')}>
+                        <Button variant="default" onClick={() => history.push('/addresses')}>
                             Cancel
                         </Button>
                         <Button leftIcon={<SaveIcon/>} type="submit">

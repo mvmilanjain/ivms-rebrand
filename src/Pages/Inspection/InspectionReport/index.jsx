@@ -34,14 +34,13 @@ const InspectionReport = (props) => {
     }, []);
 
     return (
-        <ContentArea withPaper limitToViewPort>
-            <Group position="apart" mb="md">
-                <Title order={2}>Inspection Report</Title>
-                <Button leftIcon={<CreateIcon/>}>Create Inspection Report</Button>
+        <ContentArea withPaper limitToViewPort withPadding={false} heightToReduce={184}>
+            <Group position="right" mb="md">
+                <Button leftIcon={<CreateIcon/>} compact>Create Inspection Report</Button>
             </Group>
-            <div style={{height: 'calc(100% - 60px)'}}>
+            <div style={{height: 'calc(100% - 48px)'}}>
                 <ReactTable
-                    columns={INSPECTION.INSPECTION_REPORT}
+                    columns={INSPECTION.REPORT}
                     data={state.data}
                     serverSideDataSource
                     fetchData={fetchData}

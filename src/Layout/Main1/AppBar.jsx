@@ -11,7 +11,7 @@ const AppBar = ({toggleNavbar, expand}) => {
     const dispatch = useDispatch();
     const logout = () => dispatch(authLogout());
 
-    const handleSetting = () => history.push("/Setting");
+    const handleSetting = () => history.push("/setting");
 
     const handleSignOut = () => {
         logout();

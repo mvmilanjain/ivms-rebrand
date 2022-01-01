@@ -85,7 +85,7 @@ const TruckForm = ({history, location, match, ...rest}) => {
             notifications.showNotification({
                 title: "Success", color: 'green', message: 'Truck has been saved successfully.'
             });
-            history.push('/Vehicle/0');
+            history.push('/vehicle/0');
         }).catch(e => {
             notifications.showNotification({
                 title: "Error", color: 'red', message: 'Not able to save truck details. Something went wrong!!'
@@ -106,7 +106,7 @@ const TruckForm = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Truck</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/Vehicle/0')}>Cancel</Button>
+                        <Button variant="default" onClick={() => history.push('/vehicle/0')}>Cancel</Button>
                         <Button leftIcon={<SaveIcon/>} type="submit">{action}</Button>
                     </Group>
                 </Group>

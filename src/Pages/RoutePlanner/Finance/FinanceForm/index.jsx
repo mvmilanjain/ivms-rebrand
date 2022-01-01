@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useFormik} from 'formik';
-import {Badge, Button, Checkbox, Divider, Group, Text, Title, Tooltip, Switch} from '@mantine/core';
+import {Button, Divider, Group, Switch, Text, Title, Tooltip} from '@mantine/core';
 import {useNotifications} from '@mantine/notifications';
 import {MdOutlineSave as SaveIcon} from 'react-icons/md';
 
@@ -49,8 +49,8 @@ const FinanceForm = ({history, location, match, ...rest}) => {
     });
 
     return (
-        <ContentArea withPaper>
-            <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
+            {values && <ContentArea withPaper>
                 <Group position="apart" mb="md">
                     <Title order={3}>Finance</Title>
                     <Group position="apart">
@@ -92,8 +92,8 @@ const FinanceForm = ({history, location, match, ...rest}) => {
                         onChange={() => handleChange('invoice_recieved')}
                     />
                 </Group>
-            </form>
-        </ContentArea>
+            </ContentArea>}
+        </form>
     );
 }
 

@@ -20,7 +20,7 @@ const PageNotFound = () => (
 
             <Text color="dimmed">Sorry, we couldn't find the page you're looking for.</Text>
 
-            <Anchor component={Link} to="/Dashboard">
+            <Anchor component={Link} to="/dashboard">
                 <Center inline>
                     <span>Go to dashboard</span>
                     <ArrowRightIcon style={{marginLeft: 5}}/>

@@ -104,9 +104,9 @@ const Planning = ({history, ...rest}) => {
         );
     };
 
-    const handleCreate = () => history.push('/Planning');
+    const handleCreate = () => history.push('/planning');
 
-    const handleEdit = (id) => history.push(`/Planning/${id}`);
+    const handleEdit = (id) => history.push(`/planning/${id}`);
 
     const handleCopyPlan = async (id) => {
         try {
@@ -125,7 +125,7 @@ const Planning = ({history, ...rest}) => {
             const notStatedPlanList = await requestHandler(getRouteOrders(paramsForPlanList), {loader: true});
             const lastPlanEta = notStatedPlanList.data.length > 0 ? last(notStatedPlanList.data).planned_eta_destination : null;
 
-            history.push('/Planning', {data: Plan.copyPlan(planRes.data, lastPlanEta)});
+            history.push('/planning', {data: Plan.copyPlan(planRes.data, lastPlanEta)});
         } catch (e) {
             notifications.showNotification({
                 title: 'Error', color: 'red',
@@ -141,9 +141,9 @@ const Planning = ({history, ...rest}) => {
         setState({outerFilter: {...data}});
     };
 
-    const handleOperationUpdate = (id) => history.push(`/Operation/${id}`);
+    const handleOperationUpdate = (id) => history.push(`/operation/${id}`);
 
-    const handleFinanceUpdate = (id) => history.push(`/Finance/${id}`);
+    const handleFinanceUpdate = (id) => history.push(`/finance/${id}`);
 
     const handleTripEvent = (id, action) => {
         let EventFrom = null, status = '';

@@ -1,18 +1,19 @@
 import {useState} from 'react';
 import {Tabs} from '@mantine/core';
-import {FaTrailer as TrailerIcon, FaTruck as TruckIcon} from 'react-icons/fa';
+import {HiOutlineDocumentReport as ReportIcon} from 'react-icons/hi';
+import {MdOutlineDescription as FormIcon} from 'react-icons/md';
 
 import {ContentArea} from 'Components';
-import Truck from './Truck';
-import Trailer from './Trailer';
+import InspectionForms from './InspectionForms';
+import InspectionReport from './InspectionReport';
 
-const Vehicle = ({history, match}) => {
+const Inspection = ({history, match}) => {
     const [tabIndex, setTabIndex] = useState(Number(match.params.tabIndex) || 0);
     const [initialTabIndex] = useState(Number(match.params.tabIndex) || 0);
 
     const handleTabChange = (index) => {
         setTabIndex(index);
-        history.push(`/vehicle/${index}`);
+        history.push(`/inspection/${index}`);
     };
 
     return (
@@ -23,15 +24,15 @@ const Vehicle = ({history, match}) => {
                 tabIndex={tabIndex}
                 onTabChange={handleTabChange}
             >
-                <Tabs.Tab label="Truck" icon={<TruckIcon/>}>
-                    {tabIndex === 0 && <Truck history={history}/>}
+                <Tabs.Tab label="Forms" icon={<FormIcon/>}>
+                    {tabIndex === 0 && <InspectionForms history={history}/>}
                 </Tabs.Tab>
-                <Tabs.Tab label="Trailer" icon={<TrailerIcon/>}>
-                    {tabIndex === 1 && <Trailer history={history}/>}
+                <Tabs.Tab label="Reports" icon={<ReportIcon/>}>
+                    {tabIndex === 1 && <InspectionReport history={history}/>}
                 </Tabs.Tab>
             </Tabs>
         </ContentArea>
     );
 };
 
-export default Vehicle;
+export default Inspection;

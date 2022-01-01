@@ -17,15 +17,10 @@ import {GiAutoRepair as MaintenanceIcon} from 'react-icons/gi';
 import {getInitials} from 'Shared/Utilities/common.util';
 
 const navList = [
-    {id: 'dashboard', path: '/Dashboard', label: 'Dashboard', icon: DashboardIcon, color: 'blue'},
-    {id: 'tripRoutes', path: '/TripRoutes', label: 'Route', icon: RouteIcon, color: 'teal'},
-    {id: 'routePlanner', path: '/RoutePlanner/0', label: 'Route Planner', icon: RouteOrderIcon, color: 'lime'},
-    {
-        id: 'inspection', label: 'Inspection', icon: InspectionIcon, color: 'green', subNav: [
-            {id: 'inspectionForm', path: '/Inspection/InspectionForm', label: 'Form'},
-            {id: 'inspectionReport', path: '/Inspection/InspectionReport', label: 'Report'},
-        ]
-    },
+    {id: 'dashboard', path: '/dashboard', label: 'Dashboard', icon: DashboardIcon, color: 'blue'},
+    {id: 'tripRoutes', path: '/routes', label: 'Route', icon: RouteIcon, color: 'teal'},
+    {id: 'routePlanner', path: '/route_planner/0', label: 'Route Planner', icon: RouteOrderIcon, color: 'lime'},
+    {id: 'inspection', path: '/inspection/0', label: 'Inspection', icon: InspectionIcon, color: 'green'},
     {
         id: 'maintenance', label: 'Maintenance', icon: MaintenanceIcon, color: 'orange', subNav: [
             {id: 'workorder', path: '/Maintenance/Workorder', label: 'Work Order'},
@@ -34,11 +29,11 @@ const navList = [
             {id: 'laborcode', path: '/Maintenance/Laborcode', label: 'Labor Code'}
         ]
     },
-    {id: 'faults', path: '/Faults', label: 'Fault', icon: FaultIcon, color: 'red'},
-    {id: 'products', path: '/Products', label: 'Product', icon: ProductIcon, color: 'yellow'},
-    {id: 'addresses', path: '/Addresses', label: 'Address', icon: AddressIcon, color: 'grape'},
-    {id: 'vehicle', path: '/Vehicle/0', label: 'Vehicle', icon: VehicleIcon, color: 'violet'},
-    {id: 'setting', path: '/Setting', label: 'Setting', icon: SettingIcon, color: 'indigo'}
+    {id: 'faults', path: '/faults', label: 'Fault', icon: FaultIcon, color: 'red'},
+    {id: 'products', path: '/products', label: 'Product', icon: ProductIcon, color: 'yellow'},
+    {id: 'addresses', path: '/addresses', label: 'Address', icon: AddressIcon, color: 'grape'},
+    {id: 'vehicle', path: '/vehicle/0', label: 'Vehicle', icon: VehicleIcon, color: 'violet'},
+    {id: 'setting', path: '/setting', label: 'Setting', icon: SettingIcon, color: 'indigo'}
 ];
 
 const useStyles = createStyles(t => ({

@@ -99,7 +99,7 @@ const ProductForm = ({history, location, match, ...rest}) => {
             notifications.showNotification({
                 title: 'Success', color: 'green', message: 'Products has been saved successfully.'
             });
-            history.push('/Products');
+            history.push('/products');
         }).catch(e => {
             notifications.showNotification({
                 title: 'Error', color: 'red', message: 'Not able to save product details. Something went wrong!!'
@@ -120,7 +120,7 @@ const ProductForm = ({history, location, match, ...rest}) => {
                 <Group position="apart" mb="md">
                     <Title order={3}>Product</Title>
                     <Group position="apart">
-                        <Button variant="default" onClick={() => history.push('/Products')}>Cancel</Button>
+                        <Button variant="default" onClick={() => history.push('/products')}>Cancel</Button>
                         <Button leftIcon={<SaveIcon/>} type="submit">{action}</Button>
                     </Group>
                 </Group>
